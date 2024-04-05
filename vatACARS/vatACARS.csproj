@@ -69,6 +69,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\SetupWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\SetupWindow.Designer.cs">
+      <DependentUpon>SetupWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="vatACARS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
