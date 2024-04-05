@@ -87,8 +87,9 @@
     <Compile Include="Components\SetupWindow.Designer.cs">
       <DependentUpon>SetupWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Tranceiver.cs" />
-    <Compile Include="Helpers\VersionChecker.cs" />
+    <Compile Include="Lib\Tranceiver.cs" />
+    <Compile Include="Lib\VersionChecker.cs" />
+    <Compile Include="Util\HttpClient.cs" />
     <Compile Include="vatACARS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
