@@ -14,9 +14,11 @@ namespace vatACARS
 
         private static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow;
+        private static EditorWindow editorWindow;
 
         private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
+        private CustomToolStripMenuItem editorWindowMenu;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
@@ -31,6 +33,12 @@ namespace vatACARS
             dispatchWindowMenu.CustomCategoryName = "ACARS";
             dispatchWindowMenu.Item.Click += DispatchWindowMenu_Click;
             MMI.AddCustomMenuItem(dispatchWindowMenu);
+
+            // Temporary for testing
+            editorWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] Response Builder"));
+            editorWindowMenu.CustomCategoryName = "ACARS";
+            editorWindowMenu.Item.Click += EditorWindowMenu_Click;
+            MMI.AddCustomMenuItem(editorWindowMenu);
 
             return;
         }
@@ -63,6 +71,22 @@ namespace vatACARS
                 return;
 
             dispatchWindow.ShowDialog();
+        }
+
+        // Temporary for testing
+        private void EditorWindowMenu_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(delegate () { DoShowEditorWindow(); });
+        }
+
+        private static void DoShowEditorWindow()
+        {
+            if (editorWindow == null || editorWindow.IsDisposed)
+                editorWindow = new EditorWindow();
+            else if (editorWindow.Visible)
+                return;
+
+            editorWindow.ShowDialog();
         }
 
         public void OnFDRUpdate(FDP2.FDR updated) { }
