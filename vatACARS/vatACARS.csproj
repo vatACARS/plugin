@@ -75,14 +75,23 @@
     <Compile Include="Components\DispatchWindow.Designer.cs">
       <DependentUpon>DispatchWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\EditorWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\EditorWindow.Designer.cs">
+      <DependentUpon>EditorWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\SetupWindow.cs">
       <SubType>designer</SubType>
     </Compile>
     <Compile Include="Components\SetupWindow.Designer.cs">
       <DependentUpon>SetupWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Tranceiver.cs" />
+    <Compile Include="Helpers\VersionChecker.cs" />
     <Compile Include="vatACARS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
