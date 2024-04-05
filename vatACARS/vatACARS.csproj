@@ -69,6 +69,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\DispatchWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\DispatchWindow.Designer.cs">
+      <DependentUpon>DispatchWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\SetupWindow.cs">
       <SubType>designer</SubType>
     </Compile>
