@@ -123,7 +123,7 @@
             // scr_cpdlc
             // 
             this.scr_cpdlc.ActualHeight = 10;
-            this.scr_cpdlc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            this.scr_cpdlc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scr_cpdlc.Change = 1;
             this.scr_cpdlc.Location = new System.Drawing.Point(500, 34);
@@ -134,7 +134,7 @@
             this.scr_cpdlc.TabIndex = 5;
             this.scr_cpdlc.Value = 0;
             // 
-            // EditorWindow
+            // DispatchWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -153,14 +153,14 @@
             this.MaximumSize = new System.Drawing.Size(950, 400);
             this.MiddleClickClose = false;
             this.MinimumSize = new System.Drawing.Size(537, 263);
-            this.Name = "EditorWindow";
+            this.Name = "DispatchWindow";
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "ACARS Editor";
-            this.TopMost = true;
             this.insetPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion

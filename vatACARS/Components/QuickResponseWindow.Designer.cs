@@ -32,9 +32,12 @@
             this.btn_def = new vatsys.GenericButton();
             this.btn_stanby = new vatsys.GenericButton();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.UnableLabel = new System.Windows.Forms.Label();
             this.ToEditLabel = new System.Windows.Forms.Label();
+            this.DelayLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.btn_air = new vatsys.GenericButton();
+            this.btn_editor = new vatsys.GenericButton();
             this.lbl_editor = new vatsys.TextLabel();
             this.lbl_unable = new vatsys.TextLabel();
             this.lbl_delay = new vatsys.TextLabel();
@@ -57,9 +60,6 @@
             this.insetPanel2 = new vatsys.InsetPanel();
             this.btn_escape = new vatsys.GenericButton();
             this.lbl_receivedMsgs = new vatsys.TextLabel();
-            this.btn_editor = new vatsys.GenericButton();
-            this.UnableLabel = new System.Windows.Forms.Label();
-            this.DelayLabel = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.insetPanel3.SuspendLayout();
@@ -122,6 +122,17 @@
             this.panel2.Size = new System.Drawing.Size(565, 84);
             this.panel2.TabIndex = 46;
             // 
+            // UnableLabel
+            // 
+            this.UnableLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.UnableLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.UnableLabel.Location = new System.Drawing.Point(389, 16);
+            this.UnableLabel.Name = "UnableLabel";
+            this.UnableLabel.Size = new System.Drawing.Size(147, 18);
+            this.UnableLabel.TabIndex = 43;
+            this.UnableLabel.Text = "Unable Due To";
+            this.UnableLabel.Click += new System.EventHandler(this.label2_Click_1);
+            // 
             // ToEditLabel
             // 
             this.ToEditLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
@@ -132,6 +143,16 @@
             this.ToEditLabel.TabIndex = 41;
             this.ToEditLabel.Text = "To Editor";
             this.ToEditLabel.Click += new System.EventHandler(this.label2_Click);
+            // 
+            // DelayLabel
+            // 
+            this.DelayLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.DelayLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.DelayLabel.Location = new System.Drawing.Point(13, 16);
+            this.DelayLabel.Name = "DelayLabel";
+            this.DelayLabel.Size = new System.Drawing.Size(159, 18);
+            this.DelayLabel.TabIndex = 44;
+            this.DelayLabel.Text = "Delay Response";
             // 
             // label1
             // 
@@ -154,6 +175,19 @@
             this.btn_air.TabIndex = 38;
             this.btn_air.Text = "Airspace";
             this.btn_air.UseVisualStyleBackColor = true;
+            // 
+            // btn_editor
+            // 
+            this.btn_editor.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btn_editor.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_editor.Location = new System.Drawing.Point(242, 53);
+            this.btn_editor.Name = "btn_editor";
+            this.btn_editor.Size = new System.Drawing.Size(80, 28);
+            this.btn_editor.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_editor.SubText = "";
+            this.btn_editor.TabIndex = 42;
+            this.btn_editor.Text = "Edit";
+            this.btn_editor.UseVisualStyleBackColor = true;
             // 
             // lbl_editor
             // 
@@ -450,40 +484,6 @@
             this.lbl_receivedMsgs.Text = "Received Messages";
             this.lbl_receivedMsgs.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btn_editor
-            // 
-            this.btn_editor.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btn_editor.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_editor.Location = new System.Drawing.Point(242, 53);
-            this.btn_editor.Name = "btn_editor";
-            this.btn_editor.Size = new System.Drawing.Size(80, 28);
-            this.btn_editor.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_editor.SubText = "";
-            this.btn_editor.TabIndex = 42;
-            this.btn_editor.Text = "Edit";
-            this.btn_editor.UseVisualStyleBackColor = true;
-            // 
-            // UnableLabel
-            // 
-            this.UnableLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.UnableLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.UnableLabel.Location = new System.Drawing.Point(389, 16);
-            this.UnableLabel.Name = "UnableLabel";
-            this.UnableLabel.Size = new System.Drawing.Size(147, 18);
-            this.UnableLabel.TabIndex = 43;
-            this.UnableLabel.Text = "Unable Due To";
-            this.UnableLabel.Click += new System.EventHandler(this.label2_Click_1);
-            // 
-            // DelayLabel
-            // 
-            this.DelayLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.DelayLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.DelayLabel.Location = new System.Drawing.Point(13, 16);
-            this.DelayLabel.Name = "DelayLabel";
-            this.DelayLabel.Size = new System.Drawing.Size(159, 18);
-            this.DelayLabel.TabIndex = 44;
-            this.DelayLabel.Text = "Delay Response";
-            // 
             // QuickResponseWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -511,7 +511,6 @@
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "ACARS Editor";
-            this.TopMost = true;
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
