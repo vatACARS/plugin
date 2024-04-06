@@ -24,6 +24,14 @@ namespace vatACARS.Components
 
             btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
             btn_send.ForeColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+            btn_stanby.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_def.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_tfc.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_air.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+
+            DelayLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            ToEditLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            UnableLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
 
             scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);

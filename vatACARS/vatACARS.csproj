@@ -75,12 +75,6 @@
     <Compile Include="Components\DispatchWindow.Designer.cs">
       <DependentUpon>DispatchWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\QuickResponseWindow.cs">
-      <SubType>designer</SubType>
-    </Compile>
-    <Compile Include="Components\QuickResponseWindow.Designer.cs">
-      <DependentUpon>QuickResponseWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Components\EditorWindow.cs">
       <SubType>designer</SubType>
     </Compile>
@@ -101,9 +95,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Components\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\QuickResponseWindow.resx">
-      <DependentUpon>QuickResponseWindow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
