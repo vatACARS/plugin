@@ -78,6 +78,12 @@
     <Compile Include="Components\DispatchWindow.Designer.cs">
       <DependentUpon>DispatchWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\QuickResponseWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\QuickResponseWindow.Designer.cs">
+      <DependentUpon>QuickResponseWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\EditorWindow.cs">
       <SubType>designer</SubType>
     </Compile>
