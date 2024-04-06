@@ -35,20 +35,6 @@
             this.scr_messageSelector = new VATSYSControls.ScrollBar();
             this.lvw_messageSelector = new vatsys.ListViewEx();
             this.insetPanel1 = new vatsys.InsetPanel();
-            this.btn_level = new vatsys.GenericButton();
-            this.btn_expect = new vatsys.GenericButton();
-            this.btn_surv = new vatsys.GenericButton();
-            this.btn_enq = new vatsys.GenericButton();
-            this.btn_cross = new vatsys.GenericButton();
-            this.btn_transfr = new vatsys.GenericButton();
-            this.btn_route = new vatsys.GenericButton();
-            this.btn_wx = new vatsys.GenericButton();
-            this.btn_comm = new vatsys.GenericButton();
-            this.btn_speed = new vatsys.GenericButton();
-            this.btn_cfm = new vatsys.GenericButton();
-            this.btn_misc = new vatsys.GenericButton();
-            this.btn_emerg = new vatsys.GenericButton();
-            this.btn_blk = new vatsys.GenericButton();
             this.btn_suspend = new vatsys.GenericButton();
             this.btn_restore = new vatsys.GenericButton();
             this.btn_send = new vatsys.GenericButton();
@@ -65,6 +51,20 @@
             this.btn_deferred = new vatsys.GenericButton();
             this.btn_standby = new vatsys.GenericButton();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btn_comm = new vatsys.GenericButton();
+            this.btn_speed = new vatsys.GenericButton();
+            this.btn_cfm = new vatsys.GenericButton();
+            this.btn_misc = new vatsys.GenericButton();
+            this.btn_emerg = new vatsys.GenericButton();
+            this.btn_expect = new vatsys.GenericButton();
+            this.btn_surv = new vatsys.GenericButton();
+            this.btn_enq = new vatsys.GenericButton();
+            this.btn_cross = new vatsys.GenericButton();
+            this.btn_transfr = new vatsys.GenericButton();
+            this.btn_wx = new vatsys.GenericButton();
+            this.btn_route = new vatsys.GenericButton();
+            this.btn_level = new vatsys.GenericButton();
+            this.btn_blk = new vatsys.GenericButton();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
             this.insetPanel3.SuspendLayout();
@@ -170,188 +170,6 @@
             this.insetPanel1.Name = "insetPanel1";
             this.insetPanel1.Size = new System.Drawing.Size(546, 176);
             this.insetPanel1.TabIndex = 6;
-            // 
-            // btn_level
-            // 
-            this.btn_level.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_level.Location = new System.Drawing.Point(-1, 3);
-            this.btn_level.Name = "btn_level";
-            this.btn_level.Size = new System.Drawing.Size(80, 28);
-            this.btn_level.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_level.SubText = "";
-            this.btn_level.TabIndex = 7;
-            this.btn_level.Text = "LEVEL";
-            this.btn_level.UseVisualStyleBackColor = true;
-            this.btn_level.Click += new System.EventHandler(this.btn_level_Click);
-            // 
-            // btn_expect
-            // 
-            this.btn_expect.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_expect.Location = new System.Drawing.Point(485, 3);
-            this.btn_expect.Name = "btn_expect";
-            this.btn_expect.Size = new System.Drawing.Size(80, 28);
-            this.btn_expect.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_expect.SubText = "";
-            this.btn_expect.TabIndex = 8;
-            this.btn_expect.Text = "EXPECT";
-            this.btn_expect.UseVisualStyleBackColor = true;
-            this.btn_expect.Click += new System.EventHandler(this.btn_expect_Click);
-            // 
-            // btn_surv
-            // 
-            this.btn_surv.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_surv.Location = new System.Drawing.Point(404, 3);
-            this.btn_surv.Name = "btn_surv";
-            this.btn_surv.Size = new System.Drawing.Size(80, 28);
-            this.btn_surv.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_surv.SubText = "";
-            this.btn_surv.TabIndex = 9;
-            this.btn_surv.Text = "SURV";
-            this.btn_surv.UseVisualStyleBackColor = true;
-            this.btn_surv.Click += new System.EventHandler(this.btn_surv_Click);
-            // 
-            // btn_enq
-            // 
-            this.btn_enq.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_enq.Location = new System.Drawing.Point(323, 3);
-            this.btn_enq.Name = "btn_enq";
-            this.btn_enq.Size = new System.Drawing.Size(80, 28);
-            this.btn_enq.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_enq.SubText = "";
-            this.btn_enq.TabIndex = 10;
-            this.btn_enq.Text = "ENQ/TXT";
-            this.btn_enq.UseVisualStyleBackColor = true;
-            this.btn_enq.Click += new System.EventHandler(this.btn_enq_Click);
-            // 
-            // btn_cross
-            // 
-            this.btn_cross.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_cross.Location = new System.Drawing.Point(242, 3);
-            this.btn_cross.Name = "btn_cross";
-            this.btn_cross.Size = new System.Drawing.Size(80, 28);
-            this.btn_cross.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_cross.SubText = "";
-            this.btn_cross.TabIndex = 11;
-            this.btn_cross.Text = "CROSS";
-            this.btn_cross.UseVisualStyleBackColor = true;
-            this.btn_cross.Click += new System.EventHandler(this.btn_cross_Click);
-            // 
-            // btn_transfr
-            // 
-            this.btn_transfr.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_transfr.Location = new System.Drawing.Point(161, 3);
-            this.btn_transfr.Name = "btn_transfr";
-            this.btn_transfr.Size = new System.Drawing.Size(80, 28);
-            this.btn_transfr.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_transfr.SubText = "";
-            this.btn_transfr.TabIndex = 12;
-            this.btn_transfr.Text = "TRANSFR";
-            this.btn_transfr.UseVisualStyleBackColor = true;
-            this.btn_transfr.Click += new System.EventHandler(this.btn_transfr_Click);
-            // 
-            // btn_route
-            // 
-            this.btn_route.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_route.Location = new System.Drawing.Point(80, 3);
-            this.btn_route.Name = "btn_route";
-            this.btn_route.Size = new System.Drawing.Size(80, 28);
-            this.btn_route.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_route.SubText = "";
-            this.btn_route.TabIndex = 13;
-            this.btn_route.Text = "ROUTE";
-            this.btn_route.UseVisualStyleBackColor = true;
-            this.btn_route.Click += new System.EventHandler(this.btn_route_Click);
-            // 
-            // btn_wx
-            // 
-            this.btn_wx.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_wx.Location = new System.Drawing.Point(80, 37);
-            this.btn_wx.Name = "btn_wx";
-            this.btn_wx.Size = new System.Drawing.Size(80, 28);
-            this.btn_wx.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_wx.SubText = "";
-            this.btn_wx.TabIndex = 20;
-            this.btn_wx.Text = "WX/OFF";
-            this.btn_wx.UseVisualStyleBackColor = true;
-            this.btn_wx.Click += new System.EventHandler(this.btn_wx_Click);
-            // 
-            // btn_comm
-            // 
-            this.btn_comm.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_comm.Location = new System.Drawing.Point(161, 37);
-            this.btn_comm.Name = "btn_comm";
-            this.btn_comm.Size = new System.Drawing.Size(80, 28);
-            this.btn_comm.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_comm.SubText = "";
-            this.btn_comm.TabIndex = 19;
-            this.btn_comm.Text = "COMM";
-            this.btn_comm.UseVisualStyleBackColor = true;
-            this.btn_comm.Click += new System.EventHandler(this.btn_comm_Click);
-            // 
-            // btn_speed
-            // 
-            this.btn_speed.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_speed.Location = new System.Drawing.Point(242, 37);
-            this.btn_speed.Name = "btn_speed";
-            this.btn_speed.Size = new System.Drawing.Size(80, 28);
-            this.btn_speed.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_speed.SubText = "";
-            this.btn_speed.TabIndex = 18;
-            this.btn_speed.Text = "SPEED";
-            this.btn_speed.UseVisualStyleBackColor = true;
-            this.btn_speed.Click += new System.EventHandler(this.btn_speed_Click);
-            // 
-            // btn_cfm
-            // 
-            this.btn_cfm.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_cfm.Location = new System.Drawing.Point(323, 37);
-            this.btn_cfm.Name = "btn_cfm";
-            this.btn_cfm.Size = new System.Drawing.Size(80, 28);
-            this.btn_cfm.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_cfm.SubText = "";
-            this.btn_cfm.TabIndex = 17;
-            this.btn_cfm.Text = "CFM/RPT";
-            this.btn_cfm.UseVisualStyleBackColor = true;
-            this.btn_cfm.Click += new System.EventHandler(this.btn_cfm_Click);
-            // 
-            // btn_misc
-            // 
-            this.btn_misc.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_misc.Location = new System.Drawing.Point(404, 37);
-            this.btn_misc.Name = "btn_misc";
-            this.btn_misc.Size = new System.Drawing.Size(80, 28);
-            this.btn_misc.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_misc.SubText = "";
-            this.btn_misc.TabIndex = 16;
-            this.btn_misc.Text = "MISC";
-            this.btn_misc.UseVisualStyleBackColor = true;
-            this.btn_misc.Click += new System.EventHandler(this.btn_misc_Click);
-            // 
-            // btn_emerg
-            // 
-            this.btn_emerg.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_emerg.Location = new System.Drawing.Point(485, 37);
-            this.btn_emerg.Name = "btn_emerg";
-            this.btn_emerg.Size = new System.Drawing.Size(80, 28);
-            this.btn_emerg.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_emerg.SubText = "";
-            this.btn_emerg.TabIndex = 15;
-            this.btn_emerg.Text = "EMERG";
-            this.btn_emerg.UseVisualStyleBackColor = true;
-            this.btn_emerg.Click += new System.EventHandler(this.btn_emerg_Click);
-            // 
-            // btn_blk
-            // 
-            this.btn_blk.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_blk.Location = new System.Drawing.Point(0, 37);
-            this.btn_blk.Name = "btn_blk";
-            this.btn_blk.Size = new System.Drawing.Size(80, 28);
-            this.btn_blk.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_blk.SubText = "";
-            this.btn_blk.TabIndex = 14;
-            this.btn_blk.Text = "BLK/CND";
-            this.btn_blk.UseVisualStyleBackColor = true;
-            this.btn_blk.Click += new System.EventHandler(this.btn_blk_Click);
             // 
             // btn_suspend
             // 
@@ -574,7 +392,189 @@
             this.panel2.Size = new System.Drawing.Size(565, 84);
             this.panel2.TabIndex = 34;
             // 
-            // ResponseBuilder
+            // btn_comm
+            // 
+            this.btn_comm.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_comm.Location = new System.Drawing.Point(161, 37);
+            this.btn_comm.Name = "btn_comm";
+            this.btn_comm.Size = new System.Drawing.Size(80, 28);
+            this.btn_comm.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_comm.SubText = "";
+            this.btn_comm.TabIndex = 19;
+            this.btn_comm.Text = "COMM";
+            this.btn_comm.UseVisualStyleBackColor = true;
+            this.btn_comm.Click += new System.EventHandler(this.btn_comm_Click);
+            // 
+            // btn_speed
+            // 
+            this.btn_speed.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_speed.Location = new System.Drawing.Point(242, 37);
+            this.btn_speed.Name = "btn_speed";
+            this.btn_speed.Size = new System.Drawing.Size(80, 28);
+            this.btn_speed.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_speed.SubText = "";
+            this.btn_speed.TabIndex = 18;
+            this.btn_speed.Text = "SPEED";
+            this.btn_speed.UseVisualStyleBackColor = true;
+            this.btn_speed.Click += new System.EventHandler(this.btn_speed_Click);
+            // 
+            // btn_cfm
+            // 
+            this.btn_cfm.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_cfm.Location = new System.Drawing.Point(323, 37);
+            this.btn_cfm.Name = "btn_cfm";
+            this.btn_cfm.Size = new System.Drawing.Size(80, 28);
+            this.btn_cfm.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_cfm.SubText = "";
+            this.btn_cfm.TabIndex = 17;
+            this.btn_cfm.Text = "CFM/RPT";
+            this.btn_cfm.UseVisualStyleBackColor = true;
+            this.btn_cfm.Click += new System.EventHandler(this.btn_cfm_Click);
+            // 
+            // btn_misc
+            // 
+            this.btn_misc.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_misc.Location = new System.Drawing.Point(404, 37);
+            this.btn_misc.Name = "btn_misc";
+            this.btn_misc.Size = new System.Drawing.Size(80, 28);
+            this.btn_misc.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_misc.SubText = "";
+            this.btn_misc.TabIndex = 16;
+            this.btn_misc.Text = "MISC";
+            this.btn_misc.UseVisualStyleBackColor = true;
+            this.btn_misc.Click += new System.EventHandler(this.btn_misc_Click);
+            // 
+            // btn_emerg
+            // 
+            this.btn_emerg.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_emerg.Location = new System.Drawing.Point(485, 37);
+            this.btn_emerg.Name = "btn_emerg";
+            this.btn_emerg.Size = new System.Drawing.Size(80, 28);
+            this.btn_emerg.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_emerg.SubText = "";
+            this.btn_emerg.TabIndex = 15;
+            this.btn_emerg.Text = "EMERG";
+            this.btn_emerg.UseVisualStyleBackColor = true;
+            this.btn_emerg.Click += new System.EventHandler(this.btn_emerg_Click);
+            // 
+            // btn_expect
+            // 
+            this.btn_expect.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_expect.Location = new System.Drawing.Point(485, 3);
+            this.btn_expect.Name = "btn_expect";
+            this.btn_expect.Size = new System.Drawing.Size(80, 28);
+            this.btn_expect.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_expect.SubText = "";
+            this.btn_expect.TabIndex = 8;
+            this.btn_expect.Text = "EXPECT";
+            this.btn_expect.UseVisualStyleBackColor = true;
+            this.btn_expect.Click += new System.EventHandler(this.btn_expect_Click);
+            // 
+            // btn_surv
+            // 
+            this.btn_surv.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_surv.Location = new System.Drawing.Point(404, 3);
+            this.btn_surv.Name = "btn_surv";
+            this.btn_surv.Size = new System.Drawing.Size(80, 28);
+            this.btn_surv.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_surv.SubText = "";
+            this.btn_surv.TabIndex = 9;
+            this.btn_surv.Text = "SURV";
+            this.btn_surv.UseVisualStyleBackColor = true;
+            this.btn_surv.Click += new System.EventHandler(this.btn_surv_Click);
+            // 
+            // btn_enq
+            // 
+            this.btn_enq.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_enq.Location = new System.Drawing.Point(323, 3);
+            this.btn_enq.Name = "btn_enq";
+            this.btn_enq.Size = new System.Drawing.Size(80, 28);
+            this.btn_enq.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_enq.SubText = "";
+            this.btn_enq.TabIndex = 10;
+            this.btn_enq.Text = "ENQ/TXT";
+            this.btn_enq.UseVisualStyleBackColor = true;
+            this.btn_enq.Click += new System.EventHandler(this.btn_enq_Click);
+            // 
+            // btn_cross
+            // 
+            this.btn_cross.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_cross.Location = new System.Drawing.Point(242, 3);
+            this.btn_cross.Name = "btn_cross";
+            this.btn_cross.Size = new System.Drawing.Size(80, 28);
+            this.btn_cross.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_cross.SubText = "";
+            this.btn_cross.TabIndex = 11;
+            this.btn_cross.Text = "CROSS";
+            this.btn_cross.UseVisualStyleBackColor = true;
+            this.btn_cross.Click += new System.EventHandler(this.btn_cross_Click);
+            // 
+            // btn_transfr
+            // 
+            this.btn_transfr.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_transfr.Location = new System.Drawing.Point(161, 3);
+            this.btn_transfr.Name = "btn_transfr";
+            this.btn_transfr.Size = new System.Drawing.Size(80, 28);
+            this.btn_transfr.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_transfr.SubText = "";
+            this.btn_transfr.TabIndex = 12;
+            this.btn_transfr.Text = "TRANSFR";
+            this.btn_transfr.UseVisualStyleBackColor = true;
+            this.btn_transfr.Click += new System.EventHandler(this.btn_transfr_Click);
+            // 
+            // btn_wx
+            // 
+            this.btn_wx.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_wx.Location = new System.Drawing.Point(80, 37);
+            this.btn_wx.Name = "btn_wx";
+            this.btn_wx.Size = new System.Drawing.Size(80, 28);
+            this.btn_wx.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_wx.SubText = "";
+            this.btn_wx.TabIndex = 20;
+            this.btn_wx.Text = "WX/OFF";
+            this.btn_wx.UseVisualStyleBackColor = true;
+            this.btn_wx.Click += new System.EventHandler(this.btn_wx_Click);
+            // 
+            // btn_route
+            // 
+            this.btn_route.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_route.Location = new System.Drawing.Point(80, 3);
+            this.btn_route.Name = "btn_route";
+            this.btn_route.Size = new System.Drawing.Size(80, 28);
+            this.btn_route.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_route.SubText = "";
+            this.btn_route.TabIndex = 13;
+            this.btn_route.Text = "ROUTE";
+            this.btn_route.UseVisualStyleBackColor = true;
+            this.btn_route.Click += new System.EventHandler(this.btn_route_Click);
+            // 
+            // btn_level
+            // 
+            this.btn_level.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_level.Location = new System.Drawing.Point(-1, 3);
+            this.btn_level.Name = "btn_level";
+            this.btn_level.Size = new System.Drawing.Size(80, 28);
+            this.btn_level.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_level.SubText = "";
+            this.btn_level.TabIndex = 7;
+            this.btn_level.Text = "LEVEL";
+            this.btn_level.UseVisualStyleBackColor = true;
+            this.btn_level.Click += new System.EventHandler(this.btn_level_Click);
+            // 
+            // btn_blk
+            // 
+            this.btn_blk.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_blk.Location = new System.Drawing.Point(0, 37);
+            this.btn_blk.Name = "btn_blk";
+            this.btn_blk.Size = new System.Drawing.Size(80, 28);
+            this.btn_blk.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_blk.SubText = "";
+            this.btn_blk.TabIndex = 14;
+            this.btn_blk.Text = "BLK/CND";
+            this.btn_blk.UseVisualStyleBackColor = true;
+            this.btn_blk.Click += new System.EventHandler(this.btn_blk_Click);
+            // 
+            // EditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -597,7 +597,7 @@
             this.HideOnClose = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MiddleClickClose = false;
-            this.Name = "ResponseBuilder";
+            this.Name = "EditorWindow";
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "ACARS Editor";
@@ -609,6 +609,7 @@
             this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         #endregion
@@ -620,20 +621,6 @@
         private VATSYSControls.ScrollBar scr_messageSelector;
         private vatsys.ListViewEx lvw_messageSelector;
         private vatsys.InsetPanel insetPanel1;
-        private vatsys.GenericButton btn_level;
-        private vatsys.GenericButton btn_expect;
-        private vatsys.GenericButton btn_surv;
-        private vatsys.GenericButton btn_enq;
-        private vatsys.GenericButton btn_cross;
-        private vatsys.GenericButton btn_transfr;
-        private vatsys.GenericButton btn_route;
-        private vatsys.GenericButton btn_wx;
-        private vatsys.GenericButton btn_comm;
-        private vatsys.GenericButton btn_speed;
-        private vatsys.GenericButton btn_cfm;
-        private vatsys.GenericButton btn_misc;
-        private vatsys.GenericButton btn_emerg;
-        private vatsys.GenericButton btn_blk;
         private vatsys.GenericButton btn_suspend;
         private vatsys.GenericButton btn_restore;
         private vatsys.GenericButton btn_send;
@@ -650,5 +637,19 @@
         private vatsys.TextLabel lbl_editor;
         private vatsys.TextLabel lbl_unable;
         private System.Windows.Forms.Panel panel2;
+        private vatsys.GenericButton btn_level;
+        private vatsys.GenericButton btn_expect;
+        private vatsys.GenericButton btn_surv;
+        private vatsys.GenericButton btn_cross;
+        private vatsys.GenericButton btn_route;
+        private vatsys.GenericButton btn_wx;
+        private vatsys.GenericButton btn_transfr;
+        private vatsys.GenericButton btn_comm;
+        private vatsys.GenericButton btn_enq;
+        private vatsys.GenericButton btn_speed;
+        private vatsys.GenericButton btn_emerg;
+        private vatsys.GenericButton btn_blk;
+        private vatsys.GenericButton btn_cfm;
+        private vatsys.GenericButton btn_misc;
     }
 }
