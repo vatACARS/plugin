@@ -7,17 +7,28 @@ namespace vatACARS.Util
 {
     public static class HttpClientUtils
     {
-        public static async Task<string> DownloadStringTaskAsync(this HttpClient httpClient, Uri uri)
+        private static string _baseUrl;
+
+        public static void SetBaseUrl(string baseUrl)
+        {
+            _baseUrl = baseUrl;
+        }
+
+        public static async Task<string> DownloadStringTaskAsync(this HttpClient httpClient, string relativePath)
         {
             if (httpClient == null)
                 throw new ArgumentNullException(nameof(httpClient));
 
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            if (string.IsNullOrWhiteSpace(_baseUrl))
+                throw new InvalidOperationException("Base URL is not set");
+
+            if (relativePath == null)
+                throw new ArgumentNullException(nameof(relativePath));
 
             try
             {
-                HttpResponseMessage response = await httpClient.GetAsync(uri);
+                var fullUrl = new Uri(new Uri(_baseUrl), relativePath);
+                HttpResponseMessage response = await httpClient.GetAsync(fullUrl);
                 response.EnsureSuccessStatusCode();
 
                 return await response.Content.ReadAsStringAsync();
@@ -34,20 +45,24 @@ namespace vatACARS.Util
             }
         }
 
-        public static async Task DownloadFileTaskAsync(this HttpClient httpClient, Uri uri, string fileName)
+        public static async Task DownloadFileTaskAsync(this HttpClient httpClient, string relativePath, string fileName)
         {
             if (httpClient == null)
                 throw new ArgumentNullException(nameof(httpClient));
 
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            if (string.IsNullOrWhiteSpace(_baseUrl))
+                throw new InvalidOperationException("Base URL is not set");
+
+            if (relativePath == null)
+                throw new ArgumentNullException(nameof(relativePath));
 
             if (string.IsNullOrWhiteSpace(fileName))
                 throw new ArgumentException("Invalid file name", nameof(fileName));
 
             try
             {
-                using (var s = await httpClient.GetStreamAsync(uri))
+                var fullUrl = new Uri(new Uri(_baseUrl), relativePath);
+                using (var s = await httpClient.GetStreamAsync(fullUrl))
                 {
                     using (var fs = new FileStream(fileName, FileMode.CreateNew))
                     {

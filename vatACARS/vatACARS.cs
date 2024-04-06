@@ -2,11 +2,17 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using vatACARS.Components;
+using vatACARS.Util;
 using vatsys;
 using vatsys.Plugin;
 
 namespace vatACARS
 {
+    public static class AppData
+    {
+        public static Version CurrentVersion { get; } = new Version(1, 2, 3, 4);
+    }
+
     [Export(typeof(IPlugin))]
     public class vatACARS : IPlugin
     {
@@ -39,6 +45,9 @@ namespace vatACARS
             editorWindowMenu.CustomCategoryName = "ACARS";
             editorWindowMenu.Item.Click += EditorWindowMenu_Click;
             MMI.AddCustomMenuItem(editorWindowMenu);
+
+            // Update Checking
+            HttpClientUtils.SetBaseUrl("https://api.plutonus.dev");
 
             return;
         }
