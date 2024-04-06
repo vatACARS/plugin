@@ -64,7 +64,7 @@ namespace vatACARS
             else if (setupWindow.Visible)
                 return;
 
-            setupWindow.ShowDialog();
+            setupWindow.Show();
         }
 
         private void DispatchWindowMenu_Click(object sender, EventArgs e)
@@ -79,7 +79,7 @@ namespace vatACARS
             else if (dispatchWindow.Visible)
                 return;
 
-            dispatchWindow.ShowDialog();
+            dispatchWindow.Show();
         }
 
         // Temporary for testing
@@ -95,7 +95,7 @@ namespace vatACARS
             else if (editorWindow.Visible)
                 return;
 
-            editorWindow.ShowDialog();
+            editorWindow.Show();
         }
 
         public void OnFDRUpdate(FDP2.FDR updated) { }
