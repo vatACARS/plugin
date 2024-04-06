@@ -21,10 +21,12 @@ namespace vatACARS
         private static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow;
         private static EditorWindow editorWindow;
+        private static QuickResponseWindow quickresponseWindow;
 
         private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
         private CustomToolStripMenuItem editorWindowMenu;
+        private CustomToolStripMenuItem quickresponseWindowMenu;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
@@ -46,6 +48,12 @@ namespace vatACARS
             editorWindowMenu.Item.Click += EditorWindowMenu_Click;
             MMI.AddCustomMenuItem(editorWindowMenu);
 
+            // Temporary for testing
+            quickresponseWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] Quick Response"));
+            quickresponseWindowMenu.CustomCategoryName = "ACARS";
+            quickresponseWindowMenu.Item.Click += QuickResponseWindow_Click;
+            MMI.AddCustomMenuItem(quickresponseWindowMenu);
+            
             // Update Checking
             HttpClientUtils.SetBaseUrl("https://api.plutonus.dev");
 
@@ -96,6 +104,21 @@ namespace vatACARS
                 return;
 
             editorWindow.ShowDialog();
+        }
+
+        private void QuickResponseWindow_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(delegate () { DoShowQuickResponseWindow(); });
+        }
+
+        private static void DoShowQuickResponseWindow()
+        {
+            if (quickresponseWindow == null || quickresponseWindow.IsDisposed)
+                quickresponseWindow = new QuickResponseWindow();
+            else if (quickresponseWindow.Visible)
+                return;
+
+            quickresponseWindow.ShowDialog();
         }
 
         public void OnFDRUpdate(FDP2.FDR updated) { }
