@@ -13,28 +13,49 @@ namespace vatACARS.Components
 
         private void StyleComponent()
         {
-            lbl_receivedMsgs.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            lbl_PDC.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_PDC.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_clrto.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_clrto.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_via.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_via.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_dep.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_dep.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_route.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_route.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_clbvia.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_clbvia.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_depfreq.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_depfreq.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_ssr.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_ssr.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_acname.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_acname.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
 
-            lvw_messages.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            lvw_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lvw_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            lvw_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lvw_freetextInput.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            lvw_freetextInput.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-
-            btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_send.ForeColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-            btn_stanby.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_def.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_tfc.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_air.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-
-            DelayLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-            ToEditLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-            UnableLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-
-            scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
+            btn_time.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_time.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_callsign.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_callsign.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_type.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_type.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_depicao.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_depicao.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_eobt.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_eobt.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_desicao.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_desicao.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_dep.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_dep.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_route.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_route.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_alt.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_alt.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_freq.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_freq.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_ssr.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_ssr.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_freetxt.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            btn_freetxt.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
         }
 
         private void lvw_messages_SelectedIndexChanged(object sender, EventArgs e) { }

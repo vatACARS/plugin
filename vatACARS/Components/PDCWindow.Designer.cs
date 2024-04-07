@@ -28,293 +28,305 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.DelayLabel = new System.Windows.Forms.Label();
-            this.btn_def = new vatsys.GenericButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.genericButton1 = new vatsys.GenericButton();
-            this.label3 = new System.Windows.Forms.Label();
-            this.genericButton2 = new vatsys.GenericButton();
-            this.label4 = new System.Windows.Forms.Label();
-            this.genericButton4 = new vatsys.GenericButton();
-            this.genericButton5 = new vatsys.GenericButton();
-            this.genericButton6 = new vatsys.GenericButton();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.genericButton8 = new vatsys.GenericButton();
-            this.label6 = new System.Windows.Forms.Label();
-            this.genericButton9 = new vatsys.GenericButton();
-            this.genericButton10 = new vatsys.GenericButton();
-            this.label7 = new System.Windows.Forms.Label();
-            this.genericButton11 = new vatsys.GenericButton();
-            this.label8 = new System.Windows.Forms.Label();
-            this.genericButton7 = new vatsys.GenericButton();
-            this.genericButton3 = new vatsys.GenericButton();
+            this.lbl_acname = new System.Windows.Forms.Label();
+            this.btn_time = new vatsys.GenericButton();
+            this.lbl_PDC = new System.Windows.Forms.Label();
+            this.btn_type = new vatsys.GenericButton();
+            this.lbl_clrto = new System.Windows.Forms.Label();
+            this.btn_desicao = new vatsys.GenericButton();
+            this.lbl_dep = new System.Windows.Forms.Label();
+            this.btn_callsign = new vatsys.GenericButton();
+            this.btn_depicao = new vatsys.GenericButton();
+            this.btn_eobt = new vatsys.GenericButton();
+            this.lbl_via = new System.Windows.Forms.Label();
+            this.lbl_route = new System.Windows.Forms.Label();
+            this.btn_alt = new vatsys.GenericButton();
+            this.lbl_clbvia = new System.Windows.Forms.Label();
+            this.btn_dep = new vatsys.GenericButton();
+            this.btn_freq = new vatsys.GenericButton();
+            this.lbl_depfreq = new System.Windows.Forms.Label();
+            this.btn_ssr = new vatsys.GenericButton();
+            this.lbl_ssr = new System.Windows.Forms.Label();
+            this.btn_route = new vatsys.GenericButton();
+            this.btn_freetxt = new vatsys.GenericButton();
             this.SuspendLayout();
             // 
-            // DelayLabel
+            // lbl_acname
             // 
-            this.DelayLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.DelayLabel.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.DelayLabel.Location = new System.Drawing.Point(12, 9);
-            this.DelayLabel.Name = "DelayLabel";
-            this.DelayLabel.Size = new System.Drawing.Size(397, 18);
-            this.DelayLabel.TabIndex = 46;
-            this.DelayLabel.Text = "AIRCRAFT NAME";
-            this.DelayLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.lbl_acname.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_acname.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_acname.Location = new System.Drawing.Point(12, 9);
+            this.lbl_acname.Name = "lbl_acname";
+            this.lbl_acname.Size = new System.Drawing.Size(397, 18);
+            this.lbl_acname.TabIndex = 46;
+            this.lbl_acname.Text = "AIRCRAFT NAME";
+            this.lbl_acname.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // btn_def
+            // btn_time
             // 
-            this.btn_def.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_def.Location = new System.Drawing.Point(56, 31);
-            this.btn_def.Name = "btn_def";
-            this.btn_def.Size = new System.Drawing.Size(90, 28);
-            this.btn_def.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_def.SubText = "";
-            this.btn_def.TabIndex = 45;
-            this.btn_def.Text = "Deferred";
-            this.btn_def.UseVisualStyleBackColor = true;
-            this.btn_def.Click += new System.EventHandler(this.btn_def_Click);
+            this.btn_time.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_time.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_time.Location = new System.Drawing.Point(56, 31);
+            this.btn_time.Name = "btn_time";
+            this.btn_time.Size = new System.Drawing.Size(90, 28);
+            this.btn_time.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_time.SubText = "";
+            this.btn_time.TabIndex = 45;
+            this.btn_time.Text = "123456";
+            this.btn_time.UseVisualStyleBackColor = true;
+            this.btn_time.Click += new System.EventHandler(this.btn_def_Click);
             // 
-            // label1
+            // lbl_PDC
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label1.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Location = new System.Drawing.Point(12, 36);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 18);
-            this.label1.TabIndex = 47;
-            this.label1.Text = "PDC";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            this.lbl_PDC.AutoSize = true;
+            this.lbl_PDC.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_PDC.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_PDC.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_PDC.Location = new System.Drawing.Point(12, 36);
+            this.lbl_PDC.Name = "lbl_PDC";
+            this.lbl_PDC.Size = new System.Drawing.Size(38, 18);
+            this.lbl_PDC.TabIndex = 47;
+            this.lbl_PDC.Text = "PDC";
+            this.lbl_PDC.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_PDC.Click += new System.EventHandler(this.label1_Click);
             // 
-            // genericButton1
+            // btn_type
             // 
-            this.genericButton1.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton1.Location = new System.Drawing.Point(111, 65);
-            this.genericButton1.Name = "genericButton1";
-            this.genericButton1.Size = new System.Drawing.Size(90, 28);
-            this.genericButton1.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton1.SubText = "";
-            this.genericButton1.TabIndex = 48;
-            this.genericButton1.Text = "Deferred";
-            this.genericButton1.UseVisualStyleBackColor = true;
+            this.btn_type.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_type.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_type.Location = new System.Drawing.Point(111, 65);
+            this.btn_type.Name = "btn_type";
+            this.btn_type.Size = new System.Drawing.Size(90, 28);
+            this.btn_type.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_type.SubText = "";
+            this.btn_type.TabIndex = 48;
+            this.btn_type.Text = "A123";
+            this.btn_type.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // lbl_clrto
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label3.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label3.Location = new System.Drawing.Point(12, 104);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 18);
-            this.label3.TabIndex = 51;
-            this.label3.Text = "CLEARED TO";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label3.Click += new System.EventHandler(this.label3_Click);
+            this.lbl_clrto.AutoSize = true;
+            this.lbl_clrto.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_clrto.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_clrto.Location = new System.Drawing.Point(12, 104);
+            this.lbl_clrto.Name = "lbl_clrto";
+            this.lbl_clrto.Size = new System.Drawing.Size(108, 18);
+            this.lbl_clrto.TabIndex = 51;
+            this.lbl_clrto.Text = "CLEARED TO";
+            this.lbl_clrto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_clrto.Click += new System.EventHandler(this.label3_Click);
             // 
-            // genericButton2
+            // btn_desicao
             // 
-            this.genericButton2.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton2.Location = new System.Drawing.Point(126, 99);
-            this.genericButton2.Name = "genericButton2";
-            this.genericButton2.Size = new System.Drawing.Size(90, 28);
-            this.genericButton2.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton2.SubText = "";
-            this.genericButton2.TabIndex = 50;
-            this.genericButton2.Text = "Deferred";
-            this.genericButton2.UseVisualStyleBackColor = true;
+            this.btn_desicao.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_desicao.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_desicao.Location = new System.Drawing.Point(126, 99);
+            this.btn_desicao.Name = "btn_desicao";
+            this.btn_desicao.Size = new System.Drawing.Size(90, 28);
+            this.btn_desicao.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_desicao.SubText = "";
+            this.btn_desicao.TabIndex = 50;
+            this.btn_desicao.Text = "ZZZZ";
+            this.btn_desicao.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // lbl_dep
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label4.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label4.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label4.Location = new System.Drawing.Point(111, 138);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 18);
-            this.label4.TabIndex = 53;
-            this.label4.Text = "DEP";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label4.Click += new System.EventHandler(this.label4_Click);
+            this.lbl_dep.AutoSize = true;
+            this.lbl_dep.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_dep.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_dep.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_dep.Location = new System.Drawing.Point(111, 138);
+            this.lbl_dep.Name = "lbl_dep";
+            this.lbl_dep.Size = new System.Drawing.Size(38, 18);
+            this.lbl_dep.TabIndex = 53;
+            this.lbl_dep.Text = "DEP";
+            this.lbl_dep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_dep.Click += new System.EventHandler(this.label4_Click);
             // 
-            // genericButton4
+            // btn_callsign
             // 
-            this.genericButton4.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton4.Location = new System.Drawing.Point(15, 65);
-            this.genericButton4.Name = "genericButton4";
-            this.genericButton4.Size = new System.Drawing.Size(90, 28);
-            this.genericButton4.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton4.SubText = "";
-            this.genericButton4.TabIndex = 54;
-            this.genericButton4.Text = "Deferred";
-            this.genericButton4.UseVisualStyleBackColor = true;
+            this.btn_callsign.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_callsign.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_callsign.Location = new System.Drawing.Point(15, 65);
+            this.btn_callsign.Name = "btn_callsign";
+            this.btn_callsign.Size = new System.Drawing.Size(90, 28);
+            this.btn_callsign.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_callsign.SubText = "";
+            this.btn_callsign.TabIndex = 54;
+            this.btn_callsign.Text = "AAA123";
+            this.btn_callsign.UseVisualStyleBackColor = true;
             // 
-            // genericButton5
+            // btn_depicao
             // 
-            this.genericButton5.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton5.Location = new System.Drawing.Point(207, 65);
-            this.genericButton5.Name = "genericButton5";
-            this.genericButton5.Size = new System.Drawing.Size(90, 28);
-            this.genericButton5.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton5.SubText = "";
-            this.genericButton5.TabIndex = 55;
-            this.genericButton5.Text = "Deferred";
-            this.genericButton5.UseVisualStyleBackColor = true;
+            this.btn_depicao.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_depicao.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_depicao.Location = new System.Drawing.Point(207, 65);
+            this.btn_depicao.Name = "btn_depicao";
+            this.btn_depicao.Size = new System.Drawing.Size(90, 28);
+            this.btn_depicao.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_depicao.SubText = "";
+            this.btn_depicao.TabIndex = 55;
+            this.btn_depicao.Text = "ZZZZ";
+            this.btn_depicao.UseVisualStyleBackColor = true;
             // 
-            // genericButton6
+            // btn_eobt
             // 
-            this.genericButton6.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton6.Location = new System.Drawing.Point(303, 65);
-            this.genericButton6.Name = "genericButton6";
-            this.genericButton6.Size = new System.Drawing.Size(90, 28);
-            this.genericButton6.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton6.SubText = "";
-            this.genericButton6.TabIndex = 56;
-            this.genericButton6.Text = "Deferred";
-            this.genericButton6.UseVisualStyleBackColor = true;
+            this.btn_eobt.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_eobt.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_eobt.Location = new System.Drawing.Point(303, 65);
+            this.btn_eobt.Name = "btn_eobt";
+            this.btn_eobt.Size = new System.Drawing.Size(90, 28);
+            this.btn_eobt.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_eobt.SubText = "";
+            this.btn_eobt.TabIndex = 56;
+            this.btn_eobt.Text = "1234";
+            this.btn_eobt.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // lbl_via
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label2.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Location = new System.Drawing.Point(222, 104);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 18);
-            this.label2.TabIndex = 57;
-            this.label2.Text = "VIA";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Click += new System.EventHandler(this.label2_Click);
+            this.lbl_via.AutoSize = true;
+            this.lbl_via.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_via.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_via.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_via.Location = new System.Drawing.Point(222, 104);
+            this.lbl_via.Name = "lbl_via";
+            this.lbl_via.Size = new System.Drawing.Size(38, 18);
+            this.lbl_via.TabIndex = 57;
+            this.lbl_via.Text = "VIA";
+            this.lbl_via.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_via.Click += new System.EventHandler(this.label2_Click);
             // 
-            // label5
+            // lbl_route
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label5.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label5.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label5.Location = new System.Drawing.Point(12, 172);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(68, 18);
-            this.label5.TabIndex = 59;
-            this.label5.Text = "ROUTE:";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_route.AutoSize = true;
+            this.lbl_route.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_route.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_route.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_route.Location = new System.Drawing.Point(12, 172);
+            this.lbl_route.Name = "lbl_route";
+            this.lbl_route.Size = new System.Drawing.Size(68, 18);
+            this.lbl_route.TabIndex = 59;
+            this.lbl_route.Text = "ROUTE:";
+            this.lbl_route.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // genericButton8
+            // btn_alt
             // 
-            this.genericButton8.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton8.Location = new System.Drawing.Point(196, 201);
-            this.genericButton8.Name = "genericButton8";
-            this.genericButton8.Size = new System.Drawing.Size(90, 28);
-            this.genericButton8.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton8.SubText = "";
-            this.genericButton8.TabIndex = 61;
-            this.genericButton8.Text = "Deferred";
-            this.genericButton8.UseVisualStyleBackColor = true;
-            this.genericButton8.Click += new System.EventHandler(this.genericButton8_Click);
+            this.btn_alt.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_alt.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_alt.Location = new System.Drawing.Point(196, 201);
+            this.btn_alt.Name = "btn_alt";
+            this.btn_alt.Size = new System.Drawing.Size(90, 28);
+            this.btn_alt.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_alt.SubText = "";
+            this.btn_alt.TabIndex = 61;
+            this.btn_alt.Text = "0000";
+            this.btn_alt.UseVisualStyleBackColor = true;
+            this.btn_alt.Click += new System.EventHandler(this.genericButton8_Click);
             // 
-            // label6
+            // lbl_clbvia
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label6.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label6.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Location = new System.Drawing.Point(12, 206);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(178, 18);
-            this.label6.TabIndex = 60;
-            this.label6.Text = "CLIMB VIA SID TO:";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label6.Click += new System.EventHandler(this.label6_Click);
+            this.lbl_clbvia.AutoSize = true;
+            this.lbl_clbvia.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_clbvia.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_clbvia.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_clbvia.Location = new System.Drawing.Point(12, 206);
+            this.lbl_clbvia.Name = "lbl_clbvia";
+            this.lbl_clbvia.Size = new System.Drawing.Size(178, 18);
+            this.lbl_clbvia.TabIndex = 60;
+            this.lbl_clbvia.Text = "CLIMB VIA SID TO:";
+            this.lbl_clbvia.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_clbvia.Click += new System.EventHandler(this.label6_Click);
             // 
-            // genericButton9
+            // btn_dep
             // 
-            this.genericButton9.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton9.Location = new System.Drawing.Point(15, 133);
-            this.genericButton9.Name = "genericButton9";
-            this.genericButton9.Size = new System.Drawing.Size(90, 28);
-            this.genericButton9.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton9.SubText = "";
-            this.genericButton9.TabIndex = 62;
-            this.genericButton9.Text = "Deferred";
-            this.genericButton9.UseVisualStyleBackColor = true;
+            this.btn_dep.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_dep.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_dep.Location = new System.Drawing.Point(15, 133);
+            this.btn_dep.Name = "btn_dep";
+            this.btn_dep.Size = new System.Drawing.Size(90, 28);
+            this.btn_dep.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_dep.SubText = "";
+            this.btn_dep.TabIndex = 62;
+            this.btn_dep.Text = "ABCDE1";
+            this.btn_dep.UseVisualStyleBackColor = true;
             // 
-            // genericButton10
+            // btn_freq
             // 
-            this.genericButton10.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton10.Location = new System.Drawing.Point(116, 235);
-            this.genericButton10.Name = "genericButton10";
-            this.genericButton10.Size = new System.Drawing.Size(90, 28);
-            this.genericButton10.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton10.SubText = "";
-            this.genericButton10.TabIndex = 65;
-            this.genericButton10.Text = "Deferred";
-            this.genericButton10.UseVisualStyleBackColor = true;
+            this.btn_freq.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_freq.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_freq.Location = new System.Drawing.Point(116, 235);
+            this.btn_freq.Name = "btn_freq";
+            this.btn_freq.Size = new System.Drawing.Size(90, 28);
+            this.btn_freq.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_freq.SubText = "";
+            this.btn_freq.TabIndex = 65;
+            this.btn_freq.Text = "123.45";
+            this.btn_freq.UseVisualStyleBackColor = true;
             // 
-            // label7
+            // lbl_depfreq
             // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label7.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label7.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label7.Location = new System.Drawing.Point(12, 240);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(98, 18);
-            this.label7.TabIndex = 64;
-            this.label7.Text = "DEP FREQ:";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label7.Click += new System.EventHandler(this.label7_Click);
+            this.lbl_depfreq.AutoSize = true;
+            this.lbl_depfreq.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_depfreq.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_depfreq.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_depfreq.Location = new System.Drawing.Point(12, 240);
+            this.lbl_depfreq.Name = "lbl_depfreq";
+            this.lbl_depfreq.Size = new System.Drawing.Size(98, 18);
+            this.lbl_depfreq.TabIndex = 64;
+            this.lbl_depfreq.Text = "DEP FREQ:";
+            this.lbl_depfreq.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_depfreq.Click += new System.EventHandler(this.label7_Click);
             // 
-            // genericButton11
+            // btn_ssr
             // 
-            this.genericButton11.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton11.Location = new System.Drawing.Point(86, 269);
-            this.genericButton11.Name = "genericButton11";
-            this.genericButton11.Size = new System.Drawing.Size(90, 28);
-            this.genericButton11.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton11.SubText = "";
-            this.genericButton11.TabIndex = 67;
-            this.genericButton11.Text = "Deferred";
-            this.genericButton11.UseVisualStyleBackColor = true;
+            this.btn_ssr.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_ssr.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_ssr.Location = new System.Drawing.Point(86, 269);
+            this.btn_ssr.Name = "btn_ssr";
+            this.btn_ssr.Size = new System.Drawing.Size(90, 28);
+            this.btn_ssr.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_ssr.SubText = "";
+            this.btn_ssr.TabIndex = 67;
+            this.btn_ssr.Text = "1234";
+            this.btn_ssr.UseVisualStyleBackColor = true;
             // 
-            // label8
+            // lbl_ssr
             // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label8.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.label8.Location = new System.Drawing.Point(12, 274);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(68, 18);
-            this.label8.TabIndex = 66;
-            this.label8.Text = "SQUAWK";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_ssr.AutoSize = true;
+            this.lbl_ssr.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_ssr.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_ssr.Location = new System.Drawing.Point(12, 274);
+            this.lbl_ssr.Name = "lbl_ssr";
+            this.lbl_ssr.Size = new System.Drawing.Size(68, 18);
+            this.lbl_ssr.TabIndex = 66;
+            this.lbl_ssr.Text = "SQUAWK";
+            this.lbl_ssr.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // genericButton7
+            // btn_route
             // 
-            this.genericButton7.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton7.Location = new System.Drawing.Point(86, 167);
-            this.genericButton7.Name = "genericButton7";
-            this.genericButton7.Size = new System.Drawing.Size(307, 28);
-            this.genericButton7.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton7.SubText = "";
-            this.genericButton7.TabIndex = 58;
-            this.genericButton7.Text = "Deferred";
-            this.genericButton7.UseVisualStyleBackColor = true;
+            this.btn_route.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_route.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_route.Location = new System.Drawing.Point(86, 167);
+            this.btn_route.Name = "btn_route";
+            this.btn_route.Size = new System.Drawing.Size(307, 28);
+            this.btn_route.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_route.SubText = "";
+            this.btn_route.TabIndex = 58;
+            this.btn_route.Text = "ABC ABC ABC ABC";
+            this.btn_route.UseVisualStyleBackColor = true;
             // 
-            // genericButton3
+            // btn_freetxt
             // 
-            this.genericButton3.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.genericButton3.Location = new System.Drawing.Point(15, 303);
-            this.genericButton3.Name = "genericButton3";
-            this.genericButton3.Size = new System.Drawing.Size(378, 28);
-            this.genericButton3.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.genericButton3.SubText = "";
-            this.genericButton3.TabIndex = 68;
-            this.genericButton3.Text = "Deferred";
-            this.genericButton3.UseVisualStyleBackColor = true;
+            this.btn_freetxt.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_freetxt.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btn_freetxt.Location = new System.Drawing.Point(15, 303);
+            this.btn_freetxt.Name = "btn_freetxt";
+            this.btn_freetxt.Size = new System.Drawing.Size(378, 28);
+            this.btn_freetxt.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_freetxt.SubText = "";
+            this.btn_freetxt.TabIndex = 68;
+            this.btn_freetxt.Text = "Free Text";
+            this.btn_freetxt.UseVisualStyleBackColor = true;
             // 
             // PDCWindow
             // 
@@ -322,27 +334,27 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(421, 355);
             this.ControlBox = false;
-            this.Controls.Add(this.genericButton3);
-            this.Controls.Add(this.genericButton11);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.genericButton10);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.genericButton9);
-            this.Controls.Add(this.genericButton8);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.genericButton7);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.genericButton6);
-            this.Controls.Add(this.genericButton5);
-            this.Controls.Add(this.genericButton4);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.genericButton2);
-            this.Controls.Add(this.genericButton1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.DelayLabel);
-            this.Controls.Add(this.btn_def);
+            this.Controls.Add(this.btn_freetxt);
+            this.Controls.Add(this.btn_ssr);
+            this.Controls.Add(this.lbl_ssr);
+            this.Controls.Add(this.btn_freq);
+            this.Controls.Add(this.lbl_depfreq);
+            this.Controls.Add(this.btn_dep);
+            this.Controls.Add(this.btn_alt);
+            this.Controls.Add(this.lbl_clbvia);
+            this.Controls.Add(this.lbl_route);
+            this.Controls.Add(this.btn_route);
+            this.Controls.Add(this.lbl_via);
+            this.Controls.Add(this.btn_eobt);
+            this.Controls.Add(this.btn_depicao);
+            this.Controls.Add(this.btn_callsign);
+            this.Controls.Add(this.lbl_dep);
+            this.Controls.Add(this.lbl_clrto);
+            this.Controls.Add(this.btn_desicao);
+            this.Controls.Add(this.btn_type);
+            this.Controls.Add(this.lbl_PDC);
+            this.Controls.Add(this.lbl_acname);
+            this.Controls.Add(this.btn_time);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HasSendBackButton = false;
             this.HideOnClose = true;
@@ -351,7 +363,7 @@
             this.Name = "PDCWindow";
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "a";
+            this.Text = "PDC Editor";
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -360,26 +372,26 @@
 
         #endregion
 
-        private System.Windows.Forms.Label DelayLabel;
-        private vatsys.GenericButton btn_def;
-        private System.Windows.Forms.Label label1;
-        private vatsys.GenericButton genericButton1;
-        private System.Windows.Forms.Label label3;
-        private vatsys.GenericButton genericButton2;
-        private System.Windows.Forms.Label label4;
-        private vatsys.GenericButton genericButton4;
-        private vatsys.GenericButton genericButton5;
-        private vatsys.GenericButton genericButton6;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label5;
-        private vatsys.GenericButton genericButton8;
-        private System.Windows.Forms.Label label6;
-        private vatsys.GenericButton genericButton9;
-        private vatsys.GenericButton genericButton10;
-        private System.Windows.Forms.Label label7;
-        private vatsys.GenericButton genericButton11;
-        private System.Windows.Forms.Label label8;
-        private vatsys.GenericButton genericButton7;
-        private vatsys.GenericButton genericButton3;
+        private System.Windows.Forms.Label lbl_acname;
+        private vatsys.GenericButton btn_time;
+        private System.Windows.Forms.Label lbl_PDC;
+        private vatsys.GenericButton btn_type;
+        private System.Windows.Forms.Label lbl_clrto;
+        private vatsys.GenericButton btn_desicao;
+        private System.Windows.Forms.Label lbl_dep;
+        private vatsys.GenericButton btn_callsign;
+        private vatsys.GenericButton btn_depicao;
+        private vatsys.GenericButton btn_eobt;
+        private System.Windows.Forms.Label lbl_via;
+        private System.Windows.Forms.Label lbl_route;
+        private vatsys.GenericButton btn_alt;
+        private System.Windows.Forms.Label lbl_clbvia;
+        private vatsys.GenericButton btn_dep;
+        private vatsys.GenericButton btn_freq;
+        private System.Windows.Forms.Label lbl_depfreq;
+        private vatsys.GenericButton btn_ssr;
+        private System.Windows.Forms.Label lbl_ssr;
+        private vatsys.GenericButton btn_route;
+        private vatsys.GenericButton btn_freetxt;
     }
 }
