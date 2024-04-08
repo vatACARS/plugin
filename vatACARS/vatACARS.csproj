@@ -78,17 +78,17 @@
     <Compile Include="Components\DispatchWindow.Designer.cs">
       <DependentUpon>DispatchWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\QuickResponseWindow.cs">
-      <SubType>designer</SubType>
-    </Compile>
-    <Compile Include="Components\QuickResponseWindow.Designer.cs">
-      <DependentUpon>QuickResponseWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Components\EditorWindow.cs">
       <SubType>designer</SubType>
     </Compile>
     <Compile Include="Components\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\PDCWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\PDCWindow.Designer.cs">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\SetupWindow.cs">
       <SubType>designer</SubType>
@@ -105,6 +105,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Components\EditorWindow.resx">
+      <DependentUpon>EditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\PDCWindow.resx">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
