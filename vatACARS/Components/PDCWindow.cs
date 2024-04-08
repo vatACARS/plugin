@@ -56,6 +56,10 @@ namespace vatACARS.Components
             btn_ssr.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             btn_freetxt.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             btn_freetxt.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_escape.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_escape.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
         }
 
         private void lvw_messages_SelectedIndexChanged(object sender, EventArgs e) { }
