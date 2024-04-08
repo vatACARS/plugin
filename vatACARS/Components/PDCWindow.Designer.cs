@@ -28,25 +28,25 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.lbl_acname = new System.Windows.Forms.Label();
+            this.lbl_acname = new vatsys.TextLabel();
             this.btn_time = new vatsys.GenericButton();
-            this.lbl_PDC = new System.Windows.Forms.Label();
+            this.lbl_PDC = new vatsys.TextLabel();
             this.btn_type = new vatsys.GenericButton();
-            this.lbl_clrto = new System.Windows.Forms.Label();
+            this.lbl_clrto = new vatsys.TextLabel();
             this.btn_desicao = new vatsys.GenericButton();
-            this.lbl_dep = new System.Windows.Forms.Label();
+            this.lbl_dep = new vatsys.TextLabel();
             this.btn_callsign = new vatsys.GenericButton();
             this.btn_depicao = new vatsys.GenericButton();
             this.btn_eobt = new vatsys.GenericButton();
-            this.lbl_via = new System.Windows.Forms.Label();
-            this.lbl_route = new System.Windows.Forms.Label();
+            this.lbl_via = new vatsys.TextLabel();
+            this.lbl_route = new vatsys.TextLabel();
             this.btn_alt = new vatsys.GenericButton();
-            this.lbl_clbvia = new System.Windows.Forms.Label();
+            this.lbl_clbvia = new vatsys.TextLabel();
             this.btn_dep = new vatsys.GenericButton();
             this.btn_freq = new vatsys.GenericButton();
-            this.lbl_depfreq = new System.Windows.Forms.Label();
+            this.lbl_depfreq = new vatsys.TextLabel();
             this.btn_ssr = new vatsys.GenericButton();
-            this.lbl_ssr = new System.Windows.Forms.Label();
+            this.lbl_ssr = new vatsys.TextLabel();
             this.btn_route = new vatsys.GenericButton();
             this.btn_freetxt = new vatsys.GenericButton();
             this.SuspendLayout();
@@ -332,7 +332,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(421, 355);
+            this.ClientSize = new System.Drawing.Size(421, 389);
             this.ControlBox = false;
             this.Controls.Add(this.btn_freetxt);
             this.Controls.Add(this.btn_ssr);
@@ -372,25 +372,25 @@
 
         #endregion
 
-        private System.Windows.Forms.Label lbl_acname;
+        private vatsys.TextLabel lbl_acname;
         private vatsys.GenericButton btn_time;
-        private System.Windows.Forms.Label lbl_PDC;
+        private vatsys.TextLabel lbl_PDC;
         private vatsys.GenericButton btn_type;
-        private System.Windows.Forms.Label lbl_clrto;
+        private vatsys.TextLabel lbl_clrto;
         private vatsys.GenericButton btn_desicao;
-        private System.Windows.Forms.Label lbl_dep;
+        private vatsys.TextLabel lbl_dep;
         private vatsys.GenericButton btn_callsign;
         private vatsys.GenericButton btn_depicao;
         private vatsys.GenericButton btn_eobt;
-        private System.Windows.Forms.Label lbl_via;
-        private System.Windows.Forms.Label lbl_route;
+        private vatsys.TextLabel lbl_via;
+        private vatsys.TextLabel lbl_route;
         private vatsys.GenericButton btn_alt;
-        private System.Windows.Forms.Label lbl_clbvia;
+        private vatsys.TextLabel lbl_clbvia;
         private vatsys.GenericButton btn_dep;
         private vatsys.GenericButton btn_freq;
-        private System.Windows.Forms.Label lbl_depfreq;
+        private vatsys.TextLabel lbl_depfreq;
         private vatsys.GenericButton btn_ssr;
-        private System.Windows.Forms.Label lbl_ssr;
+        private vatsys.TextLabel lbl_ssr;
         private vatsys.GenericButton btn_route;
         private vatsys.GenericButton btn_freetxt;
     }
