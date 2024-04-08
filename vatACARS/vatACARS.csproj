@@ -111,29 +111,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Components\EditorWindow.resx">
-      <DependentUpon>EditorWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\PDCWindow.resx">
-      <DependentUpon>PDCWindow.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Components\DispatchWindow.resx">
-      <DependentUpon>DispatchWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\EditorWindow.resx">
-      <DependentUpon>EditorWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\QuickResponseWindow.resx">
-      <DependentUpon>QuickResponseWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\SetupWindow.resx">
-      <DependentUpon>SetupWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\UpdateNotification.resx">
-      <DependentUpon>UpdateNotification.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

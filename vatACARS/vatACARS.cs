@@ -50,11 +50,6 @@ namespace vatACARS
             MMI.AddCustomMenuItem(editorWindowMenu);
 
             // Temporary for testing
-            quickresponseWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] Quick Response"));
-            quickresponseWindowMenu.CustomCategoryName = "ACARS";
-            quickresponseWindowMenu.Item.Click += QuickResponseWindow_Click;
-            MMI.AddCustomMenuItem(quickresponseWindowMenu);
-
             PDCWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] PDC Editor"));
             PDCWindowMenu.CustomCategoryName = "ACARS";
             PDCWindowMenu.Item.Click += PDCWindowMenu_Click;
