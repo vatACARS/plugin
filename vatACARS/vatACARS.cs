@@ -15,10 +15,12 @@ namespace vatACARS
         private static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow;
         private static EditorWindow editorWindow;
+        private static PDCWindow PDCWindow;
 
         private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
         private CustomToolStripMenuItem editorWindowMenu;
+        private CustomToolStripMenuItem PDCWindowMenu;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
@@ -39,6 +41,12 @@ namespace vatACARS
             editorWindowMenu.CustomCategoryName = "ACARS";
             editorWindowMenu.Item.Click += EditorWindowMenu_Click;
             MMI.AddCustomMenuItem(editorWindowMenu);
+
+            // Temporary for testing
+            PDCWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] PDC Editor"));
+            PDCWindowMenu.CustomCategoryName = "ACARS";
+            PDCWindowMenu.Item.Click += PDCWindowMenu_Click;
+            MMI.AddCustomMenuItem(PDCWindowMenu);
 
             return;
         }
@@ -87,6 +95,21 @@ namespace vatACARS
                 return;
 
             editorWindow.ShowDialog();
+        }
+
+        private void PDCWindowMenu_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(delegate () { DoShowPDCWindow(); });
+        }
+
+        private static void DoShowPDCWindow()
+        {
+            if (PDCWindow == null || PDCWindow.IsDisposed)
+                PDCWindow = new PDCWindow();
+            else if (PDCWindow.Visible)
+                return;
+
+            PDCWindow.ShowDialog();
         }
 
         public void OnFDRUpdate(FDP2.FDR updated) { }

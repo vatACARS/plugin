@@ -35,12 +35,6 @@
             this.scr_messageSelector = new VATSYSControls.ScrollBar();
             this.lvw_messageSelector = new vatsys.ListViewEx();
             this.insetPanel1 = new vatsys.InsetPanel();
-            this.btn_suspend = new vatsys.GenericButton();
-            this.btn_restore = new vatsys.GenericButton();
-            this.btn_send = new vatsys.GenericButton();
-            this.insetPanel3 = new vatsys.InsetPanel();
-            this.lvw_freetextInput = new vatsys.ListViewEx();
-            this.btn_1 = new vatsys.GenericButton();
             this.panel2 = new System.Windows.Forms.Panel();
             this.btn_level = new vatsys.GenericButton();
             this.btn_expect = new vatsys.GenericButton();
@@ -56,11 +50,17 @@
             this.btn_blk = new vatsys.GenericButton();
             this.btn_cfm = new vatsys.GenericButton();
             this.btn_misc = new vatsys.GenericButton();
+            this.btn_suspend = new vatsys.GenericButton();
+            this.btn_restore = new vatsys.GenericButton();
+            this.btn_send = new vatsys.GenericButton();
+            this.insetPanel3 = new vatsys.InsetPanel();
+            this.lvw_freetextInput = new vatsys.ListViewEx();
+            this.btn_1 = new vatsys.GenericButton();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.UnableLabel = new System.Windows.Forms.Label();
-            this.ToEditLabel = new System.Windows.Forms.Label();
-            this.DelayLabel = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.UnableLabel = new vatsys.TextLabel();
+            this.ToEditLabel = new vatsys.TextLabel();
+            this.DelayLabel = new vatsys.TextLabel();
+            this.label1 = new vatsys.TextLabel();
             this.btn_tfc = new vatsys.GenericButton();
             this.btn_air = new vatsys.GenericButton();
             this.btn_def = new vatsys.GenericButton();
@@ -68,8 +68,8 @@
             this.btn_editor = new vatsys.GenericButton();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
-            this.insetPanel3.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.insetPanel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -172,86 +172,6 @@
             this.insetPanel1.Size = new System.Drawing.Size(546, 176);
             this.insetPanel1.TabIndex = 6;
             // 
-            // btn_suspend
-            // 
-            this.btn_suspend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_suspend.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_suspend.Location = new System.Drawing.Point(202, 404);
-            this.btn_suspend.Name = "btn_suspend";
-            this.btn_suspend.Size = new System.Drawing.Size(90, 28);
-            this.btn_suspend.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_suspend.SubText = "";
-            this.btn_suspend.TabIndex = 21;
-            this.btn_suspend.Text = "Suspend";
-            this.btn_suspend.UseVisualStyleBackColor = true;
-            this.btn_suspend.Click += new System.EventHandler(this.btn_suspend_Click);
-            // 
-            // btn_restore
-            // 
-            this.btn_restore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_restore.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_restore.Location = new System.Drawing.Point(106, 404);
-            this.btn_restore.Name = "btn_restore";
-            this.btn_restore.Size = new System.Drawing.Size(90, 28);
-            this.btn_restore.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_restore.SubText = "";
-            this.btn_restore.TabIndex = 22;
-            this.btn_restore.Text = "Restore";
-            this.btn_restore.UseVisualStyleBackColor = true;
-            // 
-            // btn_send
-            // 
-            this.btn_send.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_send.Location = new System.Drawing.Point(466, 404);
-            this.btn_send.Name = "btn_send";
-            this.btn_send.Size = new System.Drawing.Size(111, 28);
-            this.btn_send.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_send.SubText = "";
-            this.btn_send.TabIndex = 23;
-            this.btn_send.Text = "Send";
-            this.btn_send.UseVisualStyleBackColor = true;
-            // 
-            // insetPanel3
-            // 
-            this.insetPanel3.Controls.Add(this.lvw_freetextInput);
-            this.insetPanel3.Location = new System.Drawing.Point(47, 367);
-            this.insetPanel3.Name = "insetPanel3";
-            this.insetPanel3.Size = new System.Drawing.Size(529, 31);
-            this.insetPanel3.TabIndex = 7;
-            // 
-            // lvw_freetextInput
-            // 
-            this.lvw_freetextInput.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.lvw_freetextInput.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.lvw_freetextInput.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lvw_freetextInput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvw_freetextInput.HideSelection = false;
-            this.lvw_freetextInput.LabelWrap = false;
-            this.lvw_freetextInput.Location = new System.Drawing.Point(3, 3);
-            this.lvw_freetextInput.MultiSelect = false;
-            this.lvw_freetextInput.Name = "lvw_freetextInput";
-            this.lvw_freetextInput.Scrollable = false;
-            this.lvw_freetextInput.Size = new System.Drawing.Size(523, 25);
-            this.lvw_freetextInput.Sorting = System.Windows.Forms.SortOrder.Descending;
-            this.lvw_freetextInput.TabIndex = 2;
-            this.lvw_freetextInput.TileSize = new System.Drawing.Size(440, 26);
-            this.lvw_freetextInput.UseCompatibleStateImageBehavior = false;
-            this.lvw_freetextInput.View = System.Windows.Forms.View.Tile;
-            // 
-            // btn_1
-            // 
-            this.btn_1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_1.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_1.Location = new System.Drawing.Point(10, 367);
-            this.btn_1.Name = "btn_1";
-            this.btn_1.Size = new System.Drawing.Size(31, 31);
-            this.btn_1.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_1.SubText = "";
-            this.btn_1.TabIndex = 24;
-            this.btn_1.Text = "1";
-            this.btn_1.UseVisualStyleBackColor = true;
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.btn_level);
@@ -268,10 +188,11 @@
             this.panel2.Controls.Add(this.btn_blk);
             this.panel2.Controls.Add(this.btn_cfm);
             this.panel2.Controls.Add(this.btn_misc);
-            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Location = new System.Drawing.Point(11, 95);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(565, 84);
             this.panel2.TabIndex = 34;
+            this.panel2.Visible = false;
             // 
             // btn_level
             // 
@@ -455,9 +376,88 @@
             this.btn_misc.UseVisualStyleBackColor = true;
             this.btn_misc.Click += new System.EventHandler(this.btn_misc_Click);
             // 
+            // btn_suspend
+            // 
+            this.btn_suspend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_suspend.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_suspend.Location = new System.Drawing.Point(202, 404);
+            this.btn_suspend.Name = "btn_suspend";
+            this.btn_suspend.Size = new System.Drawing.Size(90, 28);
+            this.btn_suspend.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_suspend.SubText = "";
+            this.btn_suspend.TabIndex = 21;
+            this.btn_suspend.Text = "Suspend";
+            this.btn_suspend.UseVisualStyleBackColor = true;
+            this.btn_suspend.Click += new System.EventHandler(this.btn_suspend_Click);
+            // 
+            // btn_restore
+            // 
+            this.btn_restore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_restore.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_restore.Location = new System.Drawing.Point(106, 404);
+            this.btn_restore.Name = "btn_restore";
+            this.btn_restore.Size = new System.Drawing.Size(90, 28);
+            this.btn_restore.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_restore.SubText = "";
+            this.btn_restore.TabIndex = 22;
+            this.btn_restore.Text = "Restore";
+            this.btn_restore.UseVisualStyleBackColor = true;
+            // 
+            // btn_send
+            // 
+            this.btn_send.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_send.Location = new System.Drawing.Point(466, 404);
+            this.btn_send.Name = "btn_send";
+            this.btn_send.Size = new System.Drawing.Size(111, 28);
+            this.btn_send.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_send.SubText = "";
+            this.btn_send.TabIndex = 23;
+            this.btn_send.Text = "Send";
+            this.btn_send.UseVisualStyleBackColor = true;
+            // 
+            // insetPanel3
+            // 
+            this.insetPanel3.Controls.Add(this.lvw_freetextInput);
+            this.insetPanel3.Location = new System.Drawing.Point(47, 367);
+            this.insetPanel3.Name = "insetPanel3";
+            this.insetPanel3.Size = new System.Drawing.Size(529, 31);
+            this.insetPanel3.TabIndex = 7;
+            // 
+            // lvw_freetextInput
+            // 
+            this.lvw_freetextInput.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.lvw_freetextInput.Alignment = System.Windows.Forms.ListViewAlignment.Default;
+            this.lvw_freetextInput.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.lvw_freetextInput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvw_freetextInput.HideSelection = false;
+            this.lvw_freetextInput.LabelWrap = false;
+            this.lvw_freetextInput.Location = new System.Drawing.Point(3, 3);
+            this.lvw_freetextInput.MultiSelect = false;
+            this.lvw_freetextInput.Name = "lvw_freetextInput";
+            this.lvw_freetextInput.Scrollable = false;
+            this.lvw_freetextInput.Size = new System.Drawing.Size(523, 25);
+            this.lvw_freetextInput.Sorting = System.Windows.Forms.SortOrder.Descending;
+            this.lvw_freetextInput.TabIndex = 2;
+            this.lvw_freetextInput.TileSize = new System.Drawing.Size(440, 26);
+            this.lvw_freetextInput.UseCompatibleStateImageBehavior = false;
+            this.lvw_freetextInput.View = System.Windows.Forms.View.Tile;
+            // 
+            // btn_1
+            // 
+            this.btn_1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_1.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_1.Location = new System.Drawing.Point(10, 367);
+            this.btn_1.Name = "btn_1";
+            this.btn_1.Size = new System.Drawing.Size(31, 31);
+            this.btn_1.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_1.SubText = "";
+            this.btn_1.TabIndex = 24;
+            this.btn_1.Text = "1";
+            this.btn_1.UseVisualStyleBackColor = true;
+            // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.UnableLabel);
             this.panel1.Controls.Add(this.ToEditLabel);
             this.panel1.Controls.Add(this.DelayLabel);
@@ -476,40 +476,54 @@
             // 
             this.UnableLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.UnableLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.UnableLabel.Location = new System.Drawing.Point(389, 16);
+            this.UnableLabel.HasBorder = false;
+            this.UnableLabel.InteractiveText = false;
+            this.UnableLabel.Location = new System.Drawing.Point(377, 16);
             this.UnableLabel.Name = "UnableLabel";
-            this.UnableLabel.Size = new System.Drawing.Size(147, 18);
+            this.UnableLabel.Size = new System.Drawing.Size(185, 18);
             this.UnableLabel.TabIndex = 43;
             this.UnableLabel.Text = "Unable Due To";
+            this.UnableLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ToEditLabel
             // 
             this.ToEditLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.ToEditLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.ToEditLabel.Location = new System.Drawing.Point(238, 16);
+            this.ToEditLabel.HasBorder = false;
+            this.ToEditLabel.InteractiveText = false;
+            this.ToEditLabel.Location = new System.Drawing.Point(191, 16);
             this.ToEditLabel.Name = "ToEditLabel";
-            this.ToEditLabel.Size = new System.Drawing.Size(106, 18);
+            this.ToEditLabel.Size = new System.Drawing.Size(180, 18);
             this.ToEditLabel.TabIndex = 41;
             this.ToEditLabel.Text = "To Editor";
+            this.ToEditLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // DelayLabel
             // 
             this.DelayLabel.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.DelayLabel.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.DelayLabel.Location = new System.Drawing.Point(13, 16);
+            this.DelayLabel.HasBorder = false;
+            this.DelayLabel.InteractiveText = false;
+            this.DelayLabel.Location = new System.Drawing.Point(-1, 16);
             this.DelayLabel.Name = "DelayLabel";
-            this.DelayLabel.Size = new System.Drawing.Size(159, 18);
+            this.DelayLabel.Size = new System.Drawing.Size(186, 18);
             this.DelayLabel.TabIndex = 44;
             this.DelayLabel.Text = "Delay Response";
+            this.DelayLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.label1.HasBorder = false;
+            this.label1.InteractiveText = false;
             this.label1.Location = new System.Drawing.Point(252, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 17);
             this.label1.TabIndex = 40;
             this.label1.Text = "label1";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btn_tfc
             // 
@@ -582,6 +596,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 452);
             this.ControlBox = false;
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btn_1);
             this.Controls.Add(this.insetPanel3);
@@ -605,8 +620,8 @@
             this.TopMost = true;
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel1.ResumeLayout(false);
-            this.insetPanel3.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.insetPanel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -644,15 +659,15 @@
         private vatsys.GenericButton btn_blk;
         private vatsys.GenericButton btn_cfm;
         private vatsys.GenericButton btn_misc;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label UnableLabel;
-        private System.Windows.Forms.Label ToEditLabel;
-        private System.Windows.Forms.Label DelayLabel;
-        private System.Windows.Forms.Label label1;
         private vatsys.GenericButton btn_tfc;
         private vatsys.GenericButton btn_air;
         private vatsys.GenericButton btn_def;
         private vatsys.GenericButton btn_stanby;
         private vatsys.GenericButton btn_editor;
+        private System.Windows.Forms.Panel panel1;
+        private vatsys.TextLabel UnableLabel;
+        private vatsys.TextLabel ToEditLabel;
+        private vatsys.TextLabel DelayLabel;
+        private vatsys.TextLabel label1;
     }
 }

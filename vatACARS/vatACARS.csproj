@@ -81,6 +81,12 @@
     <Compile Include="Components\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\PDCWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\PDCWindow.Designer.cs">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\SetupWindow.cs">
       <SubType>designer</SubType>
     </Compile>
@@ -96,6 +102,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Components\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\PDCWindow.resx">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
