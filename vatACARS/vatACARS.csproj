@@ -96,6 +96,12 @@
     <Compile Include="Components\SetupWindow.Designer.cs">
       <DependentUpon>SetupWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\UpdateNotification.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\UpdateNotification.Designer.cs">
+      <DependentUpon>UpdateNotification.cs</DependentUpon>
+    </Compile>
     <Compile Include="Lib\Tranceiver.cs" />
     <Compile Include="Lib\VersionChecker.cs" />
     <Compile Include="Util\HttpClient.cs" />
@@ -105,6 +111,23 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Components\DispatchWindow.resx">
+      <DependentUpon>DispatchWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\EditorWindow.resx">
+      <DependentUpon>EditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\QuickResponseWindow.resx">
+      <DependentUpon>QuickResponseWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\SetupWindow.resx">
+      <DependentUpon>SetupWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\UpdateNotification.resx">
+      <DependentUpon>UpdateNotification.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -8,22 +8,27 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using vatACARS.Components;
 using vatACARS.Util;
 
 namespace vatACARS.Helpers
 {
-    internal class VersionChecker
+    public static class VersionChecker
     {
-        static async Task CheckForUpdates()
+        public static UpdateInfo updateInfo;
+
+        public static async Task CheckForUpdates()
         {
             using (var httpClient = new HttpClient())
             {
                 string liveVersion = await httpClient.DownloadStringTaskAsync("/versions/latest");
-                UpdateInfo updateInfo = JsonConvert.DeserializeObject<UpdateInfo>(liveVersion);
+                updateInfo = JsonConvert.DeserializeObject<UpdateInfo>(liveVersion);
                 Version currentVersion = AppData.CurrentVersion;
+                //MessageBox.Show("An new version of vatACARS is available.\n\nVersion " + updateInfo.version.ToString() + "\n" + string.Join("\n", updateInfo.Changes.ToArray()), "vatACARS Update Checker", MessageBoxButtons.OK);
                 if(updateInfo.version > currentVersion)
                 {
-
+                    UpdateNotification updateNotification = new UpdateNotification();
+                    updateNotification.ShowDialog();
                 }
             }
         }

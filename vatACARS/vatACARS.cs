@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using vatACARS.Components;
+using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
 using vatsys.Plugin;
@@ -10,7 +11,7 @@ namespace vatACARS
 {
     public static class AppData
     {
-        public static Version CurrentVersion { get; } = new Version(1, 2, 3, 4);
+        public static Version CurrentVersion { get; } = new Version(1, 0, 0);
     }
 
     [Export(typeof(IPlugin))]
@@ -55,7 +56,8 @@ namespace vatACARS
             MMI.AddCustomMenuItem(quickresponseWindowMenu);
             
             // Update Checking
-            HttpClientUtils.SetBaseUrl("https://api.plutonus.dev");
+            HttpClientUtils.SetBaseUrl("https://api.vatacars.com");
+            VersionChecker.CheckForUpdates();
 
             return;
         }
