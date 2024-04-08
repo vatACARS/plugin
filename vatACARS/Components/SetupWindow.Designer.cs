@@ -165,11 +165,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "vatACARS Setup";
-            this.TopMost = true;
             this.Shown += new System.EventHandler(this.SetupWindow_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion
