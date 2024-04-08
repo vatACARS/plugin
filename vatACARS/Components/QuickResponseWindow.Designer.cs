@@ -511,6 +511,7 @@
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "ACARS Editor";
+            this.TopMost = true;
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
