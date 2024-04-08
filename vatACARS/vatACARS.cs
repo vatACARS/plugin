@@ -22,12 +22,12 @@ namespace vatACARS
         private static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow;
         private static EditorWindow editorWindow;
-        private static QuickResponseWindow quickresponseWindow;
+        private static PDCWindow PDCWindow;
 
         private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
         private CustomToolStripMenuItem editorWindowMenu;
-        private CustomToolStripMenuItem quickresponseWindowMenu;
+        private CustomToolStripMenuItem PDCWindowMenu;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
@@ -54,6 +54,11 @@ namespace vatACARS
             quickresponseWindowMenu.CustomCategoryName = "ACARS";
             quickresponseWindowMenu.Item.Click += QuickResponseWindow_Click;
             MMI.AddCustomMenuItem(quickresponseWindowMenu);
+
+            PDCWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] PDC Editor"));
+            PDCWindowMenu.CustomCategoryName = "ACARS";
+            PDCWindowMenu.Item.Click += PDCWindowMenu_Click;
+            MMI.AddCustomMenuItem(PDCWindowMenu);
             
             // Update Checking
             HttpClientUtils.SetBaseUrl("https://api.vatacars.com");
@@ -108,19 +113,19 @@ namespace vatACARS
             editorWindow.Show();
         }
 
-        private void QuickResponseWindow_Click(object sender, EventArgs e)
+        private void PDCWindowMenu_Click(object sender, EventArgs e)
         {
-            MMI.InvokeOnGUI(delegate () { DoShowQuickResponseWindow(); });
+            MMI.InvokeOnGUI(delegate () { DoShowPDCWindow(); });
         }
 
-        private static void DoShowQuickResponseWindow()
+        private static void DoShowPDCWindow()
         {
-            if (quickresponseWindow == null || quickresponseWindow.IsDisposed)
-                quickresponseWindow = new QuickResponseWindow();
-            else if (quickresponseWindow.Visible)
+            if (PDCWindow == null || PDCWindow.IsDisposed)
+                PDCWindow = new PDCWindow();
+            else if (PDCWindow.Visible)
                 return;
 
-            quickresponseWindow.ShowDialog();
+            PDCWindow.ShowDialog();
         }
 
         public void OnFDRUpdate(FDP2.FDR updated) { }

@@ -23,7 +23,19 @@ namespace vatACARS.Components
             lvw_freetextInput.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
 
             btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_send.ForeColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+            btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_stanby.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_def.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_tfc.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_air.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_stanby.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_def.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_tfc.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_air.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+
+            DelayLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            ToEditLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            UnableLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
 
             scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
