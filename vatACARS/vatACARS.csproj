@@ -97,7 +97,7 @@
       <DependentUpon>SetupWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="Components\UpdateNotification.cs">
-      <SubType>Form</SubType>
+      <SubType>designer</SubType>
     </Compile>
     <Compile Include="Components\UpdateNotification.Designer.cs">
       <DependentUpon>UpdateNotification.cs</DependentUpon>
