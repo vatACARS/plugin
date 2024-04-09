@@ -2,18 +2,11 @@
 using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using vatACARS.Components;
-using vatACARS.Helpers;
-using vatACARS.Util;
 using vatsys;
 using vatsys.Plugin;
 
 namespace vatACARS
 {
-    public static class AppData
-    {
-        public static Version CurrentVersion { get; } = new Version(1, 0, 0);
-    }
-
     [Export(typeof(IPlugin))]
     public class vatACARS : IPlugin
     {
@@ -50,19 +43,10 @@ namespace vatACARS
             MMI.AddCustomMenuItem(editorWindowMenu);
 
             // Temporary for testing
-            quickresponseWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] Quick Response"));
-            quickresponseWindowMenu.CustomCategoryName = "ACARS";
-            quickresponseWindowMenu.Item.Click += QuickResponseWindow_Click;
-            MMI.AddCustomMenuItem(quickresponseWindowMenu);
-
             PDCWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] PDC Editor"));
             PDCWindowMenu.CustomCategoryName = "ACARS";
             PDCWindowMenu.Item.Click += PDCWindowMenu_Click;
             MMI.AddCustomMenuItem(PDCWindowMenu);
-            
-            // Update Checking
-            HttpClientUtils.SetBaseUrl("https://api.vatacars.com");
-            VersionChecker.CheckForUpdates();
 
             return;
         }
@@ -79,7 +63,7 @@ namespace vatACARS
             else if (setupWindow.Visible)
                 return;
 
-            setupWindow.Show();
+            setupWindow.ShowDialog();
         }
 
         private void DispatchWindowMenu_Click(object sender, EventArgs e)
@@ -94,7 +78,7 @@ namespace vatACARS
             else if (dispatchWindow.Visible)
                 return;
 
-            dispatchWindow.Show();
+            dispatchWindow.ShowDialog();
         }
 
         // Temporary for testing
@@ -110,7 +94,7 @@ namespace vatACARS
             else if (editorWindow.Visible)
                 return;
 
-            editorWindow.Show();
+            editorWindow.ShowDialog();
         }
 
         private void PDCWindowMenu_Click(object sender, EventArgs e)
