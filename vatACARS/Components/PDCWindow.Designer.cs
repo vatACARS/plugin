@@ -412,7 +412,6 @@
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "PDC Editor";
-            this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
 

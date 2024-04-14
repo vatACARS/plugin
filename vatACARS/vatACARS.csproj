@@ -57,6 +57,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -103,14 +104,32 @@
       <DependentUpon>UpdateNotification.cs</DependentUpon>
     </Compile>
     <Compile Include="Lib\Tranceiver.cs" />
+    <Compile Include="Lib\UpdateClient.cs" />
+    <Compile Include="Lib\Uplinks.cs" />
     <Compile Include="Lib\VersionChecker.cs" />
+    <Compile Include="Util\AudioInterface.cs" />
+    <Compile Include="Util\HoppiesInterface.cs" />
     <Compile Include="Util\HttpClient.cs" />
+    <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\VatACARSInterface.cs" />
+    <Compile Include="Util\UplinkInterface.cs" />
     <Compile Include="vatACARS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Components\DispatchWindow.resx">
+      <DependentUpon>DispatchWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\EditorWindow.resx">
+      <DependentUpon>EditorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\PDCWindow.resx">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
