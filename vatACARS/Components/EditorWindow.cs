@@ -1,14 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Net.Http;
+using System.Windows.Forms;
+using vatACARS.Helpers;
+using vatACARS.Lib;
+using vatACARS.Util;
 using vatsys;
 
 namespace vatACARS.Components
 {
     public partial class EditorWindow : BaseForm
     {
+        private static Logger logger = new Logger("EditorWindow");
+        private static string[] response = new string[5];
+        private static int responseIndex = 0;
+        private CPDLCMessage msg;
+
         public EditorWindow()
         {
             InitializeComponent();
             StyleComponent();
+            msg = DispatchWindow.SelectedMessage;
+
+            this.Text = $"Replying to {msg.Station}";
+            ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HHmm"));
+            lvMsg.SubItems.Add($"{msg.Station}: {msg.Text}");
+            lvMsg.Font = MMI.eurofont_winsml;
+
+            lvw_messages.Items.Add(lvMsg);
+
+            lvw_messageSelector.Items.Clear();
+            foreach (var uplink in Uplinks.uplinks.Entries.Where(entry => entry.Response == "NE").ToList())
+            {
+                lvw_messageSelector.Items.Add(uplink.Element);
+            }
+
+            logger.Log("Window opened and populated.");
         }
 
         private void StyleComponent()
@@ -24,12 +53,12 @@ namespace vatACARS.Components
 
             btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
             btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            btn_stanby.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_def.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_standby.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_defer.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
             btn_tfc.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
             btn_air.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_stanby.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            btn_def.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_standby.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_defer.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
             btn_tfc.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
             btn_air.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
 
@@ -41,43 +70,249 @@ namespace vatACARS.Components
             scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
         }
 
+        private void ShowGroup(string group_id)
+        {
+            lvw_messageSelector.Items.Clear();
+            List<UplinkEntry> filteredUplinks = Uplinks.uplinks.Entries.Where(entry => entry.Group == group_id).ToList();
+
+            int visibleCount = 0;
+            int startIndex = lvw_messageSelector.TopItem != null ? lvw_messageSelector.TopItem.Index : 0;
+            for(int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
+            {
+                ListViewItem item = lvw_messageSelector.Items[i];
+                Rectangle itemRect = lvw_messageSelector.GetItemRect(i);
+                if (lvw_messageSelector.ClientRectangle.IntersectsWith(itemRect)) visibleCount++;
+            }
+            scr_messageSelector.PreferredHeight = (visibleCount - 1) * lvw_messageSelector.ItemHeight;
+            scr_messageSelector.ActualHeight = lvw_messageSelector.ClientRectangle.Height;
+            scr_messageSelector.Change = (int)((float)lvw_messageSelector.ItemHeight / 2f);
+
+            int tileHeight = lvw_messageSelector.TileSize.Height;
+            if(filteredUplinks.Count > 8)
+            {
+                scr_messageSelector.PreferredHeight = (filteredUplinks.Count * tileHeight) / 10;
+                scr_messageSelector.ActualHeight = ((filteredUplinks.Count * tileHeight) / 10) - (filteredUplinks.Count - 8);
+                scr_messageSelector.Enabled = true;
+            } else
+            {
+                scr_messageSelector.PreferredHeight = 10;
+                scr_messageSelector.ActualHeight = 10;
+                scr_messageSelector.Enabled = false;
+            }
+
+            scr_messageSelector.Value = 0;
+            foreach (var uplink in filteredUplinks)
+            {
+                lvw_messageSelector.Items.Add(uplink.Element);
+            }
+        }
+
         private void lvw_messages_SelectedIndexChanged(object sender, EventArgs e) { }
 
-        private void btn_standby_Click(object sender, EventArgs e) { }
+        private void lvw_messageSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvw_messageSelector.SelectedItems.Count > 0)
+            {
+                logger.Log($"SelectedIndex changed: {lvw_messageSelector.SelectedItems[0].Text}");
+                lvw_freetextInput.Items.Clear();
+                var selected = lvw_messageSelector.SelectedItems[0].Text; //Uplinks.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Element;
+                lvw_freetextInput.Items.Add(selected);
+                response[responseIndex] = selected;
+            }
+        }
 
-        private void btn_reply_Click(object sender, EventArgs e) { }
+        private void btn_standby_Click(object sender, EventArgs e)
+        {
+            lvw_freetextInput.Items.Clear();
+            var standby = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM1").ToList().FirstOrDefault().Element;
+            lvw_freetextInput.Items.Add(standby);
+            response = new string[5];
+            response[0] = standby;
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+        }
 
-        private async void scr_messageSelector_Scroll(object sender, EventArgs e) { }
+        private void btn_defer_Click(object sender, EventArgs e)
+        {
+            lvw_freetextInput.Items.Clear();
+            var defer = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM2").ToList().FirstOrDefault().Element;
+            lvw_freetextInput.Items.Add(defer);
+            response = new string[5];
+            response[0] = defer;
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+        }
 
-        // There has got to be a better way to do this, will look into it
+        private void btn_tfc_Click(object sender, EventArgs e)
+        {
+            lvw_freetextInput.Items.Clear();
+            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM0").ToList().FirstOrDefault().Element;
+            var tfc = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM166").ToList().FirstOrDefault().Element;
+            lvw_freetextInput.Items.Add(tfc);
+            response = new string[5];
+            response[0] = unable;
+            response[1] = tfc;
+            responseIndex = 1;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+        }
+
+        private void btn_air_Click(object sender, EventArgs e)
+        {
+            lvw_freetextInput.Items.Clear();
+            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM0").ToList().FirstOrDefault().Element;
+            var air = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM167").ToList().FirstOrDefault().Element;
+            lvw_freetextInput.Items.Add(air);
+            response = new string[5];
+            response[0] = unable;
+            response[1] = air;
+            responseIndex = 1;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+        }
+
+        private void btn_editor_Click(object sender, EventArgs e)
+        {
+            logger.Log("Transferring to Editor");
+            lvw_freetextInput.Items.Clear();
+            pnl_categories.Visible = true;
+            response = new string[5];
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            ShowGroup("1");
+        }
+
+        private void btn_messageScroller_MouseDown(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Left && responseIndex < 4)
+            {
+                responseIndex++;
+                lvw_freetextInput.Items.Clear();
+                lvw_freetextInput.Items.Add(response[responseIndex]);
+                btn_messageScroller.Text = (responseIndex + 1).ToString();
+            } else if(e.Button == MouseButtons.Right && responseIndex > 0)
+            {
+                responseIndex--;
+                lvw_freetextInput.Items.Clear();
+                lvw_freetextInput.Items.Add(response[responseIndex]);
+                btn_messageScroller.Text = (responseIndex + 1).ToString();
+            }
+        }
+
+        private void btn_send_Click(object sender, EventArgs e)
+        {
+            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(msg.Station, "telex", string.Join("\n", response));
+            HoppiesInterface.SendMessage(req);
+        }
+
+        private void scr_messageSelector_Scroll(object sender, EventArgs e)
+        {
+            try
+            {
+                lvw_messageSelector.SetScrollPosVert(scr_messageSelector.PercentageValue);
+            } catch (Exception ex) { logger.Log($"An error occured:\n{ex.ToString()}"); }
+        }
+
         private void btn_suspend_Click(object sender, EventArgs e) { }
 
-        private void btn_level_Click(object sender, EventArgs e) { }
+        private void btn_category_Click(object sender, EventArgs e) {
+            try
+            {
+                GenericButton clicked = (GenericButton)sender;
+                switch (clicked.Text)
+                {
+                    case "LEVEL": ShowGroup("1"); break;
+                    case "ROUTE": ShowGroup("2"); break;
+                    case "TRANSFR": ShowGroup("3"); break;
+                    case "CROSS": ShowGroup("4"); break;
+                    case "ENQ/TXT": ShowGroup("5"); break;
+                    case "SURV": ShowGroup("6"); break;
+                    case "EXPECT": ShowGroup("7"); break;
+                    case "BLK/CND": ShowGroup("8"); break;
+                    case "WX/OFF": ShowGroup("9"); break;
+                    case "COMM": ShowGroup("10"); break;
+                    case "SPEED": ShowGroup("11"); break;
+                    case "CFM/RPT": ShowGroup("12"); break;
+                    case "MISC": ShowGroup("13"); break;
+                    case "EMERG": ShowGroup("14"); break;
+                    default: ShowGroup("1"); break;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"Something went wrong!\n{ex.ToString()}");
+            }
+        }
 
-        private void btn_route_Click(object sender, EventArgs e) { }
+        private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            Font font = MMI.eurofont_winsml;
+            SolidBrush bg = new SolidBrush(e.Item.BackColor);
+            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
+            e.Graphics.FillRectangle(bg, e.Bounds);
+            int n = 0;
+            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
+            {
+                StringFormat format = new StringFormat();
+                format.LineAlignment = StringAlignment.Center;
+                format.Alignment = StringAlignment.Near;
+                int offset = lvw_messages.ClientSize.Width - n;
+                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
+                if (strSpace.Width > (float)offset)
+                {
+                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
+                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
+                }
+                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
+                n++;
+            }
+        }
 
-        private void btn_transfr_Click(object sender, EventArgs e) { }
+        private void lvw_freetextInput_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            
+            Font font = new Font(MMI.eurofont_winsml.FontFamily.Name, 16F, FontStyle.Bold, GraphicsUnit.Pixel);
+            SolidBrush bg = new SolidBrush(e.Item.BackColor);
+            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
+            e.Graphics.FillRectangle(bg, e.Bounds);
+            int n = 0;
+            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
+            {
+                StringFormat format = new StringFormat();
+                format.LineAlignment = StringAlignment.Far;
+                format.Alignment = StringAlignment.Near;
+                int offset = lvw_freetextInput.ClientSize.Width - n;
+                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
+                if (strSpace.Width > (float)offset)
+                {
+                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
+                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
+                }
+                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
+                n++;
+            }
+        }
 
-        private void btn_cross_Click(object sender, EventArgs e) { }
-
-        private void btn_enq_Click(object sender, EventArgs e) { }
-
-        private void btn_surv_Click(object sender, EventArgs e) { }
-
-        private void btn_expect_Click(object sender, EventArgs e) { }
-
-        private void btn_blk_Click(object sender, EventArgs e) { }
-
-        private void btn_wx_Click(object sender, EventArgs e) { }
-
-        private void btn_comm_Click(object sender, EventArgs e) { }
-
-        private void btn_speed_Click(object sender, EventArgs e) { }
-
-        private void btn_cfm_Click(object sender, EventArgs e) { }
-
-        private void btn_misc_Click(object sender, EventArgs e) { }
-
-        private void btn_emerg_Click(object sender, EventArgs e) { }
+        private void lvw_messageSelector_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            Font font = MMI.eurofont_winsml;
+            SolidBrush bg = new SolidBrush(e.Item.BackColor);
+            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
+            e.Graphics.FillRectangle(bg, e.Bounds);
+            int n = 0;
+            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
+            {
+                StringFormat format = new StringFormat();
+                format.LineAlignment = StringAlignment.Center;
+                format.Alignment = StringAlignment.Near;
+                int offset = lvw_messageSelector.ClientSize.Width - n;
+                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
+                if (strSpace.Width > (float)offset)
+                {
+                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
+                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
+                }
+                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
+                n++;
+            }
+        }
     }
 }

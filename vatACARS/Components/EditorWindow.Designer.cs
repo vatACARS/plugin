@@ -32,10 +32,13 @@
             this.btn_escape = new vatsys.GenericButton();
             this.insetPanel2 = new vatsys.InsetPanel();
             this.lvw_messages = new vatsys.ListViewEx();
+            this.col_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.col_message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scr_messageSelector = new VATSYSControls.ScrollBar();
             this.lvw_messageSelector = new vatsys.ListViewEx();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.insetPanel1 = new vatsys.InsetPanel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnl_categories = new System.Windows.Forms.Panel();
             this.btn_level = new vatsys.GenericButton();
             this.btn_expect = new vatsys.GenericButton();
             this.btn_surv = new vatsys.GenericButton();
@@ -55,7 +58,8 @@
             this.btn_send = new vatsys.GenericButton();
             this.insetPanel3 = new vatsys.InsetPanel();
             this.lvw_freetextInput = new vatsys.ListViewEx();
-            this.btn_1 = new vatsys.GenericButton();
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btn_messageScroller = new vatsys.GenericButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.UnableLabel = new vatsys.TextLabel();
             this.ToEditLabel = new vatsys.TextLabel();
@@ -63,12 +67,13 @@
             this.label1 = new vatsys.TextLabel();
             this.btn_tfc = new vatsys.GenericButton();
             this.btn_air = new vatsys.GenericButton();
-            this.btn_def = new vatsys.GenericButton();
-            this.btn_stanby = new vatsys.GenericButton();
+            this.btn_defer = new vatsys.GenericButton();
+            this.btn_standby = new vatsys.GenericButton();
             this.btn_editor = new vatsys.GenericButton();
+            this.lbl_debug = new System.Windows.Forms.Label();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.pnl_categories.SuspendLayout();
             this.insetPanel3.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -99,7 +104,6 @@
             this.btn_escape.TabIndex = 2;
             this.btn_escape.Text = "Escape";
             this.btn_escape.UseVisualStyleBackColor = true;
-            this.btn_escape.Click += new System.EventHandler(this.btn_reply_Click);
             // 
             // insetPanel2
             // 
@@ -112,56 +116,72 @@
             // 
             // lvw_messages
             // 
-            this.lvw_messages.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvw_messages.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.lvw_messages.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvw_messages.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvw_messages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.col_timestamp,
+            this.col_message});
+            this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messages.HideSelection = false;
             this.lvw_messages.LabelWrap = false;
             this.lvw_messages.Location = new System.Drawing.Point(3, 3);
             this.lvw_messages.MultiSelect = false;
             this.lvw_messages.Name = "lvw_messages";
+            this.lvw_messages.OwnerDraw = true;
             this.lvw_messages.Scrollable = false;
             this.lvw_messages.ShowGroups = false;
             this.lvw_messages.Size = new System.Drawing.Size(559, 74);
-            this.lvw_messages.Sorting = System.Windows.Forms.SortOrder.Descending;
             this.lvw_messages.TabIndex = 2;
             this.lvw_messages.TileSize = new System.Drawing.Size(550, 26);
             this.lvw_messages.UseCompatibleStateImageBehavior = false;
-            this.lvw_messages.View = System.Windows.Forms.View.Tile;
+            this.lvw_messages.View = System.Windows.Forms.View.Details;
+            this.lvw_messages.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lvw_messages_DrawItem);
             this.lvw_messages.SelectedIndexChanged += new System.EventHandler(this.lvw_messages_SelectedIndexChanged);
+            // 
+            // col_message
+            // 
+            this.col_message.Width = 499;
             // 
             // scr_messageSelector
             // 
-            this.scr_messageSelector.ActualHeight = 10;
+            this.scr_messageSelector.ActualHeight = 8;
             this.scr_messageSelector.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.scr_messageSelector.Change = 1;
             this.scr_messageSelector.Location = new System.Drawing.Point(559, 185);
             this.scr_messageSelector.Name = "scr_messageSelector";
             this.scr_messageSelector.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-            this.scr_messageSelector.PreferredHeight = 10;
+            this.scr_messageSelector.PreferredHeight = 8;
             this.scr_messageSelector.Size = new System.Drawing.Size(17, 176);
             this.scr_messageSelector.TabIndex = 5;
             this.scr_messageSelector.Value = 0;
+            this.scr_messageSelector.Scroll += new System.EventHandler(this.scr_messageSelector_Scroll);
             this.scr_messageSelector.Scrolling += new System.EventHandler(this.scr_messageSelector_Scroll);
             // 
             // lvw_messageSelector
             // 
-            this.lvw_messageSelector.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvw_messageSelector.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.lvw_messageSelector.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.lvw_messageSelector.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvw_messageSelector.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvw_messageSelector.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1});
+            this.lvw_messageSelector.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messageSelector.HideSelection = false;
             this.lvw_messageSelector.LabelWrap = false;
             this.lvw_messageSelector.Location = new System.Drawing.Point(3, 3);
             this.lvw_messageSelector.MultiSelect = false;
             this.lvw_messageSelector.Name = "lvw_messageSelector";
+            this.lvw_messageSelector.OwnerDraw = true;
             this.lvw_messageSelector.ShowGroups = false;
             this.lvw_messageSelector.Size = new System.Drawing.Size(539, 170);
             this.lvw_messageSelector.TabIndex = 2;
             this.lvw_messageSelector.TileSize = new System.Drawing.Size(440, 20);
             this.lvw_messageSelector.UseCompatibleStateImageBehavior = false;
-            this.lvw_messageSelector.View = System.Windows.Forms.View.Tile;
+            this.lvw_messageSelector.View = System.Windows.Forms.View.Details;
+            this.lvw_messageSelector.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lvw_messageSelector_DrawItem);
+            this.lvw_messageSelector.SelectedIndexChanged += new System.EventHandler(this.lvw_messageSelector_SelectedIndexChanged);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Width = 539;
             // 
             // insetPanel1
             // 
@@ -172,27 +192,27 @@
             this.insetPanel1.Size = new System.Drawing.Size(546, 176);
             this.insetPanel1.TabIndex = 6;
             // 
-            // panel2
+            // pnl_categories
             // 
-            this.panel2.Controls.Add(this.btn_level);
-            this.panel2.Controls.Add(this.btn_expect);
-            this.panel2.Controls.Add(this.btn_surv);
-            this.panel2.Controls.Add(this.btn_cross);
-            this.panel2.Controls.Add(this.btn_route);
-            this.panel2.Controls.Add(this.btn_wx);
-            this.panel2.Controls.Add(this.btn_transfr);
-            this.panel2.Controls.Add(this.btn_comm);
-            this.panel2.Controls.Add(this.btn_enq);
-            this.panel2.Controls.Add(this.btn_speed);
-            this.panel2.Controls.Add(this.btn_emerg);
-            this.panel2.Controls.Add(this.btn_blk);
-            this.panel2.Controls.Add(this.btn_cfm);
-            this.panel2.Controls.Add(this.btn_misc);
-            this.panel2.Location = new System.Drawing.Point(11, 95);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(565, 84);
-            this.panel2.TabIndex = 34;
-            this.panel2.Visible = false;
+            this.pnl_categories.Controls.Add(this.btn_level);
+            this.pnl_categories.Controls.Add(this.btn_expect);
+            this.pnl_categories.Controls.Add(this.btn_surv);
+            this.pnl_categories.Controls.Add(this.btn_cross);
+            this.pnl_categories.Controls.Add(this.btn_route);
+            this.pnl_categories.Controls.Add(this.btn_wx);
+            this.pnl_categories.Controls.Add(this.btn_transfr);
+            this.pnl_categories.Controls.Add(this.btn_comm);
+            this.pnl_categories.Controls.Add(this.btn_enq);
+            this.pnl_categories.Controls.Add(this.btn_speed);
+            this.pnl_categories.Controls.Add(this.btn_emerg);
+            this.pnl_categories.Controls.Add(this.btn_blk);
+            this.pnl_categories.Controls.Add(this.btn_cfm);
+            this.pnl_categories.Controls.Add(this.btn_misc);
+            this.pnl_categories.Location = new System.Drawing.Point(0, 0);
+            this.pnl_categories.Name = "pnl_categories";
+            this.pnl_categories.Size = new System.Drawing.Size(565, 84);
+            this.pnl_categories.TabIndex = 34;
+            this.pnl_categories.Visible = false;
             // 
             // btn_level
             // 
@@ -205,7 +225,7 @@
             this.btn_level.TabIndex = 7;
             this.btn_level.Text = "LEVEL";
             this.btn_level.UseVisualStyleBackColor = true;
-            this.btn_level.Click += new System.EventHandler(this.btn_level_Click);
+            this.btn_level.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_expect
             // 
@@ -218,7 +238,7 @@
             this.btn_expect.TabIndex = 8;
             this.btn_expect.Text = "EXPECT";
             this.btn_expect.UseVisualStyleBackColor = true;
-            this.btn_expect.Click += new System.EventHandler(this.btn_expect_Click);
+            this.btn_expect.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_surv
             // 
@@ -231,7 +251,7 @@
             this.btn_surv.TabIndex = 9;
             this.btn_surv.Text = "SURV";
             this.btn_surv.UseVisualStyleBackColor = true;
-            this.btn_surv.Click += new System.EventHandler(this.btn_surv_Click);
+            this.btn_surv.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_cross
             // 
@@ -244,7 +264,7 @@
             this.btn_cross.TabIndex = 11;
             this.btn_cross.Text = "CROSS";
             this.btn_cross.UseVisualStyleBackColor = true;
-            this.btn_cross.Click += new System.EventHandler(this.btn_cross_Click);
+            this.btn_cross.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_route
             // 
@@ -257,7 +277,7 @@
             this.btn_route.TabIndex = 13;
             this.btn_route.Text = "ROUTE";
             this.btn_route.UseVisualStyleBackColor = true;
-            this.btn_route.Click += new System.EventHandler(this.btn_route_Click);
+            this.btn_route.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_wx
             // 
@@ -270,7 +290,7 @@
             this.btn_wx.TabIndex = 20;
             this.btn_wx.Text = "WX/OFF";
             this.btn_wx.UseVisualStyleBackColor = true;
-            this.btn_wx.Click += new System.EventHandler(this.btn_wx_Click);
+            this.btn_wx.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_transfr
             // 
@@ -283,7 +303,7 @@
             this.btn_transfr.TabIndex = 12;
             this.btn_transfr.Text = "TRANSFR";
             this.btn_transfr.UseVisualStyleBackColor = true;
-            this.btn_transfr.Click += new System.EventHandler(this.btn_transfr_Click);
+            this.btn_transfr.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_comm
             // 
@@ -296,7 +316,7 @@
             this.btn_comm.TabIndex = 19;
             this.btn_comm.Text = "COMM";
             this.btn_comm.UseVisualStyleBackColor = true;
-            this.btn_comm.Click += new System.EventHandler(this.btn_comm_Click);
+            this.btn_comm.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_enq
             // 
@@ -309,7 +329,7 @@
             this.btn_enq.TabIndex = 10;
             this.btn_enq.Text = "ENQ/TXT";
             this.btn_enq.UseVisualStyleBackColor = true;
-            this.btn_enq.Click += new System.EventHandler(this.btn_enq_Click);
+            this.btn_enq.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_speed
             // 
@@ -322,7 +342,7 @@
             this.btn_speed.TabIndex = 18;
             this.btn_speed.Text = "SPEED";
             this.btn_speed.UseVisualStyleBackColor = true;
-            this.btn_speed.Click += new System.EventHandler(this.btn_speed_Click);
+            this.btn_speed.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_emerg
             // 
@@ -335,7 +355,7 @@
             this.btn_emerg.TabIndex = 15;
             this.btn_emerg.Text = "EMERG";
             this.btn_emerg.UseVisualStyleBackColor = true;
-            this.btn_emerg.Click += new System.EventHandler(this.btn_emerg_Click);
+            this.btn_emerg.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_blk
             // 
@@ -348,7 +368,7 @@
             this.btn_blk.TabIndex = 14;
             this.btn_blk.Text = "BLK/CND";
             this.btn_blk.UseVisualStyleBackColor = true;
-            this.btn_blk.Click += new System.EventHandler(this.btn_blk_Click);
+            this.btn_blk.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_cfm
             // 
@@ -361,7 +381,7 @@
             this.btn_cfm.TabIndex = 17;
             this.btn_cfm.Text = "CFM/RPT";
             this.btn_cfm.UseVisualStyleBackColor = true;
-            this.btn_cfm.Click += new System.EventHandler(this.btn_cfm_Click);
+            this.btn_cfm.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_misc
             // 
@@ -374,7 +394,7 @@
             this.btn_misc.TabIndex = 16;
             this.btn_misc.Text = "MISC";
             this.btn_misc.UseVisualStyleBackColor = true;
-            this.btn_misc.Click += new System.EventHandler(this.btn_misc_Click);
+            this.btn_misc.Click += new System.EventHandler(this.btn_category_Click);
             // 
             // btn_suspend
             // 
@@ -415,6 +435,7 @@
             this.btn_send.TabIndex = 23;
             this.btn_send.Text = "Send";
             this.btn_send.UseVisualStyleBackColor = true;
+            this.btn_send.Click += new System.EventHandler(this.btn_send_Click);
             // 
             // insetPanel3
             // 
@@ -426,46 +447,55 @@
             // 
             // lvw_freetextInput
             // 
-            this.lvw_freetextInput.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.lvw_freetextInput.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.lvw_freetextInput.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lvw_freetextInput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvw_freetextInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lvw_freetextInput.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader2});
+            this.lvw_freetextInput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_freetextInput.HideSelection = false;
             this.lvw_freetextInput.LabelWrap = false;
             this.lvw_freetextInput.Location = new System.Drawing.Point(3, 3);
             this.lvw_freetextInput.MultiSelect = false;
             this.lvw_freetextInput.Name = "lvw_freetextInput";
+            this.lvw_freetextInput.OwnerDraw = true;
             this.lvw_freetextInput.Scrollable = false;
-            this.lvw_freetextInput.Size = new System.Drawing.Size(523, 25);
-            this.lvw_freetextInput.Sorting = System.Windows.Forms.SortOrder.Descending;
+            this.lvw_freetextInput.Size = new System.Drawing.Size(522, 25);
             this.lvw_freetextInput.TabIndex = 2;
             this.lvw_freetextInput.TileSize = new System.Drawing.Size(440, 26);
             this.lvw_freetextInput.UseCompatibleStateImageBehavior = false;
-            this.lvw_freetextInput.View = System.Windows.Forms.View.Tile;
+            this.lvw_freetextInput.View = System.Windows.Forms.View.Details;
+            this.lvw_freetextInput.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lvw_freetextInput_DrawItem);
             // 
-            // btn_1
+            // columnHeader2
             // 
-            this.btn_1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_1.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_1.Location = new System.Drawing.Point(10, 367);
-            this.btn_1.Name = "btn_1";
-            this.btn_1.Size = new System.Drawing.Size(31, 31);
-            this.btn_1.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_1.SubText = "";
-            this.btn_1.TabIndex = 24;
-            this.btn_1.Text = "1";
-            this.btn_1.UseVisualStyleBackColor = true;
+            this.columnHeader2.Width = 522;
+            // 
+            // btn_messageScroller
+            // 
+            this.btn_messageScroller.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_messageScroller.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_messageScroller.Location = new System.Drawing.Point(10, 367);
+            this.btn_messageScroller.Name = "btn_messageScroller";
+            this.btn_messageScroller.Size = new System.Drawing.Size(31, 31);
+            this.btn_messageScroller.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_messageScroller.SubText = "";
+            this.btn_messageScroller.TabIndex = 24;
+            this.btn_messageScroller.Text = "1";
+            this.btn_messageScroller.UseVisualStyleBackColor = true;
+            this.btn_messageScroller.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_messageScroller_MouseDown);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pnl_categories);
             this.panel1.Controls.Add(this.UnableLabel);
             this.panel1.Controls.Add(this.ToEditLabel);
             this.panel1.Controls.Add(this.DelayLabel);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btn_tfc);
             this.panel1.Controls.Add(this.btn_air);
-            this.panel1.Controls.Add(this.btn_def);
-            this.panel1.Controls.Add(this.btn_stanby);
+            this.panel1.Controls.Add(this.btn_defer);
+            this.panel1.Controls.Add(this.btn_standby);
             this.panel1.Controls.Add(this.btn_editor);
             this.panel1.Location = new System.Drawing.Point(11, 95);
             this.panel1.Name = "panel1";
@@ -537,6 +567,7 @@
             this.btn_tfc.TabIndex = 39;
             this.btn_tfc.Text = "Traffic";
             this.btn_tfc.UseVisualStyleBackColor = true;
+            this.btn_tfc.Click += new System.EventHandler(this.btn_tfc_Click);
             // 
             // btn_air
             // 
@@ -550,32 +581,35 @@
             this.btn_air.TabIndex = 38;
             this.btn_air.Text = "Airspace";
             this.btn_air.UseVisualStyleBackColor = true;
+            this.btn_air.Click += new System.EventHandler(this.btn_air_Click);
             // 
-            // btn_def
+            // btn_defer
             // 
-            this.btn_def.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btn_def.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_def.Location = new System.Drawing.Point(95, 53);
-            this.btn_def.Name = "btn_def";
-            this.btn_def.Size = new System.Drawing.Size(90, 28);
-            this.btn_def.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_def.SubText = "";
-            this.btn_def.TabIndex = 36;
-            this.btn_def.Text = "Deferred";
-            this.btn_def.UseVisualStyleBackColor = true;
+            this.btn_defer.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btn_defer.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_defer.Location = new System.Drawing.Point(95, 53);
+            this.btn_defer.Name = "btn_defer";
+            this.btn_defer.Size = new System.Drawing.Size(90, 28);
+            this.btn_defer.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_defer.SubText = "";
+            this.btn_defer.TabIndex = 36;
+            this.btn_defer.Text = "Deferred";
+            this.btn_defer.UseVisualStyleBackColor = true;
+            this.btn_defer.Click += new System.EventHandler(this.btn_defer_Click);
             // 
-            // btn_stanby
+            // btn_standby
             // 
-            this.btn_stanby.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btn_stanby.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_stanby.Location = new System.Drawing.Point(-1, 53);
-            this.btn_stanby.Name = "btn_stanby";
-            this.btn_stanby.Size = new System.Drawing.Size(90, 28);
-            this.btn_stanby.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_stanby.SubText = "";
-            this.btn_stanby.TabIndex = 35;
-            this.btn_stanby.Text = "Standby";
-            this.btn_stanby.UseVisualStyleBackColor = true;
+            this.btn_standby.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btn_standby.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_standby.Location = new System.Drawing.Point(-1, 53);
+            this.btn_standby.Name = "btn_standby";
+            this.btn_standby.Size = new System.Drawing.Size(90, 28);
+            this.btn_standby.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_standby.SubText = "";
+            this.btn_standby.TabIndex = 35;
+            this.btn_standby.Text = "Standby";
+            this.btn_standby.UseVisualStyleBackColor = true;
+            this.btn_standby.Click += new System.EventHandler(this.btn_standby_Click);
             // 
             // btn_editor
             // 
@@ -589,6 +623,16 @@
             this.btn_editor.TabIndex = 42;
             this.btn_editor.Text = "Edit";
             this.btn_editor.UseVisualStyleBackColor = true;
+            this.btn_editor.Click += new System.EventHandler(this.btn_editor_Click);
+            // 
+            // lbl_debug
+            // 
+            this.lbl_debug.AutoSize = true;
+            this.lbl_debug.Location = new System.Drawing.Point(298, 410);
+            this.lbl_debug.Name = "lbl_debug";
+            this.lbl_debug.Size = new System.Drawing.Size(56, 17);
+            this.lbl_debug.TabIndex = 48;
+            this.lbl_debug.Text = "label2";
             // 
             // EditorWindow
             // 
@@ -596,9 +640,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 452);
             this.ControlBox = false;
-            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.lbl_debug);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btn_1);
+            this.Controls.Add(this.btn_messageScroller);
             this.Controls.Add(this.insetPanel3);
             this.Controls.Add(this.btn_send);
             this.Controls.Add(this.btn_restore);
@@ -620,7 +664,7 @@
             this.TopMost = true;
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel1.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
+            this.pnl_categories.ResumeLayout(false);
             this.insetPanel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -643,8 +687,8 @@
         private vatsys.GenericButton btn_send;
         private vatsys.InsetPanel insetPanel3;
         private vatsys.ListViewEx lvw_freetextInput;
-        private vatsys.GenericButton btn_1;
-        private System.Windows.Forms.Panel panel2;
+        private vatsys.GenericButton btn_messageScroller;
+        private System.Windows.Forms.Panel pnl_categories;
         private vatsys.GenericButton btn_level;
         private vatsys.GenericButton btn_expect;
         private vatsys.GenericButton btn_surv;
@@ -661,13 +705,18 @@
         private vatsys.GenericButton btn_misc;
         private vatsys.GenericButton btn_tfc;
         private vatsys.GenericButton btn_air;
-        private vatsys.GenericButton btn_def;
-        private vatsys.GenericButton btn_stanby;
+        private vatsys.GenericButton btn_defer;
+        private vatsys.GenericButton btn_standby;
         private vatsys.GenericButton btn_editor;
         private System.Windows.Forms.Panel panel1;
         private vatsys.TextLabel UnableLabel;
         private vatsys.TextLabel ToEditLabel;
         private vatsys.TextLabel DelayLabel;
         private vatsys.TextLabel label1;
+        private System.Windows.Forms.Label lbl_debug;
+        private System.Windows.Forms.ColumnHeader col_timestamp;
+        private System.Windows.Forms.ColumnHeader col_message;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
     }
 }
