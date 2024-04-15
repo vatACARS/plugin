@@ -28,6 +28,8 @@ namespace vatACARS.Helpers
             timer.AutoReset = true; // Keep the timer running
             timer.Interval = 1.8e06;
             timer.Enabled = true;
+
+            CheckLatestVersion();
         }
 
         private static void CheckTimer(object sender, ElapsedEventArgs e)

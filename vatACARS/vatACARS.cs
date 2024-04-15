@@ -67,12 +67,6 @@ namespace vatACARS
             MMI.AddCustomMenuItem(dispatchWindowMenu);
 
             // Temporary for testing
-            editorWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] Response Builder"));
-            editorWindowMenu.CustomCategoryName = "ACARS";
-            editorWindowMenu.Item.Click += EditorWindowMenu_Click;
-            MMI.AddCustomMenuItem(editorWindowMenu);
-
-            // Temporary for testing
             PDCWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] PDC Editor"));
             PDCWindowMenu.CustomCategoryName = "ACARS";
             PDCWindowMenu.Item.Click += PDCWindowMenu_Click;
@@ -119,22 +113,6 @@ namespace vatACARS
                 return;
 
             dispatchWindow.Show();
-        }
-
-        // Temporary for testing
-        private void EditorWindowMenu_Click(object sender, EventArgs e)
-        {
-            MMI.InvokeOnGUI(delegate () { DoShowEditorWindow(); });
-        }
-
-        private static void DoShowEditorWindow()
-        {
-            if (editorWindow == null || editorWindow.IsDisposed)
-                editorWindow = new EditorWindow();
-            else if (editorWindow.Visible)
-                return;
-
-            editorWindow.Show();
         }
 
         private void PDCWindowMenu_Click(object sender, EventArgs e)

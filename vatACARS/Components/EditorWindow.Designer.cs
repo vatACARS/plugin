@@ -70,7 +70,6 @@
             this.btn_defer = new vatsys.GenericButton();
             this.btn_standby = new vatsys.GenericButton();
             this.btn_editor = new vatsys.GenericButton();
-            this.lbl_debug = new System.Windows.Forms.Label();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
             this.pnl_categories.SuspendLayout();
@@ -123,7 +122,6 @@
             this.col_message});
             this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messages.HideSelection = false;
-            this.lvw_messages.LabelWrap = false;
             this.lvw_messages.Location = new System.Drawing.Point(3, 3);
             this.lvw_messages.MultiSelect = false;
             this.lvw_messages.Name = "lvw_messages";
@@ -454,7 +452,6 @@
             this.columnHeader2});
             this.lvw_freetextInput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_freetextInput.HideSelection = false;
-            this.lvw_freetextInput.LabelWrap = false;
             this.lvw_freetextInput.Location = new System.Drawing.Point(3, 3);
             this.lvw_freetextInput.MultiSelect = false;
             this.lvw_freetextInput.Name = "lvw_freetextInput";
@@ -625,22 +622,12 @@
             this.btn_editor.UseVisualStyleBackColor = true;
             this.btn_editor.Click += new System.EventHandler(this.btn_editor_Click);
             // 
-            // lbl_debug
-            // 
-            this.lbl_debug.AutoSize = true;
-            this.lbl_debug.Location = new System.Drawing.Point(298, 410);
-            this.lbl_debug.Name = "lbl_debug";
-            this.lbl_debug.Size = new System.Drawing.Size(56, 17);
-            this.lbl_debug.TabIndex = 48;
-            this.lbl_debug.Text = "label2";
-            // 
             // EditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 452);
             this.ControlBox = false;
-            this.Controls.Add(this.lbl_debug);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btn_messageScroller);
             this.Controls.Add(this.insetPanel3);
@@ -713,7 +700,6 @@
         private vatsys.TextLabel ToEditLabel;
         private vatsys.TextLabel DelayLabel;
         private vatsys.TextLabel label1;
-        private System.Windows.Forms.Label lbl_debug;
         private System.Windows.Forms.ColumnHeader col_timestamp;
         private System.Windows.Forms.ColumnHeader col_message;
         private System.Windows.Forms.ColumnHeader columnHeader1;

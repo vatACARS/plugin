@@ -54,7 +54,6 @@
             this.lvw_messages.FullRowSelect = true;
             this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messages.HideSelection = false;
-            this.lvw_messages.LabelWrap = false;
             this.lvw_messages.Location = new System.Drawing.Point(3, 3);
             this.lvw_messages.MultiSelect = false;
             this.lvw_messages.Name = "lvw_messages";

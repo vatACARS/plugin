@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 
 namespace vatACARS.Components
 {
@@ -16,6 +18,7 @@ namespace vatACARS.Components
         private static Logger logger = new Logger("EditorWindow");
         private static string[] response = new string[5];
         private static int responseIndex = 0;
+        private static readonly Regex placeholderParse = new Regex(@"\[(.*?)\]");
         private CPDLCMessage msg;
 
         public EditorWindow()
@@ -86,19 +89,6 @@ namespace vatACARS.Components
             scr_messageSelector.PreferredHeight = (visibleCount - 1) * lvw_messageSelector.ItemHeight;
             scr_messageSelector.ActualHeight = lvw_messageSelector.ClientRectangle.Height;
             scr_messageSelector.Change = (int)((float)lvw_messageSelector.ItemHeight / 2f);
-
-            int tileHeight = lvw_messageSelector.TileSize.Height;
-            if(filteredUplinks.Count > 8)
-            {
-                scr_messageSelector.PreferredHeight = (filteredUplinks.Count * tileHeight) / 10;
-                scr_messageSelector.ActualHeight = ((filteredUplinks.Count * tileHeight) / 10) - (filteredUplinks.Count - 8);
-                scr_messageSelector.Enabled = true;
-            } else
-            {
-                scr_messageSelector.PreferredHeight = 10;
-                scr_messageSelector.ActualHeight = 10;
-                scr_messageSelector.Enabled = false;
-            }
 
             scr_messageSelector.Value = 0;
             foreach (var uplink in filteredUplinks)
@@ -269,7 +259,7 @@ namespace vatACARS.Components
         private void lvw_freetextInput_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             
-            Font font = new Font(MMI.eurofont_winsml.FontFamily.Name, 16F, FontStyle.Bold, GraphicsUnit.Pixel);
+            Font font = new Font(MMI.eurofont_winsml.FontFamily.Name, 14F, FontStyle.Bold, GraphicsUnit.Pixel);
             SolidBrush bg = new SolidBrush(e.Item.BackColor);
             SolidBrush fg = new SolidBrush(e.Item.ForeColor);
             e.Graphics.FillRectangle(bg, e.Bounds);
@@ -277,16 +267,35 @@ namespace vatACARS.Components
             foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
             {
                 StringFormat format = new StringFormat();
-                format.LineAlignment = StringAlignment.Far;
+                format.LineAlignment = StringAlignment.Center;
                 format.Alignment = StringAlignment.Near;
-                int offset = lvw_freetextInput.ClientSize.Width - n;
-                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
-                if (strSpace.Width > (float)offset)
+                e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
+
+                var placeholders = placeholderParse.Matches(subItem.Text);
+
+                if (placeholders.Count > 0)
                 {
-                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
-                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
+                    format.LineAlignment = StringAlignment.Far;
+                    foreach (Match placeholder in placeholders)
+                    {
+                        SolidBrush outline = new SolidBrush(Colours.GetColour(Colours.Identities.CPDLCDownlink));
+                        Pen p = new Pen(outline, 2f);
+
+                        CharacterRange[] ranges = { new CharacterRange(placeholder.Index, placeholder.Length) };
+                        format.SetMeasurableCharacterRanges(ranges);
+
+                        Region region = e.Graphics.MeasureCharacterRanges(subItem.Text, font, subItem.Bounds, format)[0];
+                        Rectangle bounds = Rectangle.Round(region.GetBounds(e.Graphics));
+
+                        e.Graphics.FillRectangle(outline, new Rectangle(new Point(bounds.X -1, bounds.Y - 2), new Size(bounds.Width + 3, bounds.Height + 2)));
+                        e.Graphics.DrawString($"{placeholder.Value}]", font, bg, new PointF(bounds.X - 2, bounds.Y + 16), format);
+
+                        // Dispose of resources
+                        p.Dispose();
+                        outline.Dispose();
+                    }
                 }
-                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
+
                 n++;
             }
         }

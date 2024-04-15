@@ -61,7 +61,7 @@ namespace vatACARS.Components
                 {
                     State = 0,
                     Station = "QFA100",
-                    Text = "REQUEST LOGON",
+                    Text = "REQUEST WEATHER DEVIATION UP TO 5NM LEFT OF ROUTE ",
                     TimeReceived = new DateTime()
                 });
 
