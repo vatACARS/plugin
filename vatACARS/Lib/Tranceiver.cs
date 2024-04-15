@@ -29,7 +29,7 @@ namespace vatACARS.Helpers
     public static class ClientInformation
     {
         public static string LogonCode = ""; // Hoppies logon code
-        public static string Callsign = "YSSY";
+        public static string Callsign = "YBCS";
 
     }
 

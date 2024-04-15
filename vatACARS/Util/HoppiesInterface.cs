@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -115,14 +116,19 @@ namespace vatACARS.Util
         public static FormUrlEncodedContent ConstructMessage(string Recipient, string MessageType, string PacketData)
         {
             CPDLCMessageRequest msg = new CPDLCMessageRequest();
-
             msg.LogonCode = ClientInformation.LogonCode;
             msg.Callsign = ClientInformation.Callsign;
             msg.Recipient = Recipient;
             msg.MessageType = MessageType;
             msg.PacketData = PacketData;
 
-            logger.Log($"Constructed message: {msg.Callsign} -> {msg.Recipient} ({msg.MessageType}): {msg.PacketData}");
+            string[] msgSplit;
+            if (msg.PacketData != null)
+            {
+                msgSplit = msg.PacketData.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            }
+            else msgSplit = new string[] { "(no message data)" };
+            logger.Log($"Constructed message: {msg.Callsign} -> {msg.Recipient} ({msg.MessageType}): {string.Join(" | ", msgSplit)}");
 
             return msg.MakeCPDLCMessageRequest();
         }
