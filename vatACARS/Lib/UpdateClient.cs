@@ -52,6 +52,7 @@ namespace vatACARS.Lib
                 foreach (DependencyInfo dependency in dependenciesRequired)
                 {
                     logger.Log($"Downloading {dependency.fileName}...");
+                    File.Delete($"{dirPath}\\{dependency.subFolder}\\{dependency.fileName}");
                     await httpClient.DownloadFileTaskAsync($"/files/{dependency.fileName}", $"{dirPath}\\{dependency.subFolder}\\{dependency.fileName}", "https://cdn.vatacars.com");
                 }
             }
