@@ -130,6 +130,9 @@
     <EmbeddedResource Include="Components\PDCWindow.resx">
       <DependentUpon>PDCWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\SetupWindow.resx">
+      <DependentUpon>SetupWindow.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
