@@ -112,7 +112,7 @@ namespace vatACARS
             else if (dispatchWindow.Visible)
                 return;
 
-            dispatchWindow.Show();
+            dispatchWindow.Show(Form.ActiveForm);
         }
 
         private void PDCWindowMenu_Click(object sender, EventArgs e)
@@ -127,7 +127,7 @@ namespace vatACARS
             else if (PDCWindow.Visible)
                 return;
                       
-            PDCWindow.ShowDialog();
+            PDCWindow.Show(Form.ActiveForm);
         }
 
         public void OnFDRUpdate(FDP2.FDR updated) { }

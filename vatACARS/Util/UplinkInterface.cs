@@ -6,22 +6,24 @@ namespace vatACARS.Util
     [XmlRoot("data")]
     public class UplinkInterface
     {
-        [XmlElement("Entry")]
+        [XmlElement("ENTRY")]
         public List<UplinkEntry> Entries { get; set; }
     }
 
     public class UplinkEntry
     {
-        [XmlAttribute("Code")]
+        [XmlAttribute("CODE")]
         public string Code { get; set; }
 
-        [XmlAttribute("Element")]
+        [XmlAttribute("MESSAGE")]
         public string Element { get; set; }
 
-        [XmlAttribute("Response")]
+        [XmlAttribute("RESP")]
         public string Response { get; set; }
 
-        [XmlAttribute("Group")]
+        [XmlAttribute("GROUP")]
         public string Group { get; set; }
+
+        // TODO: "URG" & "ALRT" elems
     }
 }

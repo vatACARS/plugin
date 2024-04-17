@@ -107,6 +107,11 @@
     <Compile Include="Lib\UpdateClient.cs" />
     <Compile Include="Lib\Uplinks.cs" />
     <Compile Include="Lib\VersionChecker.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Util\AudioInterface.cs" />
     <Compile Include="Util\HoppiesInterface.cs" />
     <Compile Include="Util\HttpClient.cs" />
@@ -133,6 +138,19 @@
     <EmbeddedResource Include="Components\SetupWindow.resx">
       <DependentUpon>SetupWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeferIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TXIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RXIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
