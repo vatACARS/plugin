@@ -14,18 +14,25 @@ namespace vatACARS
         private void StyleComponent()
         {
             lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-            lbl_acarsServer.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-            lbl_logonCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            lbl_enablehop.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            lbl_hoplogon.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
 
-            tbx_stationCode.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            tbx_acarsServer.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            tbx_logonCode.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            tbx_stationCode.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            tbx_acarsServer.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            tbx_logonCode.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_stationCode.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_enablehop.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_hoplogon.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+
+            btn_save.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_connect.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_save.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_connect.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
         }
 
         private void SetupWindow_Shown(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lbl_logonCode_Click(object sender, EventArgs e)
         {
 
         }
