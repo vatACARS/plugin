@@ -463,6 +463,7 @@
             this.lvw_freetextInput.UseCompatibleStateImageBehavior = false;
             this.lvw_freetextInput.View = System.Windows.Forms.View.Details;
             this.lvw_freetextInput.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lvw_freetextInput_DrawItem);
+            this.lvw_freetextInput.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvw_freetextInput_MouseDown);
             // 
             // columnHeader2
             // 
@@ -648,7 +649,6 @@
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "ACARS Editor";
-            this.TopMost = true;
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel1.ResumeLayout(false);
             this.pnl_categories.ResumeLayout(false);

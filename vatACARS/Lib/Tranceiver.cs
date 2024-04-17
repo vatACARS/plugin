@@ -24,11 +24,16 @@ namespace vatACARS.Helpers
             logger.Log("CPDLCMessage successfully received.");
             StoredMessages.Add(message);
         }
+
+        public static void SetCPDLCMessageState(this CPDLCMessage message, int state)
+        {
+            message.State = state;
+        }
     }
 
     public static class ClientInformation
     {
-        public static string LogonCode = ""; // Hoppies logon code
+        public static string LogonCode = "TqL6XbjhexpHgKPdH"; // Hoppies logon code
         public static string Callsign = "YBCS";
 
     }
@@ -39,6 +44,7 @@ namespace vatACARS.Helpers
          * 0 = Downlink
          * 1 = Uplink
          * 2 = Ack
+         * 3 = Finished
          */
         public int State;
         public DateTime TimeReceived;
