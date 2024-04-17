@@ -18,7 +18,7 @@ namespace vatACARS.Components
         private static Logger logger = new Logger("EditorWindow");
         private static string[] response = new string[5];
         private static int responseIndex = 0;
-        private static readonly Regex placeholderParse = new Regex(@"\[(.*?)\]");
+        private static readonly Regex placeholderParse = new Regex(@"\((.*?)\)");
         private CPDLCMessage msg;
 
         public EditorWindow()
@@ -28,14 +28,21 @@ namespace vatACARS.Components
             msg = DispatchWindow.SelectedMessage;
 
             this.Text = $"Replying to {msg.Station}";
-            ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HHmm"));
-            lvMsg.SubItems.Add($"{msg.Station}: {msg.Text}");
+            ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
+            lvMsg.SubItems.Add($"{msg.Text}");
             lvMsg.Font = MMI.eurofont_winsml;
 
             lvw_messages.Items.Add(lvMsg);
 
+            if(msg.Text == "(no message received)")
+            {
+                this.Text = $"Sending to {msg.Station}";
+                btn_editor_Click(null, null);
+                return;
+            }
+
             lvw_messageSelector.Items.Clear();
-            foreach (var uplink in Uplinks.uplinks.Entries.Where(entry => entry.Response == "NE").ToList())
+            foreach (var uplink in Uplinks.uplinks.Entries.Where(entry => entry.Response == "N").ToList())
             {
                 lvw_messageSelector.Items.Add(uplink.Element);
             }
@@ -80,15 +87,33 @@ namespace vatACARS.Components
 
             int visibleCount = 0;
             int startIndex = lvw_messageSelector.TopItem != null ? lvw_messageSelector.TopItem.Index : 0;
-            for(int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
+            for (int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
             {
                 ListViewItem item = lvw_messageSelector.Items[i];
                 Rectangle itemRect = lvw_messageSelector.GetItemRect(i);
                 if (lvw_messageSelector.ClientRectangle.IntersectsWith(itemRect)) visibleCount++;
             }
-            scr_messageSelector.PreferredHeight = (visibleCount - 1) * lvw_messageSelector.ItemHeight;
-            scr_messageSelector.ActualHeight = lvw_messageSelector.ClientRectangle.Height;
-            scr_messageSelector.Change = (int)((float)lvw_messageSelector.ItemHeight / 2f);
+
+            int tileHeight = lvw_messageSelector.TileSize.Height;
+            if(filteredUplinks.Count > 0)
+            {
+                scr_messageSelector.PreferredHeight = (filteredUplinks.Count * tileHeight) / 10;
+                scr_messageSelector.ActualHeight = ((filteredUplinks.Count * tileHeight) / 10) - (filteredUplinks.Count - 8);
+                scr_messageSelector.Enabled = true;
+            } else
+            {
+                // Disable the scrollbar
+                scr_messageSelector.PreferredHeight = 1;
+                scr_messageSelector.ActualHeight = 1;
+                scr_messageSelector.Enabled = false;
+            }
+
+            for (int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
+            {
+                ListViewItem item = lvw_messageSelector.Items[i];
+                Rectangle itemRect = lvw_messageSelector.GetItemRect(i);
+                if (lvw_messageSelector.ClientRectangle.IntersectsWith(itemRect)) visibleCount++;
+            }
 
             scr_messageSelector.Value = 0;
             foreach (var uplink in filteredUplinks)
@@ -103,7 +128,6 @@ namespace vatACARS.Components
         {
             if (lvw_messageSelector.SelectedItems.Count > 0)
             {
-                logger.Log($"SelectedIndex changed: {lvw_messageSelector.SelectedItems[0].Text}");
                 lvw_freetextInput.Items.Clear();
                 var selected = lvw_messageSelector.SelectedItems[0].Text; //Uplinks.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Element;
                 lvw_freetextInput.Items.Add(selected);
@@ -114,7 +138,7 @@ namespace vatACARS.Components
         private void btn_standby_Click(object sender, EventArgs e)
         {
             lvw_freetextInput.Items.Clear();
-            var standby = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM1").ToList().FirstOrDefault().Element;
+            var standby = Uplinks.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Element;
             lvw_freetextInput.Items.Add(standby);
             response = new string[5];
             response[0] = standby;
@@ -125,7 +149,7 @@ namespace vatACARS.Components
         private void btn_defer_Click(object sender, EventArgs e)
         {
             lvw_freetextInput.Items.Clear();
-            var defer = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM2").ToList().FirstOrDefault().Element;
+            var defer = Uplinks.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Element;
             lvw_freetextInput.Items.Add(defer);
             response = new string[5];
             response[0] = defer;
@@ -136,8 +160,8 @@ namespace vatACARS.Components
         private void btn_tfc_Click(object sender, EventArgs e)
         {
             lvw_freetextInput.Items.Clear();
-            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM0").ToList().FirstOrDefault().Element;
-            var tfc = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM166").ToList().FirstOrDefault().Element;
+            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
+            var tfc = Uplinks.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Element;
             lvw_freetextInput.Items.Add(tfc);
             response = new string[5];
             response[0] = unable;
@@ -149,8 +173,8 @@ namespace vatACARS.Components
         private void btn_air_Click(object sender, EventArgs e)
         {
             lvw_freetextInput.Items.Clear();
-            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM0").ToList().FirstOrDefault().Element;
-            var air = Uplinks.uplinks.Entries.Where(entry => entry.Code == "UM167").ToList().FirstOrDefault().Element;
+            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
+            var air = Uplinks.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault().Element;
             lvw_freetextInput.Items.Add(air);
             response = new string[5];
             response[0] = unable;
@@ -232,6 +256,16 @@ namespace vatACARS.Components
             }
         }
 
+        private void lvw_freetextInput_MouseDown(object sender, MouseEventArgs e)
+        {
+            if(e.Button == MouseButtons.Right)
+            {
+                response[responseIndex] = "";
+                lvw_freetextInput.Items.Clear();
+                lvw_messageSelector.SelectedItems.Clear();
+            }
+        }
+
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             Font font = MMI.eurofont_winsml;
@@ -288,7 +322,7 @@ namespace vatACARS.Components
                         Rectangle bounds = Rectangle.Round(region.GetBounds(e.Graphics));
 
                         e.Graphics.FillRectangle(outline, new Rectangle(new Point(bounds.X -1, bounds.Y - 2), new Size(bounds.Width + 3, bounds.Height + 2)));
-                        e.Graphics.DrawString($"{placeholder.Value}]", font, bg, new PointF(bounds.X - 2, bounds.Y + 16), format);
+                        e.Graphics.DrawString($"{placeholder.Value})", font, bg, new PointF(bounds.X - 2, bounds.Y + 16), format);
 
                         // Dispose of resources
                         p.Dispose();
