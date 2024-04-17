@@ -51,6 +51,12 @@ namespace vatACARS.Util
                 return;
             }
 
+            if (rawMessages.StartsWith("ERROR"))
+            {
+                logger.Log($"Hoppies error: {rawMessages}");
+                return;
+            }
+
             var responses = hoppieParse.Matches(rawMessages);
             List<CPDLCMessageReponse> newMessages = new List<CPDLCMessageReponse>();
 
