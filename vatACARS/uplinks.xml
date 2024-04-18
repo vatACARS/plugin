@@ -1,0 +1,259 @@
+<data>
+  <UM0 Element="UNABLE" Response="NE" />
+  <UM1 Element="STANDBY" Response="NE" />
+  <UM2 Element="REQUEST DEFERRED" Response="NE" />
+  <UM3 Element="ROGER" Response="NE" />
+  <UM4 Element="AFFIRM" Response="NE" />
+  <UM5 Element="NEGATIVE" Response="NE" />
+  <UM235 Element="ROGER 7500" Response="NE" />
+  <UM211 Element="REQUEST FORWARDED" Response="NE" />
+  <UM218 Element="REQUEST ALREADY RECEIVED" Response="NE" />
+  <UM237 Element="REQUEST AGAIN WITH NEXT UNIT" Response="NE" />
+  <UM6 Element="EXPECT [LEVEL]" Response="R" />
+  <UM7 Element="EXPECT CLIMB AT [TIME]" Response="R" />
+  <UM8 Element="EXPECT CLIMB AT [POSITION]" Response="R" />
+  <UM9 Element="EXPECT DESCENT AT [TIME]" Response="R" />
+  <UM10 Element="EXPECT DESCENT AT [POSITION]" Response="R" />
+  <UM11 Element="EXPECT CRUISE CLIMB AT [TIME]" Response="R" />
+  <UM12 Element="EXPECT CRUISE CLIMB AT [POSITION]" Response="R" />
+  <UM19 Element="MAINTAIN [LEVEL]" Response="W/U" />
+  <UM20 Element="CLIMB TO [LEVEL]" Response="W/U" />
+  <UM21 Element="AT [TIME] CLIMB TO [LEVEL]" Response="W/U" />
+  <UM22 Element="AT [POSITION] CLIMB TO [LEVEL]" Response="W/U" />
+  <UM23 Element="DESCEND TO [LEVEL]" Response="W/U" />
+  <UM24 Element="AT [TIME] DESCEND TO [LEVEL]" Response="W/U" />
+  <UM25 Element="AT [POSITION] DESCEND TO [LEVEL]" Response="W/U" />
+  <UM26 Element="CLIMB TO REACH [LEVEL] BY [TIME]" Response="W/U" />
+  <UM27 Element="CLIMB TO REACH [LEVEL] BY [POSITION]" Response="W/U" />
+  <UM28 Element="DESCEND TO REACH [LEVEL] BY [TIME]" Response="W/U" />
+  <UM29 Element="DESCEND TO REACH [LEVEL] BY [POSITION]" Response="W/U" />
+  <UM192 Element="REACH [LEVEL] BY [TIME]" Response="W/U" />
+  <UM209 Element="REACH [LEVEL] BY [POSITION]" Response="W/U" />
+  <UM30 Element="MAINTAIN BLOCK [LEVEL] TO [LEVEL]" Response="W/U" />
+  <UM31 Element="CLIMB TO AND MAINTAIN BLOCK [LEVEL] TO [LEVEL]" Response="W/U" />
+  <UM32 Element="DESCEND TO AND MAINTAIN BLOCK [LEVEL] TO [LEVEL]" Response="W/U" />
+  <UM34 Element="CRUISE CLIMB TO [LEVEL]" Response="W/U" />
+  <UM35 Element="CRUISE CLIMB ABOVE [LEVEL]" Response="W/U" />
+  <UM219 Element="STOP CLIMB AT [LEVEL]" Response="W/U" />
+  <UM220 Element="STOP DESCENT AT [LEVEL]" Response="W/U" />
+  <UM36 Element="EXPEDITE CLIMB TO [LEVEL]" Response="W/U" />
+  <UM37 Element="EXPEDITE DESCENT TO[LEVEL]" Response="W/U" />
+  <UM38 Element="IMMEDIATELY CLIMB TO [LEVEL]" Response="W/U" />
+  <UM39 Element="IMMEDIATELY DESCEND TO [LEVEL]" Response="W/U" />
+  <UM171 Element="CLIMB AT [VERTICAL RATE] MINIMUM" Response="W/U" />
+  <UM172 Element="CLIMB AT [VERTICAL RATE] MAXIMUM" Response="W/U" />
+  <UM173 Element="DESCEND AT [VERTICAL RATE] MINIMUM" Response="W/U" />
+  <UM174 Element="DESCEND AT [VERTICAL RATE] MAXIMUM" Response="W/U" />
+  <UM46 Element="CROSS [POSITION] AT [LEVEL]" Response="W/U" />
+  <UM47 Element="CROSS [POSITION] AT OR ABOVE [LEVEL]" Response="W/U" />
+  <UM48 Element="CROSS [POSITION] AT OR BELOW [LEVEL]" Response="W/U" />
+  <UM49 Element="CROSS [POSITION] AT AND MAINTAIN [LEVEL]" Response="W/U" />
+  <UM50 Element="CROSS [POSITION] BETWEEN [LEVEL] AND [LEVEL]" Response="W/U" />
+  <UM51 Element="CROSS [POSITION] AT [TIME]" Response="W/U" />
+  <UM52 Element="CROSS [POSITION] AT OR BEFORE [TIME]" Response="W/U" />
+  <UM53 Element="CROSS [POSITION] AT OR AFTER [TIME]" Response="W/U" />
+  <UM54 Element="CROSS [POSITION] BETWEEN [TIME] AND [TIME]" Response="W/U" />
+  <UM55 Element="CROSS [POSITION] AT [SPEED]" Response="W/U" />
+  <UM56 Element="CROSS [POSITION] AT OR LESS THAN [SPEED]" Response="W/U" />
+  <UM57 Element="CROSS [POSITION] AT OR GREATER THAN [SPEED]" Response="W/U" />
+  <UM58 Element="CROSS [POSITION] AT [TIME] AT [LEVEL]" Response="W/U" />
+  <UM59 Element="CROSS [POSITION] AT OR BEFORE [TIME] AT [LEVEL]" Response="W/U" />
+  <UM60 Element="CROSS [POSITION] AT OR AFTER [TIME] AT [LEVEL]" Response="W/U" />
+  <UM61 Element="CROSS [POSITION] AT AND MAINTAIN [LEVEL] AT [SPEED]" Response="W/U" />
+  <UM62 Element="AT [TIME] CROSS [POSITION] AT AND MAINTAIN [LEVEL]" Response="W/U" />
+  <UM63 Element="AT [TIME] CROSS [POSITION] AT AND MAINTAIN [LEVEL] AT [SPEED]" Response="W/U" />
+  <UM64 Element="OFFSET [SPECIFIED DISTANCE] [DIRECTION] OF ROUTE" Response="W/U" />
+  <UM65 Element="AT [POSITION] OFFSET [SPECIFIED DISTANCE] [DIRECTION] OF ROUTE" Response="W/U" />
+  <UM66 Element="AT [TIME] OFFSET [SPECIFIED DISTANCE] [DIRECTION] OF ROUTE" Response="W/U" />
+  <UM67 Element="PROCEED BACK ON ROUTE" Response="W/U" />
+  <UM68 Element="REJOIN ROUTE BY [POSITION]" Response="W/U" />
+  <UM69 Element="REJOIN ROUTE BY [TIME]" Response="W/U" />
+  <UM70 Element="EXPECT BACK ON ROUTE BY [POSITION]" Response="R" />
+  <UM71 Element="EXPECT BACK ON ROUTE BY [TIME]" Response="R" />
+  <UM72 Element="RESUME OWN NAVIGATION" Response="W/U" />
+  <UM73 Element="[DEPARTURE CLEARANCE]" Response="W/U" />
+  <UM74 Element="PROCEED DIRECT TO [POSITION]" Response="W/U" />
+  <UM75 Element="WHEN ABLE PROCEED DIRECT TO [POSITION]" Response="W/U" />
+  <UM76 Element="AT [TIME] PROCEED DIRECT TO [POSITION]" Response="W/U" />
+  <UM77 Element="AT [POSITION] PROCEED DIRECT TO [POSITION]" Response="W/U" />
+  <UM78 Element="AT [LEVEL] PROCEED DIRECT TO [POSITION]" Response="W/U" />
+  <UM79 Element="CLEARED TO [POSITION] VIA [ROUTE CLEARANCE]" Response="W/U" />
+  <UM80 Element="CLEARED [ROUTE CLEARANCE]" Response="W/U" />
+  <UM81 Element="CLEARED [PROCEDURE NAME]" Response="W/U" />
+  <UM236 Element="LEAVE CONTROLLED AIRSPACE" Response="W/U" />
+  <UM82 Element="CLEARED TO DEVIATE UP TO [SPECIFIED DISTANCE] [DIRECTION] OF ROUTE" Response="W/U" />
+  <UM83 Element="AT [POSITION] CLEARED [ROUTE CLEARANCE]" Response="W/U" />
+  <UM84 Element="AT [POSITION] CLEARED [PROCEDURE NAME]" Response="W/U" />
+  <UM85 Element="EXPECT [ROUTE CLEARANCE]" Response="R" />
+  <UM86 Element="AT [POSITION] EXPECT [ROUTE CLEARANCE]" Response="R" />
+  <UM87 Element="EXPECT DIRECT TO [POSITION]" Response="R" />
+  <UM88 Element="AT [POSITION] EXPECT DIRECT TO [POSITION]" Response="R" />
+  <UM89 Element="AT [TIME] EXPECT DIRECT TO [POSITION]" Response="R" />
+  <UM90 Element="AT [LEVEL] EXPECT DIRECT TO [POSITION]" Response="R" />
+  <UM91 Element="HOLD AT [POSITION] MAINTAIN [LEVEL] INBOUND TRACK [DEGREES] [DIRECTION] TURNS [LEG TYPE]" Response="W/U" />
+  <UM92 Element="HOLD AT [POSITION] AS PUBLISHED MAINTAIN [LEVEL]" Response="W/U" />
+  <UM93 Element="EXPECT FURTHER CLEARANCE AT [TIME]" Response="R" />
+  <UM94 Element="TURN [DIRECTION] HEADING [DEGREES]" Response="W/U" />
+  <UM95 Element="TURN [DIRECTION] GROUND TRACK [DEGREES]" Response="W/U" />
+  <UM215 Element="TURN [DIRECTION] [DEGREES] DEGREES" Response="W/U" />
+  <UM190 Element="FLY HEADING [DEGREES]" Response="W/U" />
+  <UM96 Element="CONTINUE PRESENT HEADING" Response="W/U" />
+  <UM97 Element="AT [POSITION] FLY HEADING [DEGREES]" Response="W/U" />
+  <UM221 Element="STOP TURN HEADING [DEGREES]" Response="W/U" />
+  <UM98 Element="IMMEDIATELY TURN [DIRECTION] HEADING [DEGREES]" Response="W/U" />
+  <UM99 Element="EXPECT [PROCEDURE NAME]" Response="R" />
+  <UM100 Element="AT [TIME] EXPECT [SPEED]" Response="R" />
+  <UM101 Element="AT [POSITION] EXPECT [SPEED]" Response="R" />
+  <UM102 Element="AT [LEVEL] EXPECT [SPEED]" Response="R" />
+  <UM103 Element="AT [TIME] EXPECT [SPEED] TO [SPEED]" Response="R" />
+  <UM104 Element="AT [POSITION] EXPECT [SPEED] TO [SPEED]" Response="R" />
+  <UM105 Element="AT [LEVEL] EXPECT [SPEED] TO [SPEED]" Response="R" />
+  <UM106 Element="MAINTAIN [SPEED]" Response="W/U" />
+  <UM188 Element="AFTER PASSING [POSITION] MAINTAIN [SPEED]" Response="W/U" />
+  <UM107 Element="MAINTAIN PRESENT SPEED" Response="W/U" />
+  <UM108 Element="MAINTAIN [SPEED] OR GREATER" Response="W/U" />
+  <UM109 Element="MAINTAIN [SPEED] OR LESS" Response="W/U" />
+  <UM110 Element="MAINTAIN [SPEED] TO [SPEED]" Response="W/U" />
+  <UM111 Element="INCREASE SPEED TO [SPEED]" Response="W/U" />
+  <UM112 Element="INCREASE SPEED TO [SPEED] OR GREATER" Response="W/U" />
+  <UM113 Element="REDUCE SPEED TO [SPEED]" Response="W/U" />
+  <UM114 Element="REDUCE SPEED TO [SPEED] OR LESS" Response="W/U" />
+  <UM115 Element="DO NOT EXCEED [SPEED]" Response="W/U" />
+  <UM116 Element="RESUME NORMAL SPEED" Response="W/U" />
+  <UM189 Element="ADJUST SPEED TO [SPEED]" Response="W/U" />
+  <UM222 Element="NO SPEED RESTRICTION" Response="W/U" />
+  <UM223 Element="REDUCE TO MINIMUM APPROACH SPEED" Response="W/U" />
+  <UM117 Element="CONTACT [UNIT NAME] [FREQUENCY]" Response="W/U" />
+  <UM118 Element="AT [POSITION] CONTACT [UNIT NAME] [FREQUENCY]" Response="W/U" />
+  <UM119 Element="AT [TIME] CONTACT [UNIT NAME] [FREQUENCY]" Response="W/U" />
+  <UM238 Element="SECONDARY FREQUENCY [FREQUENCY]" Response="R" />
+  <UM120 Element="MONITOR [UNIT NAME] [FREQUENCY]" Response="W/U" />
+  <UM121 Element="AT [POSITION] MONITOR [UNIT NAME] [FREQUENCY]" Response="W/U" />
+  <UM122 Element="AT [TIME] MONITOR [UNIT NAME] [FREQUENCY]" Response="W/U" />
+  <UM123 Element="SQUAWK [CODE]" Response="W/U" />
+  <UM124 Element="STOP SQUAWK" Response="W/U" />
+  <UM239 Element="STOP ADS-B TRANSMISSION" Response="W/U" />
+  <UM125 Element="SQUAWK MODE CHARLIE" Response="W/U" />
+  <UM240 Element="TRANSMIT ADS-B ALTITUDE" Response="W/U" />
+  <UM126 Element="STOP SQUAWK MODE CHARLIE" Response="W/U" />
+  <UM241 Element="STOP ADS-B ALTITUDE TRANSMISSION" Response="W/U" />
+  <UM179 Element="SQUAWK IDENT" Response="W/U" />
+  <UM242 Element="TRANSMIT ADS-B IDENT" Response="W/U OR R" />
+  <UM243 Element="REPORT CLEAR OF WEATHER" Response="W/U" />
+  <UM127 Element="REPORT BACK ON ROUTE" Response="W/U OR R" />
+  <UM128 Element="REPORT LEAVING [LEVEL]" Response="W/U OR R" />
+  <UM129 Element="REPORT MAINTAINING [LEVEL]" Response="W/U OR R" />
+  <UM200 Element="REPORT MAINTAINING" Response="W/U" />
+  <UM180 Element="REPORT REACHING BLOCK [LEVEL] TO [LEVEL]" Response="W/U OR R" />
+  <UM130 Element="REPORT PASSING [POSITION]" Response="W/U OR R" />
+  <UM181 Element="REPORT DISTANCE [TO/FROM] [POSITION]" Response="Y OR NE" />
+  <UM184 Element="AT TIME [TIME] REPORT DISTANCE [TO/FROM] [POSITION]" Response="Y" />
+  <UM228 Element="REPORT ETA [POSITION]" Response="Y" />
+  <UM131 Element="REPORT REMAINING FUEL AND PERSONS ON BOARD" Response="Y OR NE" />
+  <UM132 Element="REPORT POSITION" Response="Y OR NE" />
+  <UM133 Element="REPORT PRESENT LEVEL" Response="Y OR NE" />
+  <UM134 Element="REPORT [SPEED TYPE] [SPEED TYPE] [SPEED TYPE] SPEED" Response="Y OR NE OR R" />
+  <UM135 Element="CONFIRM ASSIGNED LEVEL" Response="Y OR NE" />
+  <UM136 Element="CONFIRM ASSIGNED SPEED" Response="Y OR NE" />
+  <UM137 Element="CONFIRM ASSIGNED ROUTE" Response="Y OR NE" />
+  <UM138 Element="CONFIRM TIME OVER REPORTED WAYPOINT" Response="Y OR NE" />
+  <UM139 Element="CONFIRM REPORTED WAYPOINT" Response="Y OR NE" />
+  <UM140 Element="CONFIRM NEXT WAYPOINT" Response="Y OR NE" />
+  <UM141 Element="CONFIRM NEXT WAYPOINT ETA" Response="Y OR NE" />
+  <UM142 Element="CONFIRM ENSUING WAYPOINT" Response="Y OR NE" />
+  <UM143 Element="CONFIRM REQUEST" Response="Y OR NE" />
+  <UM144 Element="CONFIRM SQUAWK" Response="Y OR NE" />
+  <UM145 Element="REPORT HEADING" Response="Y OR NE" />
+  <UM146 Element="REPORT GROUND TRACK" Response="Y OR NE" />
+  <UM182 Element="CONFIRM ATIS CODE" Response="Y OR NE" />
+  <UM147 Element="REQUEST POSITION REPORT" Response="Y OR NE" />
+  <UM216 Element="REQUEST FLIGHT PLAN" Response="Y" />
+  <UM217 Element="REPORT ARRIVAL" Response="Y" />
+  <UM229 Element="REPORT ALTERNATE AERODROME" Response="Y" />
+  <UM231 Element="STATE PREFERRED LEVEL" Response="Y" />
+  <UM232 Element="STATE TOP OF DESCENT" Response="Y" />
+  <UM148 Element="WHEN CAN YOU ACCEPT [LEVEL]" Response="Y OR NE" />
+  <UM149 Element="CAN YOU ACCEPT [LEVEL] AT [POSITION]" Response="A/N" />
+  <UM150 Element="CAN YOU ACCEPT [LEVEL] AT [TIME]" Response="A/N" />
+  <UM151 Element="WHEN CAN YOU ACCEPT [SPEED]" Response="Y OR NE" />
+  <UM152 Element="WHEN CAN YOU ACCEPT [SPECIFIED DISTANCE] [DIRECTION] OFFSET" Response="Y OR NE" />
+  <UM153 Element="ALTIMETER [ALTIMETER]" Response="R" />
+  <UM213 Element="[FACILITY DESIGNATION] ALTIMETER [ALTIMETER]" Response="R" />
+  <UM154 Element="RADAR SERVICE TERMINATED" Response="R" />
+  <UM244 Element="IDENTIFICATION TERMINATED" Response="R" />
+  <UM191 Element="ALL ATS TERMINATED" Response="R" />
+  <UM155 Element="RADAR CONTACT [POSITION]" Response="R" />
+  <UM156 Element="RADAR CONTACT LOST" Response="R" />
+  <UM210 Element="IDENTIFIED [POSITION]" Response="R" />
+  <UM193 Element="IDENTIFICATION LOST" Response="R" />
+  <UM157 Element="CHECK STUCK MICROPHONE [FREQUENCY]" Response="N OR R" />
+  <UM158 Element="ATIS [ATIS CODE]" Response="R" />
+  <UM212 Element="[FACILITY DESIGNATION] ATIS [ATIS CODE] CURRENT" Response="R" />
+  <UM214 Element="RVR RUNWAY [RUNWAY] [RVR]" Response="R" />
+  <UM224 Element="NO DELAY EXPECTED" Response="R" />
+  <UM225 Element="DELAY NOT DETERMINED" Response="R" />
+  <UM226 Element="EXPECTED APPROACH TIME [TIME]" Response="R" />
+  <UM159 Element="ERROR [ERROR INFORMATION]" Response="NE" />
+  <UM160 Element="NEXT DATA AUTHORITY [FACILITY DESIGNATION]" Response="NE" />
+  <UM161 Element="END SERVICE" Response="NE" />
+  <UM162 Element="MESSAGE NOT SUPPORTED BY THIS ATS UNIT" Response="NE" />
+  <UM234 Element="FLIGHT PLAN NOT HELD" Response="N" />
+  <UM163 Element="[FACILITY DESIGNATION]" Response="NE" />
+  <UM227 Element="LOGICAL ACKNOWLEDGEMENT" Response="N" />
+  <UM233 Element="USE OF LOGICAL ACKNOWLEDGEMENT PROHIBITED" Response="N" />
+  <UM164 Element="WHEN READY" Response="NE" />
+  <UM230 Element="IMMEDIATELY" Response="N" />
+  <UM165 Element="THEN" Response="NE" />
+  <UM166 Element="DUE TO [TRAFFIC TYPE] TRAFFIC" Response="NE" />
+  <UM167 Element="DUE TO AIRSPACE RESTRICTION" Response="NE" />
+  <UM168 Element="DISREGARD" Response="R" />
+  <UM176 Element="MAINTAIN OWN SEPARATION AND VMC" Response="W/U" />
+  <UM177 Element="AT PILOTS DISCRETION" Response="N" />
+  <UM169Q Element="ROGER MAYDAY" Response="R" />
+  <UM169R Element="ROGER PAN" Response="R" />
+  <UM169AK Element="CONFIRM ADS-C EMERGENCY" Response="R" />
+  <UM169S Element="REQUEST RECEIVED RESPONSE WILL BE VIA [UNIT_DESCRIPTION]" Response="R" />
+  <UM169X Element="REQUEST FORWARDED" Response="R" />
+  <UM169AB Element="REQUEST AGAIN WITH NEXT UNIT" Response="R" />
+  <UM169AC Element="ITP BEHIND [AIRCRAFT IDENTIFICATION]" Response="R" />
+  <UM169AD Element="ITP AHEAD OF [AIRCRAFT IDENTIFICATION]" Response="R" />
+  <UM169AE Element="ITP BEHIND[AIRCRAFT IDENTIFICATION] AND BEHIND [AIRCRAFT IDENTIFICATION]" Response="R" />
+  <UM169AF Element="ITP AHEAD OF [AIRCRAFT IDENTIFICATION] AND AHEAD OF [AIRCRAFT IDENTIFICATION]" Response="R" />
+  <UM169AL Element="ITP BEHIND [AIRCRAFT IDENTIFICATION] AND AHEAD OF [AIRCRAFT IDENTIFICATION]" Response="R" />
+  <UM169P Element="EXPECT TO MAINTAIN [SPEED] UNTIL [TIME / POSITION]" Response="R" />
+  <UM169Z Element="NO SPEED RESTRICTION" Response="R" />
+  <UM169AI Element="TRANSMIT ADS-B IDENT" Response="R" />
+  <UM169B Element="REPORT GROUND SPEED" Response="R" />
+  <UM169C Element="STATE PREFERRED LEVEL" Response="R" />
+  <UM169D Element="REPORT ETA [POSITION]" Response="R" />
+  <UM169E Element="REPORT SIGHTING AND PASSING OPPOSITE DIRECTION [TRAFFIC DESCRIPTION] ETP [TIME]" Response="R" />
+  <UM169F Element="ADS-C INDICATES OFF ROUTE. ADVISE INTENTIONS." Response="R" />
+  <UM169T Element="ADS-C INDICATES LEVEL DEVIATION. ADVISE INTENTIONS." Response="R" />
+  <UM169V Element="ADS-C INDICATES SPEED DEVIATION. ADVISE INTENTIONS." Response="R" />
+  <UM169H Element="ADS-C ESTIMATES APPEAR INACCURATE. CHECK FMS." Response="R" />
+  <UM169AA Element="STATE TOP OF DESCENT" Response="R" />
+  <UM169K Element="EXPECT SELCAL CHECK HF [FREQUENCY]" Response="R" />
+  <UM169L Element="EXPECT CPDLC TRANSFER AT [TIME/POSITION]" Response="R" />
+  <UM169AJ Element="IDENTIFICATION TERMINATED" Response="R" />
+  <UM169M Element="EXPECT NEXT CENTER [FACILITY DESIGNATION]. CONTACT WITH [FACILITY DESIGNATION] NOT REQUIRED" Response="R" />
+  <UM169N Element="TRAFFIC IS [TRAFFIC DESCRIPTION]" Response="R" />
+  <UM169O Element="SECONDARY FREQUENCY [FREQUENCY]" Response="R" />
+  <UM169AG Element="TRY SATCOM VOICE OR RELAY THROUGH ANOTHER AIRCRAFT" Response="R" />
+  <UM169Y Element="[FACILITY DESIGNATION] ALTIMETER [ALTIMETER]" Response="R" />
+  <UM169AV Element="SEND NEW ITP REQUEST IF ABLE [LEVEL]" Response="R" />
+  <UM169J Element="CHECK AND RESPOND TO OPEN CPDLC MESSAGES" Response="R" />
+  <UM169W Element="SET MAX UPLINK DELAY VALUE TO [DELAYED MESSAGE PARAMETER] SECONDS" Response="R" />
+  <UM169AU Element="CONFIRM MAX UPLINK DELAY VALUE IS NOT SET" Response="R" />
+  <UM169U Element="MESSAGE NOT SUPPORTED BY THIS ATS UNIT" Response="R" />
+  <UM169AH Element="MESSAGE NOT SUPPORTED BY THIS ATS UNIT CONTACT RTF" Response="R" />
+  <UM169AM Element="AUTOMATIC TRANSFER OF CPDLC FAILED. WHEN ENTERING [UNIT NAME] AREA DISCONNECT CPDLC THEN LOGON TO [FACILITY DESIGNATION]" Response="R" />
+  <UM169AN Element="CONFIRM ADS-C ARMED" Response="R" />
+  <UM169AO Element="ADS-C SHUT DOWN AT [FACILITY DESIGNATION]. REVERT TO CPDLC POSITION REPORTS. LEAVE ADS-C ARMED." Response="R" />
+  <UM169AT Element="ADS-C SHUT DOWN AT [FACILITY DESIGNATION]. REVERT TO VOICE POSITION REPORTS. LEAVE ADS-C ARMED." Response="R" />
+  <UM169AW Element="RESUME NORMAL ADS-C OPERATIONS. CPDLC AND VOICE POSITION REPORTS NOT REQUIRED" Response="R" />
+  <UM169AX Element="CPDLC WILL BE SHUT DOWN. DISCONNECT CPDLC. CONTINUE ON VOICE" Response="R" />
+  <UM169AP Element="RELAY TO [CALL SIGN] [UNIT NAME] [TEXT OF MESSAGE TO BE RELAYED]" Response="R" />
+  <UM169AQ Element="MARSA TERMINATED WITH [CALL SIGN(S) OF RECEIVER AIRCRAFT]" Response="R" />
+  <UM169AR Element="CLEARED TO DELAY FOR AIR REFUEL AT [POSITION] UNTIL [TIME]" Response="R" />
+  <UM169AS Element="CLEARED TO CONDUCT REFUELING" Response="R" />
+</data>

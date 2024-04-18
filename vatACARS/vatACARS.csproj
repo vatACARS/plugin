@@ -57,6 +57,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -103,20 +104,26 @@
       <DependentUpon>UpdateNotification.cs</DependentUpon>
     </Compile>
     <Compile Include="Lib\Tranceiver.cs" />
+    <Compile Include="Lib\UpdateClient.cs" />
+    <Compile Include="Lib\Uplinks.cs" />
     <Compile Include="Lib\VersionChecker.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Util\AudioInterface.cs" />
+    <Compile Include="Util\HoppiesInterface.cs" />
     <Compile Include="Util\HttpClient.cs" />
+    <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\VatACARSInterface.cs" />
+    <Compile Include="Util\UplinkInterface.cs" />
     <Compile Include="vatACARS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Components\EditorWindow.resx">
-      <DependentUpon>EditorWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Components\PDCWindow.resx">
-      <DependentUpon>PDCWindow.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Components\DispatchWindow.resx">
@@ -125,15 +132,25 @@
     <EmbeddedResource Include="Components\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\QuickResponseWindow.resx">
-      <DependentUpon>QuickResponseWindow.cs</DependentUpon>
+    <EmbeddedResource Include="Components\PDCWindow.resx">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\SetupWindow.resx">
       <DependentUpon>SetupWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Components\UpdateNotification.resx">
-      <DependentUpon>UpdateNotification.cs</DependentUpon>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeferIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TXIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RXIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

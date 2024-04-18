@@ -82,7 +82,6 @@
             this.TopMost = true;
             this.ResumeLayout(false);
             this.PerformLayout();
-
         }
 
         #endregion

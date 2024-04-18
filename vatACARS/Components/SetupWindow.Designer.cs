@@ -28,133 +28,133 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cancelButton = new vatsys.GenericButton();
-            this.b_restartPlugin = new vatsys.GenericButton();
+            this.btn_connect = new vatsys.GenericButton();
+            this.btn_save = new vatsys.GenericButton();
             this.lbl_stationCode = new vatsys.TextLabel();
-            this.tbx_stationCode = new vatsys.TextField();
-            this.lbl_acarsServer = new vatsys.TextLabel();
-            this.lbl_logonCode = new vatsys.TextLabel();
-            this.tbx_acarsServer = new vatsys.TextField();
+            this.lbl_enablehop = new vatsys.TextLabel();
+            this.lbl_hoplogon = new vatsys.TextLabel();
             this.tbx_logonCode = new vatsys.TextField();
+            this.tbx_hoplogon = new vatsys.TextField();
+            this.toggle_hop = new vatsys.GenericButton();
             this.SuspendLayout();
             // 
-            // cancelButton
+            // btn_connect
             // 
-            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.cancelButton.Location = new System.Drawing.Point(305, 114);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(140, 28);
-            this.cancelButton.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cancelButton.SubText = "";
-            this.cancelButton.TabIndex = 1;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
+            this.btn_connect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_connect.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_connect.Location = new System.Drawing.Point(314, 166);
+            this.btn_connect.Name = "btn_connect";
+            this.btn_connect.Size = new System.Drawing.Size(101, 28);
+            this.btn_connect.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_connect.SubText = "";
+            this.btn_connect.TabIndex = 1;
+            this.btn_connect.Text = "Connect";
+            this.btn_connect.UseVisualStyleBackColor = true;
             // 
-            // b_restartPlugin
+            // btn_save
             // 
-            this.b_restartPlugin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.b_restartPlugin.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.b_restartPlugin.Location = new System.Drawing.Point(12, 114);
-            this.b_restartPlugin.Name = "b_restartPlugin";
-            this.b_restartPlugin.Size = new System.Drawing.Size(140, 28);
-            this.b_restartPlugin.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.b_restartPlugin.SubText = "";
-            this.b_restartPlugin.TabIndex = 9;
-            this.b_restartPlugin.Text = "Save & Connect";
-            this.b_restartPlugin.UseVisualStyleBackColor = true;
+            this.btn_save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_save.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_save.Location = new System.Drawing.Point(12, 166);
+            this.btn_save.Name = "btn_save";
+            this.btn_save.Size = new System.Drawing.Size(101, 28);
+            this.btn_save.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_save.SubText = "";
+            this.btn_save.TabIndex = 9;
+            this.btn_save.Text = "Save";
+            this.btn_save.UseVisualStyleBackColor = true;
             // 
             // lbl_stationCode
             // 
+            this.lbl_stationCode.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_stationCode.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_stationCode.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_stationCode.HasBorder = false;
             this.lbl_stationCode.InteractiveText = false;
-            this.lbl_stationCode.Location = new System.Drawing.Point(12, 9);
+            this.lbl_stationCode.Location = new System.Drawing.Point(12, 7);
             this.lbl_stationCode.Name = "lbl_stationCode";
-            this.lbl_stationCode.Size = new System.Drawing.Size(140, 26);
+            this.lbl_stationCode.Size = new System.Drawing.Size(159, 26);
             this.lbl_stationCode.TabIndex = 10;
-            this.lbl_stationCode.Text = "Station Code";
-            this.lbl_stationCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lbl_stationCode.Text = "STATION CODE";
+            this.lbl_stationCode.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbx_stationCode
+            // lbl_enablehop
             // 
-            this.tbx_stationCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbx_stationCode.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_stationCode.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.tbx_stationCode.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_stationCode.Location = new System.Drawing.Point(169, 9);
-            this.tbx_stationCode.Name = "tbx_stationCode";
-            this.tbx_stationCode.NumericCharOnly = false;
-            this.tbx_stationCode.OctalOnly = false;
-            this.tbx_stationCode.Size = new System.Drawing.Size(74, 25);
-            this.tbx_stationCode.TabIndex = 11;
+            this.lbl_enablehop.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_enablehop.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_enablehop.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_enablehop.HasBorder = false;
+            this.lbl_enablehop.InteractiveText = false;
+            this.lbl_enablehop.Location = new System.Drawing.Point(12, 40);
+            this.lbl_enablehop.Name = "lbl_enablehop";
+            this.lbl_enablehop.Size = new System.Drawing.Size(159, 26);
+            this.lbl_enablehop.TabIndex = 12;
+            this.lbl_enablehop.Text = "ENABLE HOPPIES";
+            this.lbl_enablehop.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lbl_acarsServer
+            // lbl_hoplogon
             // 
-            this.lbl_acarsServer.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.lbl_acarsServer.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_acarsServer.HasBorder = false;
-            this.lbl_acarsServer.InteractiveText = false;
-            this.lbl_acarsServer.Location = new System.Drawing.Point(12, 73);
-            this.lbl_acarsServer.Name = "lbl_acarsServer";
-            this.lbl_acarsServer.Size = new System.Drawing.Size(140, 26);
-            this.lbl_acarsServer.TabIndex = 12;
-            this.lbl_acarsServer.Text = "ACARS Server";
-            this.lbl_acarsServer.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lbl_logonCode
-            // 
-            this.lbl_logonCode.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.lbl_logonCode.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_logonCode.HasBorder = false;
-            this.lbl_logonCode.InteractiveText = false;
-            this.lbl_logonCode.Location = new System.Drawing.Point(12, 41);
-            this.lbl_logonCode.Name = "lbl_logonCode";
-            this.lbl_logonCode.Size = new System.Drawing.Size(140, 26);
-            this.lbl_logonCode.TabIndex = 13;
-            this.lbl_logonCode.Text = "Logon Code";
-            this.lbl_logonCode.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // tbx_acarsServer
-            // 
-            this.tbx_acarsServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbx_acarsServer.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_acarsServer.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.tbx_acarsServer.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_acarsServer.Location = new System.Drawing.Point(170, 73);
-            this.tbx_acarsServer.Name = "tbx_acarsServer";
-            this.tbx_acarsServer.NumericCharOnly = false;
-            this.tbx_acarsServer.OctalOnly = false;
-            this.tbx_acarsServer.Size = new System.Drawing.Size(276, 25);
-            this.tbx_acarsServer.TabIndex = 14;
+            this.lbl_hoplogon.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_hoplogon.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_hoplogon.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_hoplogon.HasBorder = false;
+            this.lbl_hoplogon.InteractiveText = false;
+            this.lbl_hoplogon.Location = new System.Drawing.Point(12, 73);
+            this.lbl_hoplogon.Name = "lbl_hoplogon";
+            this.lbl_hoplogon.Size = new System.Drawing.Size(159, 26);
+            this.lbl_hoplogon.TabIndex = 13;
+            this.lbl_hoplogon.Text = "HOPPIES LOGON CODE";
+            this.lbl_hoplogon.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_hoplogon.Click += new System.EventHandler(this.lbl_logonCode_Click);
             // 
             // tbx_logonCode
             // 
-            this.tbx_logonCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.tbx_logonCode.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tbx_logonCode.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbx_logonCode.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_logonCode.Location = new System.Drawing.Point(169, 41);
+            this.tbx_logonCode.Location = new System.Drawing.Point(177, 9);
             this.tbx_logonCode.Name = "tbx_logonCode";
             this.tbx_logonCode.NumericCharOnly = false;
             this.tbx_logonCode.OctalOnly = false;
-            this.tbx_logonCode.Size = new System.Drawing.Size(276, 25);
+            this.tbx_logonCode.Size = new System.Drawing.Size(85, 25);
             this.tbx_logonCode.TabIndex = 15;
+            // 
+            // tbx_hoplogon
+            // 
+            this.tbx_hoplogon.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_hoplogon.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.tbx_hoplogon.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_hoplogon.Location = new System.Drawing.Point(177, 73);
+            this.tbx_hoplogon.Name = "tbx_hoplogon";
+            this.tbx_hoplogon.NumericCharOnly = false;
+            this.tbx_hoplogon.OctalOnly = false;
+            this.tbx_hoplogon.Size = new System.Drawing.Size(238, 25);
+            this.tbx_hoplogon.TabIndex = 17;
+            // 
+            // toggle_hop
+            // 
+            this.toggle_hop.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.toggle_hop.Location = new System.Drawing.Point(177, 40);
+            this.toggle_hop.Name = "toggle_hop";
+            this.toggle_hop.Size = new System.Drawing.Size(26, 26);
+            this.toggle_hop.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.toggle_hop.SubText = "";
+            this.toggle_hop.TabIndex = 19;
+            this.toggle_hop.UseVisualStyleBackColor = true;
             // 
             // SetupWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 155);
+            this.ClientSize = new System.Drawing.Size(427, 206);
+            this.Controls.Add(this.toggle_hop);
+            this.Controls.Add(this.tbx_hoplogon);
             this.Controls.Add(this.tbx_logonCode);
-            this.Controls.Add(this.tbx_acarsServer);
-            this.Controls.Add(this.lbl_logonCode);
-            this.Controls.Add(this.lbl_acarsServer);
-            this.Controls.Add(this.tbx_stationCode);
+            this.Controls.Add(this.lbl_hoplogon);
+            this.Controls.Add(this.lbl_enablehop);
             this.Controls.Add(this.lbl_stationCode);
-            this.Controls.Add(this.b_restartPlugin);
-            this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.btn_save);
+            this.Controls.Add(this.btn_connect);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HasMinimizeButton = false;
             this.HasSendBackButton = false;
@@ -165,7 +165,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "vatACARS Setup";
-            this.TopMost = true;
             this.Shown += new System.EventHandler(this.SetupWindow_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -174,13 +173,13 @@
 
         #endregion
 
-        private vatsys.GenericButton cancelButton;
-        private vatsys.GenericButton b_restartPlugin;
+        private vatsys.GenericButton btn_connect;
+        private vatsys.GenericButton btn_save;
         private vatsys.TextLabel lbl_stationCode;
-        private vatsys.TextField tbx_stationCode;
-        private vatsys.TextLabel lbl_acarsServer;
-        private vatsys.TextLabel lbl_logonCode;
-        private vatsys.TextField tbx_acarsServer;
+        private vatsys.TextLabel lbl_enablehop;
+        private vatsys.TextLabel lbl_hoplogon;
         private vatsys.TextField tbx_logonCode;
+        private vatsys.TextField tbx_hoplogon;
+        private vatsys.GenericButton toggle_hop;
     }
 }
