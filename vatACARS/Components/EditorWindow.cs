@@ -4,19 +4,20 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using static vatACARS.Components.QuickFillWindow;
 
 namespace vatACARS.Components
 {
     public partial class EditorWindow : BaseForm
     {
         private static Logger logger = new Logger("EditorWindow");
-        private static string[] response = new string[5];
+        private static ResponseItem[] response = new ResponseItem[5];
         private static int responseIndex = 0;
         private static readonly Regex placeholderParse = new Regex(@"\((.*?)\)");
         private CPDLCMessage msg;
@@ -42,7 +43,7 @@ namespace vatACARS.Components
             }
 
             lvw_messageSelector.Items.Clear();
-            foreach (var uplink in Uplinks.uplinks.Entries.Where(entry => entry.Response == "N").ToList())
+            foreach (var uplink in XMLReader.uplinks.Entries.Where(entry => entry.Response == "N").ToList())
             {
                 lvw_messageSelector.Items.Add(uplink.Element);
             }
@@ -58,8 +59,8 @@ namespace vatACARS.Components
             lvw_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             lvw_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lvw_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lvw_freetextInput.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            lvw_freetextInput.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_response.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_response.Font = new Font(MMI.eurofont_winsml.FontFamily, 12F, FontStyle.Bold);
 
             btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
             btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
@@ -83,7 +84,7 @@ namespace vatACARS.Components
         private void ShowGroup(string group_id)
         {
             lvw_messageSelector.Items.Clear();
-            List<UplinkEntry> filteredUplinks = Uplinks.uplinks.Entries.Where(entry => entry.Group == group_id).ToList();
+            List<UplinkEntry> filteredUplinks = XMLReader.uplinks.Entries.Where(entry => entry.Group == group_id).ToList();
 
             int visibleCount = 0;
             int startIndex = lvw_messageSelector.TopItem != null ? lvw_messageSelector.TopItem.Index : 0;
@@ -128,57 +129,87 @@ namespace vatACARS.Components
         {
             if (lvw_messageSelector.SelectedItems.Count > 0)
             {
-                lvw_freetextInput.Items.Clear();
                 var selected = lvw_messageSelector.SelectedItems[0].Text; //Uplinks.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Element;
-                lvw_freetextInput.Items.Add(selected);
-                response[responseIndex] = selected;
+                var placeholders = placeholderParse.Matches(selected);
+
+                
+                response[responseIndex] = new ResponseItem()
+                {
+                    Text = selected,
+                    Placeholders = null
+                };
+
+                if (placeholders.Count > 0)
+                {
+                    response[responseIndex].Placeholders = new PlaceholderStr[placeholders.Count];
+                    Graphics graphics = lbl_response.CreateGraphics();
+                    StringFormat format = new StringFormat();
+                    format.LineAlignment = StringAlignment.Center;
+                    format.Alignment = StringAlignment.Near;
+
+                    for (int i = 0; i < placeholders.Count; i++)
+                    {
+                        CharacterRange[] ranges = { new CharacterRange(placeholders[i].Index, placeholders[i].Length) };
+                        format.SetMeasurableCharacterRanges(ranges);
+
+                        Region region = graphics.MeasureCharacterRanges(response[responseIndex].Text, lbl_response.Font, lbl_response.Bounds, format)[0];
+                        Rectangle bounds = Rectangle.Round(region.GetBounds(graphics));
+
+                        response[responseIndex].Placeholders[i] = new PlaceholderStr()
+                        {
+                            Placeholder = placeholders[i].Value,
+                            UserValue = "",
+                            TopLeftLoc = new Point(bounds.X, bounds.Y),
+                            Size = new Size(bounds.Width, bounds.Height)
+                        };
+                    }
+                } else response[responseIndex].Placeholders = new PlaceholderStr[placeholders.Count];
+
+                lbl_response.Text = selected;
+                lbl_response.Refresh();
             }
         }
 
         private void btn_standby_Click(object sender, EventArgs e)
         {
-            lvw_freetextInput.Items.Clear();
-            var standby = Uplinks.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Element;
-            lvw_freetextInput.Items.Add(standby);
-            response = new string[5];
-            response[0] = standby;
+            var standby = XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Element;
+            lbl_response.Text = standby;
+            response = new ResponseItem[5];
+            response[0] = new ResponseItem() { Text = standby };
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
 
         private void btn_defer_Click(object sender, EventArgs e)
         {
-            lvw_freetextInput.Items.Clear();
-            var defer = Uplinks.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Element;
-            lvw_freetextInput.Items.Add(defer);
-            response = new string[5];
-            response[0] = defer;
+            var defer = XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Element;
+            lbl_response.Text = defer;
+            response = new ResponseItem[5];
+            response[0] = new ResponseItem() { Text = defer };
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
 
         private void btn_tfc_Click(object sender, EventArgs e)
         {
-            lvw_freetextInput.Items.Clear();
-            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
-            var tfc = Uplinks.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Element;
-            lvw_freetextInput.Items.Add(tfc);
-            response = new string[5];
-            response[0] = unable;
-            response[1] = tfc;
+            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
+            var tfc = XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Element;
+            lbl_response.Text = tfc;
+            response = new ResponseItem[5];
+            response[0] = new ResponseItem() { Text = unable };
+            response[1] = new ResponseItem() { Text = tfc };
             responseIndex = 1;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
 
         private void btn_air_Click(object sender, EventArgs e)
         {
-            lvw_freetextInput.Items.Clear();
-            var unable = Uplinks.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
-            var air = Uplinks.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault().Element;
-            lvw_freetextInput.Items.Add(air);
-            response = new string[5];
-            response[0] = unable;
-            response[1] = air;
+            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
+            var air = XMLReader.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault().Element;
+            lbl_response.Text = air;
+            response = new ResponseItem[5];
+            response[0] = new ResponseItem() { Text = unable };
+            response[1] = new ResponseItem() { Text = air };
             responseIndex = 1;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
@@ -186,9 +217,9 @@ namespace vatACARS.Components
         private void btn_editor_Click(object sender, EventArgs e)
         {
             logger.Log("Transferring to Editor");
-            lvw_freetextInput.Items.Clear();
+            lbl_response.Text = "";
             pnl_categories.Visible = true;
-            response = new string[5];
+            response = new ResponseItem[5];
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
             ShowGroup("1");
@@ -199,30 +230,25 @@ namespace vatACARS.Components
             if(e.Button == MouseButtons.Left && responseIndex < 4)
             {
                 responseIndex++;
-                lvw_freetextInput.Items.Clear();
-                lvw_freetextInput.Items.Add(response[responseIndex]);
                 btn_messageScroller.Text = (responseIndex + 1).ToString();
             } else if(e.Button == MouseButtons.Right && responseIndex > 0)
             {
                 responseIndex--;
-                lvw_freetextInput.Items.Clear();
-                lvw_freetextInput.Items.Add(response[responseIndex]);
                 btn_messageScroller.Text = (responseIndex + 1).ToString();
             }
+
+            lbl_response.Text = response[responseIndex].Text;
         }
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(msg.Station, "telex", string.Join("\n", response));
+            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(msg.Station, "telex", string.Join("\n", response.Select(obj => obj.Text)));
             HoppiesInterface.SendMessage(req);
         }
 
         private void scr_messageSelector_Scroll(object sender, EventArgs e)
         {
-            try
-            {
-                lvw_messageSelector.SetScrollPosVert(scr_messageSelector.PercentageValue);
-            } catch (Exception ex) { logger.Log($"An error occured:\n{ex.ToString()}"); }
+            lvw_messageSelector.SetScrollPosVert(scr_messageSelector.PercentageValue);
         }
 
         private void btn_suspend_Click(object sender, EventArgs e) { }
@@ -256,15 +282,45 @@ namespace vatACARS.Components
             }
         }
 
-        private void lvw_freetextInput_MouseDown(object sender, MouseEventArgs e)
+        /*private void lvw_freetextInput_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Right)
+            if(e.Button == MouseButtons.Left)
+            {
+                System.Windows.Forms.Label item = lbl_response;
+                if (item != null)
+                {
+                    foreach(EditableInput input in editableBounds)
+                    {
+                        if (input.bounds.Contains(e.Location))
+                        {
+                            logger.Log("Opening the quick fill window...");
+                            QuickFillWindow fillWindow = new QuickFillWindow(input.placeholder.Substring(1, input.placeholder.Length - 2).ToUpper());
+                            fillWindow.QuickFillDataChanged += (object s, QuickFillData fillText) =>
+                            {
+                                try
+                                {
+                                    input.filled = fillText.Setting;
+                                    input.graphics.FillRectangle(new SolidBrush(Colours.GetColour(Colours.Identities.CPDLCDownlink)), new Rectangle(new Point(input.bounds.X - 1, input.bounds.Y - 2), new Size(input.bounds.Width + 3, input.bounds.Height + 2)));
+                                    input.graphics.DrawString($"{(input.filled != "" ? input.filled : input.placeholder)})", new Font(MMI.eurofont_winsml.FontFamily.Name, 14F, FontStyle.Bold, GraphicsUnit.Pixel), new SolidBrush(item.BackColor), new PointF(input.bounds.X - 2, input.bounds.Y + 16), new StringFormat());
+                                }
+                                catch(Exception ex)
+                                {
+                                    logger.Log($"Something went wrong: {ex.ToString()}");
+                                }
+                            };
+                            fillWindow.Show(this);
+                            break;
+                        }
+                    }
+                }
+            } else if(e.Button == MouseButtons.Right)
             {
                 response[responseIndex] = "";
-                lvw_freetextInput.Items.Clear();
+                lbl_response.Text = "";
                 lvw_messageSelector.SelectedItems.Clear();
+                lbl_response.Refresh();
             }
-        }
+        }*/
 
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
@@ -286,50 +342,6 @@ namespace vatACARS.Components
                     if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
                 }
                 else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
-                n++;
-            }
-        }
-
-        private void lvw_freetextInput_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            
-            Font font = new Font(MMI.eurofont_winsml.FontFamily.Name, 14F, FontStyle.Bold, GraphicsUnit.Pixel);
-            SolidBrush bg = new SolidBrush(e.Item.BackColor);
-            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
-            e.Graphics.FillRectangle(bg, e.Bounds);
-            int n = 0;
-            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
-            {
-                StringFormat format = new StringFormat();
-                format.LineAlignment = StringAlignment.Center;
-                format.Alignment = StringAlignment.Near;
-                e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
-
-                var placeholders = placeholderParse.Matches(subItem.Text);
-
-                if (placeholders.Count > 0)
-                {
-                    format.LineAlignment = StringAlignment.Far;
-                    foreach (Match placeholder in placeholders)
-                    {
-                        SolidBrush outline = new SolidBrush(Colours.GetColour(Colours.Identities.CPDLCDownlink));
-                        Pen p = new Pen(outline, 2f);
-
-                        CharacterRange[] ranges = { new CharacterRange(placeholder.Index, placeholder.Length) };
-                        format.SetMeasurableCharacterRanges(ranges);
-
-                        Region region = e.Graphics.MeasureCharacterRanges(subItem.Text, font, subItem.Bounds, format)[0];
-                        Rectangle bounds = Rectangle.Round(region.GetBounds(e.Graphics));
-
-                        e.Graphics.FillRectangle(outline, new Rectangle(new Point(bounds.X -1, bounds.Y - 2), new Size(bounds.Width + 3, bounds.Height + 2)));
-                        e.Graphics.DrawString($"{placeholder.Value})", font, bg, new PointF(bounds.X - 2, bounds.Y + 16), format);
-
-                        // Dispose of resources
-                        p.Dispose();
-                        outline.Dispose();
-                    }
-                }
-
                 n++;
             }
         }
@@ -357,5 +369,82 @@ namespace vatACARS.Components
                 n++;
             }
         }
+
+        private void lbl_response_Paint(object sender, PaintEventArgs e)
+        {
+            if (response[responseIndex] == null || response[responseIndex].Placeholders == null) return;
+
+            SolidBrush highlight = new SolidBrush(Colours.GetColour(Colours.Identities.CPDLCDownlink));
+            SolidBrush highlightText = new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground));
+
+            StringFormat format = new StringFormat();
+            format.LineAlignment = StringAlignment.Center;
+            format.Alignment = StringAlignment.Near;
+
+            foreach(PlaceholderStr item in response[responseIndex].Placeholders)
+            {
+                e.Graphics.FillRectangle(highlight, new Rectangle(item.TopLeftLoc, item.Size));
+                format.Alignment = StringAlignment.Center;
+
+                if (item.UserValue != "")
+                {
+                    SizeF strSpace = e.Graphics.MeasureString(item.UserValue, lbl_response.Font);
+                    if (strSpace.Width > (float)item.Size.Width)
+                    {
+                        int place = (int)Math.Floor((float)item.Size.Width / (strSpace.Width / (float)item.UserValue.Length));
+                        if (place > 0) e.Graphics.DrawString(item.UserValue.Substring(0, place) + "...", lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
+                    } else
+                    {
+                        e.Graphics.DrawString(item.UserValue, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
+                    }
+                }
+                else
+                {
+                    e.Graphics.DrawString(item.Placeholder, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
+                }
+            }
+        }
+
+        private void lbl_response_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (response[responseIndex] == null || response[responseIndex].Placeholders == null) return;
+
+            for(var i = 0; i < response[responseIndex].Placeholders.Count(); i++)
+            {
+                PlaceholderStr item = response[responseIndex].Placeholders[i];
+                if (new Rectangle(item.TopLeftLoc, item.Size).Contains(e.Location))
+                {
+                    try
+                    {
+                        QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper());
+                        fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
+                        {
+                            item.UserValue = data.Setting;
+                            lbl_response.Refresh();
+                        };
+
+                        fillWindow.ShowDialog(ActiveForm);
+                    } catch(Exception ex)
+                    {
+                        logger.Log($"Oops: {ex.ToString()}");
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    class ResponseItem
+    {
+        public string Text;
+        public PlaceholderStr[] Placeholders;
+    }
+
+    class PlaceholderStr
+    {
+        public string Placeholder;
+        public string UserValue;
+        public Point TopLeftLoc;
+        public Size Size;
     }
 }

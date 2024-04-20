@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace vatACARS.Util
 {
     [XmlRoot("data")]
-    public class UplinkInterface
+    public class XMLInterface
     {
         [XmlElement("ENTRY")]
         public List<UplinkEntry> Entries { get; set; }

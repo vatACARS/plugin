@@ -80,7 +80,8 @@ namespace vatACARS
             // Start Hoppies Polling
             HoppiesInterface.StartListening();
 
-            Uplinks.MakeUplinks();
+            XMLReader.MakeUplinks();
+            JSONReader.MakeQuickFillItems();
 
             logger.Log("Started successfully.");
         }

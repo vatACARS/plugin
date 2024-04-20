@@ -48,8 +48,8 @@ namespace vatACARS.Components
 
             il = new ImageList();
             il.Images.Add(Properties.Resources.RXIcon);
-            il.Images.Add(Properties.Resources.TXIcon);
             il.Images.Add(Properties.Resources.DeferIcon);
+            il.Images.Add(Properties.Resources.TXIcon);
 
             lvw_messages.SmallImageList = il;
         }
@@ -67,35 +67,44 @@ namespace vatACARS.Components
                 //if (tMsgs == messages) return;
 
                 messages = tMsgs;
+
+                messages.Add(new CPDLCMessage()
+                {
+                    State = 3,
+                    Station = "QFA100",
+                    Text = "EXAMPLE FINISHED MESSAGE ",
+                    TimeReceived = new DateTime()
+                });
+
+                messages.Add(new CPDLCMessage()
+                {
+                    State = 1,
+                    Station = "JST100",
+                    Text = "EXAMPLE STBY/DEFER MESSAGE ",
+                    TimeReceived = new DateTime()
+                });
+
+                messages.Add(new CPDLCMessage()
+                {
+                    State = 2,
+                    Station = "BNZ100",
+                    Text = "EXAMPLE UPLINKED MESSAGE ",
+                    TimeReceived = new DateTime()
+                });
+
+                messages.Add(new CPDLCMessage()
+                {
+                    State = 0,
+                    Station = "VOZ100",
+                    Text = "EXAMPLE DOWNLINKED MESSAGE ",
+                    TimeReceived = new DateTime()
+                });
+
                 lvw_messages.Items.Clear();
-                foreach (var message in messages.ToArray())
+                foreach (var message in messages.OrderBy(item => item.State).ToArray())
                 {
                     AddMessage(message);
                 }
-
-                AddMessage(new CPDLCMessage()
-                {
-                    State = 0,
-                    Station = "QFA100",
-                    Text = "REQUEST WEATHER DEVIATION UP TO 5NM LEFT OF ROUTE ",
-                    TimeReceived = new DateTime()
-                });
-
-                AddMessage(new CPDLCMessage()
-                {
-                    State = 1,
-                    Station = "QFA100",
-                    Text = "(UPLINK) ",
-                    TimeReceived = new DateTime()
-                });
-
-                AddMessage(new CPDLCMessage()
-                {
-                    State = 2,
-                    Station = "QFA100",
-                    Text = "(ACK) ",
-                    TimeReceived = new DateTime()
-                });
 
                 lvw_messages.Invalidate();
             }
@@ -110,24 +119,25 @@ namespace vatACARS.Components
             try
             {
                 messages.Add(message);
-                ListViewItem item = new ListViewItem(message.TimeReceived.ToString("HH:mm"), message.State);
+                ListViewItem item = new ListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State);
                 item.SubItems.Add($"{message.Station}: {message.Text}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
+                item.Group = lvw_messages.Groups[message.State];
                 if (message.State == 0)
-                {
+                { // DOWNLINK
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
                 else if (message.State == 1)
-                {
-                    item.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-                    item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
-                }
-                else if (message.State == 2)
-                {
+                { // STBY/DEFER
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCFreetext);
+                }
+                else if (message.State == 2)
+                { // UPLINK
+                    item.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
                 else
                 {
@@ -224,7 +234,7 @@ namespace vatACARS.Components
 
                 if (e.Button == MouseButtons.Left)
                 {
-                    if(msg.State == 0 || msg.State == 2)
+                    if(msg.State == 0 || msg.State == 1)
                     {
                         SelectedMessage = msg;
                         EditorWindow window = new EditorWindow();

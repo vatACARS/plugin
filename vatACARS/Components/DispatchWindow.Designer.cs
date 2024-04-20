@@ -28,6 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
             this.insetPanel2 = new vatsys.InsetPanel();
             this.lvw_messages = new vatsys.ListViewEx();
             this.col_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -58,12 +62,26 @@
             this.col_message});
             this.lvw_messages.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lvw_messages.FullRowSelect = true;
+            listViewGroup1.Header = "";
+            listViewGroup1.Name = "downlink";
+            listViewGroup2.Header = "";
+            listViewGroup2.Name = "defer";
+            listViewGroup3.Header = "";
+            listViewGroup3.Name = "uplink";
+            listViewGroup4.Header = "";
+            listViewGroup4.Name = "finished";
+            this.lvw_messages.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
+            listViewGroup1,
+            listViewGroup2,
+            listViewGroup3,
+            listViewGroup4});
             this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messages.HideSelection = false;
             this.lvw_messages.Location = new System.Drawing.Point(3, 3);
             this.lvw_messages.MultiSelect = false;
             this.lvw_messages.Name = "lvw_messages";
             this.lvw_messages.OwnerDraw = true;
+            this.lvw_messages.ShowGroups = false;
             this.lvw_messages.Size = new System.Drawing.Size(501, 124);
             this.lvw_messages.TabIndex = 2;
             this.lvw_messages.UseCompatibleStateImageBehavior = false;
