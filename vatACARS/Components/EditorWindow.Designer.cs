@@ -105,7 +105,6 @@
             // 
             // insetPanel2
             // 
-            this.insetPanel2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.insetPanel2.Controls.Add(this.lvw_messages);
             this.insetPanel2.Location = new System.Drawing.Point(11, 12);
             this.insetPanel2.Name = "insetPanel2";
@@ -142,7 +141,6 @@
             // scr_messageSelector
             // 
             this.scr_messageSelector.ActualHeight = 8;
-            this.scr_messageSelector.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.scr_messageSelector.Change = 1;
             this.scr_messageSelector.Location = new System.Drawing.Point(559, 185);
             this.scr_messageSelector.Name = "scr_messageSelector";
@@ -182,7 +180,6 @@
             // 
             // insetPanel1
             // 
-            this.insetPanel1.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.insetPanel1.Controls.Add(this.lvw_messageSelector);
             this.insetPanel1.Location = new System.Drawing.Point(11, 185);
             this.insetPanel1.Name = "insetPanel1";
@@ -422,7 +419,7 @@
             // 
             // btn_send
             // 
-            this.btn_send.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btn_send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_send.Location = new System.Drawing.Point(466, 404);
             this.btn_send.Name = "btn_send";
@@ -442,6 +439,10 @@
             this.insetPanel3.Size = new System.Drawing.Size(529, 31);
             this.insetPanel3.TabIndex = 7;
             // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Width = 522;
+            //
             // lbl_response
             // 
             this.lbl_response.BackColor = System.Drawing.Color.Transparent;
@@ -455,7 +456,6 @@
             // 
             // btn_messageScroller
             // 
-            this.btn_messageScroller.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_messageScroller.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_messageScroller.Location = new System.Drawing.Point(10, 367);
             this.btn_messageScroller.Name = "btn_messageScroller";
