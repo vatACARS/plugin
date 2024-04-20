@@ -42,8 +42,8 @@ namespace vatACARS.Helpers
     {
         /* State:
          * 0 = Downlink
-         * 1 = Uplink
-         * 2 = Ack
+         * 1 = Stby/Defer
+         * 2 = Uplink
          * 3 = Finished
          */
         public int State;
