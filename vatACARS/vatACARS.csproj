@@ -91,6 +91,12 @@
     <Compile Include="Components\PDCWindow.Designer.cs">
       <DependentUpon>PDCWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\QuickFillWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\QuickFillWindow.Designer.cs">
+      <DependentUpon>QuickFillWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\SetupWindow.cs">
       <SubType>designer</SubType>
     </Compile>
@@ -103,9 +109,10 @@
     <Compile Include="Components\UpdateNotification.Designer.cs">
       <DependentUpon>UpdateNotification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Lib\JSONReader.cs" />
     <Compile Include="Lib\Tranceiver.cs" />
     <Compile Include="Lib\UpdateClient.cs" />
-    <Compile Include="Lib\Uplinks.cs" />
+    <Compile Include="Lib\XMLReader.cs" />
     <Compile Include="Lib\VersionChecker.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -115,9 +122,10 @@
     <Compile Include="Util\AudioInterface.cs" />
     <Compile Include="Util\HoppiesInterface.cs" />
     <Compile Include="Util\HttpClient.cs" />
+    <Compile Include="Util\JSONInterface.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\VatACARSInterface.cs" />
-    <Compile Include="Util\UplinkInterface.cs" />
+    <Compile Include="Util\XMLInterface.cs" />
     <Compile Include="vatACARS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

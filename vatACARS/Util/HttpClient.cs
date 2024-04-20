@@ -38,7 +38,15 @@ namespace vatACARS.Util
 
                 var fullUrl = new Uri(new Uri(!string.IsNullOrWhiteSpace(baseUrlOverride) ? baseUrlOverride : _baseUrl), relativePath);
                 HttpResponseMessage response = await httpClient.GetAsync(fullUrl);
-                response.EnsureSuccessStatusCode();
+
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                } catch(Exception ex)
+                {
+                    logger.Log($"({id}) GET request failed: {ex.ToString()}");
+                    return "";
+                }
 
                 logger.Log($"({id}) GET request completed.");
                 return await response.Content.ReadAsStringAsync();
@@ -79,7 +87,16 @@ namespace vatACARS.Util
 
                 var fullUrl = new Uri(new Uri(!string.IsNullOrWhiteSpace(baseUrlOverride) ? baseUrlOverride : _baseUrl), relativePath);
                 HttpResponseMessage response = await httpClient.PostAsync(fullUrl, content);
-                response.EnsureSuccessStatusCode();
+
+                try
+                {
+                    response.EnsureSuccessStatusCode();
+                }
+                catch (Exception ex)
+                {
+                    logger.Log($"({id}) POST request failed: {ex.ToString()}");
+                    return "";
+                }
 
                 logger.Log($"({id}) POST request completed.");
 

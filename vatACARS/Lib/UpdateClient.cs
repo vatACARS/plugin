@@ -22,6 +22,11 @@ namespace vatACARS.Lib
             {
                 logger.Log("Checking the repository...");
                 string dependencies = await httpClient.GetStringTaskAsync("/repository");
+                if (dependencies == "")
+                {
+                    logger.Log("Failed to retrieve latest version information!");
+                    return;
+                }
                 DependencyInfo[] dependencyList = JsonConvert.DeserializeObject<DependencyInfo[]>(dependencies);
                 foreach( DependencyInfo dependency in dependencyList )
                 {

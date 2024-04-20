@@ -43,6 +43,11 @@ namespace vatACARS.Helpers
             using (var httpClient = new HttpClient())
             {
                 string liveVersion = await httpClient.GetStringTaskAsync("/versions/latest");
+                if (liveVersion == "")
+                {
+                    logger.Log("Failed to retrieve latest version information!");
+                    return;
+                }
                 updateInfo = JsonConvert.DeserializeObject<VersionInfo>(liveVersion);
                 Version currentVersion = AppData.CurrentVersion;
                 logger.Log($"Current Version: {currentVersion} | Latest Version: {updateInfo.version}");

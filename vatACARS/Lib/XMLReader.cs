@@ -5,10 +5,10 @@ using vatACARS.Util;
 
 namespace vatACARS.Lib
 {
-    public static class Uplinks
+    public static class XMLReader
     {
         private static string dirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\vatACARS";
-        public static UplinkInterface uplinks;
+        public static XMLInterface uplinks;
         private static Logger logger = new Logger("XMLReader");
 
         public static void MakeUplinks()
@@ -21,8 +21,8 @@ namespace vatACARS.Lib
                 logger.Log("Deserializing...");
                 using (TextReader reader = new StringReader(uplinksRaw))
                 {
-                    XmlSerializer serializer = new XmlSerializer(typeof(UplinkInterface));
-                    uplinks = serializer.Deserialize(reader) as UplinkInterface;
+                    XmlSerializer serializer = new XmlSerializer(typeof(XMLInterface));
+                    uplinks = serializer.Deserialize(reader) as XMLInterface;
                 }
                 logger.Log("Done!");
             } catch (Exception ex)

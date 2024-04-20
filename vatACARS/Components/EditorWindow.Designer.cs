@@ -57,8 +57,7 @@
             this.btn_restore = new vatsys.GenericButton();
             this.btn_send = new vatsys.GenericButton();
             this.insetPanel3 = new vatsys.InsetPanel();
-            this.lvw_freetextInput = new vatsys.ListViewEx();
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.lbl_response = new System.Windows.Forms.Label();
             this.btn_messageScroller = new vatsys.GenericButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.UnableLabel = new vatsys.TextLabel();
@@ -434,36 +433,26 @@
             // 
             // insetPanel3
             // 
-            this.insetPanel3.Controls.Add(this.lvw_freetextInput);
+            this.insetPanel3.Controls.Add(this.lbl_response);
             this.insetPanel3.Location = new System.Drawing.Point(47, 367);
             this.insetPanel3.Name = "insetPanel3";
             this.insetPanel3.Size = new System.Drawing.Size(529, 31);
             this.insetPanel3.TabIndex = 7;
             // 
-            // lvw_freetextInput
-            // 
-            this.lvw_freetextInput.Alignment = System.Windows.Forms.ListViewAlignment.Default;
-            this.lvw_freetextInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lvw_freetextInput.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader2});
-            this.lvw_freetextInput.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.lvw_freetextInput.HideSelection = false;
-            this.lvw_freetextInput.Location = new System.Drawing.Point(3, 3);
-            this.lvw_freetextInput.MultiSelect = false;
-            this.lvw_freetextInput.Name = "lvw_freetextInput";
-            this.lvw_freetextInput.OwnerDraw = true;
-            this.lvw_freetextInput.Scrollable = false;
-            this.lvw_freetextInput.Size = new System.Drawing.Size(522, 25);
-            this.lvw_freetextInput.TabIndex = 2;
-            this.lvw_freetextInput.TileSize = new System.Drawing.Size(440, 26);
-            this.lvw_freetextInput.UseCompatibleStateImageBehavior = false;
-            this.lvw_freetextInput.View = System.Windows.Forms.View.Details;
-            this.lvw_freetextInput.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lvw_freetextInput_DrawItem);
-            this.lvw_freetextInput.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lvw_freetextInput_MouseDown);
-            // 
             // columnHeader2
             // 
             this.columnHeader2.Width = 522;
+            //
+            // lbl_response
+            // 
+            this.lbl_response.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_response.Location = new System.Drawing.Point(2, 2);
+            this.lbl_response.Name = "lbl_response";
+            this.lbl_response.Size = new System.Drawing.Size(525, 27);
+            this.lbl_response.TabIndex = 0;
+            this.lbl_response.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_response.Paint += new System.Windows.Forms.PaintEventHandler(this.lbl_response_Paint);
+            this.lbl_response.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lbl_response_MouseUp);
             // 
             // btn_messageScroller
             // 
@@ -668,7 +657,6 @@
         private vatsys.GenericButton btn_restore;
         private vatsys.GenericButton btn_send;
         private vatsys.InsetPanel insetPanel3;
-        private vatsys.ListViewEx lvw_freetextInput;
         private vatsys.GenericButton btn_messageScroller;
         private System.Windows.Forms.Panel pnl_categories;
         private vatsys.GenericButton btn_level;
@@ -698,6 +686,6 @@
         private System.Windows.Forms.ColumnHeader col_timestamp;
         private System.Windows.Forms.ColumnHeader col_message;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Label lbl_response;
     }
 }
