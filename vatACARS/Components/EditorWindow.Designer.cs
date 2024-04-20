@@ -438,10 +438,6 @@
             this.insetPanel3.Name = "insetPanel3";
             this.insetPanel3.Size = new System.Drawing.Size(529, 31);
             this.insetPanel3.TabIndex = 7;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Width = 522;
             //
             // lbl_response
             // 
