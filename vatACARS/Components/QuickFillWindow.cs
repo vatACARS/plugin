@@ -20,17 +20,18 @@ namespace vatACARS.Components
             public string Setting { get; set; }
         }
 
-        public QuickFillWindow(string placeholder)
+        public QuickFillWindow(string identifier, string placeholder = "")
         {
             InitializeComponent();
             StyleComponent();
             SelectedLabel = new Label();
             FreeText = "";
-            OnDataChanged(placeholder);
+            OnDataChanged(placeholder.ToUpper());
+            tbx_freetext.Text = placeholder;
 
             try
             {
-                foreach (string item in JSONReader.quickFillItems.data[placeholder])
+                foreach (string item in JSONReader.quickFillItems.data[identifier])
                 {
                     AddQuickFillItem(item);
                 }
@@ -93,20 +94,14 @@ namespace vatACARS.Components
         private void tbx_freetext_KeyUp(object sender, KeyEventArgs e)
         {
             if (SelectedLabel.Text != "") SelectedLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-            var ss = tbx_freetext.SelectionStart;
-            var sl = tbx_freetext.SelectionLength;
-            
-            tbx_freetext.Text = tbx_freetext.Text.ToUpper();
-
-            tbx_freetext.SelectionStart = ss;
-            tbx_freetext.SelectionLength = sl;
             FreeText = tbx_freetext.Text;
+            if (((char)e.KeyCode) == (char)Keys.Enter) btn_confirm_Click(sender, null);
         }
 
         private void btn_confirm_Click(object sender, EventArgs e)
         {
-            if (FreeText != "") OnDataChanged(FreeText);
-            if (SelectedLabel.Text != "") OnDataChanged(SelectedLabel.Text);
+            if (FreeText != "") OnDataChanged(FreeText.ToUpper());
+            if (SelectedLabel.Text != "") OnDataChanged(SelectedLabel.Text.ToUpper());
             this.Close();
         }
     }
