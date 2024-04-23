@@ -57,7 +57,7 @@
             this.btn_restore = new vatsys.GenericButton();
             this.btn_send = new vatsys.GenericButton();
             this.insetPanel3 = new vatsys.InsetPanel();
-            this.lbl_response = new System.Windows.Forms.Label();
+            this.lbl_response = new vatsys.TextLabel();
             this.btn_messageScroller = new vatsys.GenericButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.UnableLabel = new vatsys.TextLabel();
@@ -438,16 +438,21 @@
             this.insetPanel3.Name = "insetPanel3";
             this.insetPanel3.Size = new System.Drawing.Size(529, 31);
             this.insetPanel3.TabIndex = 7;
-            //
+            // 
             // lbl_response
             // 
             this.lbl_response.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_response.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_response.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_response.HasBorder = false;
+            this.lbl_response.InteractiveText = false;
             this.lbl_response.Location = new System.Drawing.Point(2, 2);
             this.lbl_response.Name = "lbl_response";
             this.lbl_response.Size = new System.Drawing.Size(525, 27);
             this.lbl_response.TabIndex = 0;
             this.lbl_response.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_response.Paint += new System.Windows.Forms.PaintEventHandler(this.lbl_response_Paint);
+            this.lbl_response.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbl_response_MouseDown);
             this.lbl_response.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lbl_response_MouseUp);
             // 
             // btn_messageScroller
@@ -682,6 +687,6 @@
         private System.Windows.Forms.ColumnHeader col_timestamp;
         private System.Windows.Forms.ColumnHeader col_message;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.Label lbl_response;
+        private vatsys.TextLabel lbl_response;
     }
 }

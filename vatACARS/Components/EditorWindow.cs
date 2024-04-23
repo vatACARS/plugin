@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Lib;
@@ -227,23 +226,32 @@ namespace vatACARS.Components
 
         private void btn_messageScroller_MouseDown(object sender, MouseEventArgs e)
         {
-            if(e.Button == MouseButtons.Left && responseIndex < 4)
+            if (e.Button == MouseButtons.Left && responseIndex < 4)
             {
                 responseIndex++;
                 btn_messageScroller.Text = (responseIndex + 1).ToString();
-            } else if(e.Button == MouseButtons.Right && responseIndex > 0)
+            }
+            else if (e.Button == MouseButtons.Right && responseIndex > 0)
             {
                 responseIndex--;
                 btn_messageScroller.Text = (responseIndex + 1).ToString();
             }
 
+            if (response[responseIndex] == null) response[responseIndex] = new ResponseItem();
             lbl_response.Text = response[responseIndex].Text;
         }
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(msg.Station, "telex", string.Join("\n", response.Select(obj => obj.Text)));
-            HoppiesInterface.SendMessage(req);
+            try
+            {
+                // TODO: replace placeholder content
+                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(msg.Station, "telex", string.Join("\n", response.Where(obj => obj != null && obj.Text != "").Select(obj => obj.Text)));
+                HoppiesInterface.SendMessage(req);
+            } catch(Exception ex)
+            {
+                logger.Log($"Oops: {ex.ToString()}");
+            }
         }
 
         private void scr_messageSelector_Scroll(object sender, EventArgs e)
@@ -281,46 +289,6 @@ namespace vatACARS.Components
                 logger.Log($"Something went wrong!\n{ex.ToString()}");
             }
         }
-
-        /*private void lvw_freetextInput_MouseDown(object sender, MouseEventArgs e)
-        {
-            if(e.Button == MouseButtons.Left)
-            {
-                System.Windows.Forms.Label item = lbl_response;
-                if (item != null)
-                {
-                    foreach(EditableInput input in editableBounds)
-                    {
-                        if (input.bounds.Contains(e.Location))
-                        {
-                            logger.Log("Opening the quick fill window...");
-                            QuickFillWindow fillWindow = new QuickFillWindow(input.placeholder.Substring(1, input.placeholder.Length - 2).ToUpper());
-                            fillWindow.QuickFillDataChanged += (object s, QuickFillData fillText) =>
-                            {
-                                try
-                                {
-                                    input.filled = fillText.Setting;
-                                    input.graphics.FillRectangle(new SolidBrush(Colours.GetColour(Colours.Identities.CPDLCDownlink)), new Rectangle(new Point(input.bounds.X - 1, input.bounds.Y - 2), new Size(input.bounds.Width + 3, input.bounds.Height + 2)));
-                                    input.graphics.DrawString($"{(input.filled != "" ? input.filled : input.placeholder)})", new Font(MMI.eurofont_winsml.FontFamily.Name, 14F, FontStyle.Bold, GraphicsUnit.Pixel), new SolidBrush(item.BackColor), new PointF(input.bounds.X - 2, input.bounds.Y + 16), new StringFormat());
-                                }
-                                catch(Exception ex)
-                                {
-                                    logger.Log($"Something went wrong: {ex.ToString()}");
-                                }
-                            };
-                            fillWindow.Show(this);
-                            break;
-                        }
-                    }
-                }
-            } else if(e.Button == MouseButtons.Right)
-            {
-                response[responseIndex] = "";
-                lbl_response.Text = "";
-                lvw_messageSelector.SelectedItems.Clear();
-                lbl_response.Refresh();
-            }
-        }*/
 
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
@@ -370,7 +338,7 @@ namespace vatACARS.Components
             }
         }
 
-        private void lbl_response_Paint(object sender, PaintEventArgs e)
+        public void lbl_response_Paint(object sender, PaintEventArgs e)
         {
             if (response[responseIndex] == null || response[responseIndex].Placeholders == null) return;
 
@@ -381,7 +349,10 @@ namespace vatACARS.Components
             format.LineAlignment = StringAlignment.Center;
             format.Alignment = StringAlignment.Near;
 
-            foreach(PlaceholderStr item in response[responseIndex].Placeholders)
+            e.Graphics.FillRectangle(new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground)), lbl_response.ClientRectangle);
+            e.Graphics.DrawString(lbl_response.Text, lbl_response.Font, new SolidBrush(Colours.GetColour(Colours.Identities.InteractiveText)), lbl_response.ClientRectangle, format);
+
+            foreach (PlaceholderStr item in response[responseIndex].Placeholders)
             {
                 e.Graphics.FillRectangle(highlight, new Rectangle(item.TopLeftLoc, item.Size));
                 format.Alignment = StringAlignment.Center;
@@ -391,9 +362,10 @@ namespace vatACARS.Components
                     SizeF strSpace = e.Graphics.MeasureString(item.UserValue, lbl_response.Font);
                     if (strSpace.Width > (float)item.Size.Width)
                     {
-                        int place = (int)Math.Floor((float)item.Size.Width / (strSpace.Width / (float)item.UserValue.Length));
-                        if (place > 0) e.Graphics.DrawString(item.UserValue.Substring(0, place) + "...", lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
-                    } else
+                        int place = (int)Math.Floor((float)item.Size.Width / (strSpace.Width / (float)item.UserValue.Length) - 1);
+                        if (place > 0) e.Graphics.DrawString(item.UserValue.Substring(0, place) + "*", lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
+                    }
+                    else
                     {
                         e.Graphics.DrawString(item.UserValue, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
                     }
@@ -402,6 +374,17 @@ namespace vatACARS.Components
                 {
                     e.Graphics.DrawString(item.Placeholder, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
                 }
+            }
+        }
+
+        private void lbl_response_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                response[responseIndex] = null;
+
+                lbl_response.Text = "";
+                lbl_response.Refresh();
             }
         }
 
@@ -416,7 +399,7 @@ namespace vatACARS.Components
                 {
                     try
                     {
-                        QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper());
+                        QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper(), item.UserValue);
                         fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
                         {
                             item.UserValue = data.Setting;
