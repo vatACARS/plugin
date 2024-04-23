@@ -144,6 +144,9 @@
     <EmbeddedResource Include="Components\PDCWindow.resx">
       <DependentUpon>PDCWindow.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Components\QuickFillWindow.resx">
+      <DependentUpon>QuickFillWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Components\SetupWindow.resx">
       <DependentUpon>SetupWindow.cs</DependentUpon>
     </EmbeddedResource>
