@@ -140,7 +140,7 @@ namespace vatACARS.Components
 
                 if (placeholders.Count > 0)
                 {
-                    response[responseIndex].Placeholders = new PlaceholderStr[placeholders.Count];
+                    response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
                     Graphics graphics = lbl_response.CreateGraphics();
                     StringFormat format = new StringFormat();
                     format.LineAlignment = StringAlignment.Center;
@@ -154,15 +154,15 @@ namespace vatACARS.Components
                         Region region = graphics.MeasureCharacterRanges(response[responseIndex].Text, lbl_response.Font, lbl_response.Bounds, format)[0];
                         Rectangle bounds = Rectangle.Round(region.GetBounds(graphics));
 
-                        response[responseIndex].Placeholders[i] = new PlaceholderStr()
+                        response[responseIndex].Placeholders[i] = new ResponseItemPlaceholderData()
                         {
                             Placeholder = placeholders[i].Value,
                             UserValue = "",
-                            TopLeftLoc = new Point(bounds.X, bounds.Y),
-                            Size = new Size(bounds.Width, bounds.Height)
+                            TopLeftLoc = new Point(bounds.X - 4, bounds.Y - 2),
+                            Size = new Size(bounds.Width + 4, bounds.Height + 2)
                         };
                     }
-                } else response[responseIndex].Placeholders = new PlaceholderStr[placeholders.Count];
+                } else response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
 
                 lbl_response.Text = selected;
                 lbl_response.Refresh();
@@ -246,6 +246,13 @@ namespace vatACARS.Components
             try
             {
                 // TODO: replace placeholder content
+                foreach(ResponseItem item in response.Where(obj => obj != null && obj.Text != ""))
+                {
+                    foreach (ResponseItemPlaceholderData placeholder in item.Placeholders)
+                    {
+                        item.Text = item.Text.Replace(placeholder.Placeholder, placeholder.UserValue);
+                    }
+                }
                 FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(msg.Station, "telex", string.Join("\n", response.Where(obj => obj != null && obj.Text != "").Select(obj => obj.Text)));
                 HoppiesInterface.SendMessage(req);
             } catch(Exception ex)
@@ -352,7 +359,7 @@ namespace vatACARS.Components
             e.Graphics.FillRectangle(new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground)), lbl_response.ClientRectangle);
             e.Graphics.DrawString(lbl_response.Text, lbl_response.Font, new SolidBrush(Colours.GetColour(Colours.Identities.InteractiveText)), lbl_response.ClientRectangle, format);
 
-            foreach (PlaceholderStr item in response[responseIndex].Placeholders)
+            foreach (ResponseItemPlaceholderData item in response[responseIndex].Placeholders)
             {
                 e.Graphics.FillRectangle(highlight, new Rectangle(item.TopLeftLoc, item.Size));
                 format.Alignment = StringAlignment.Center;
@@ -394,7 +401,7 @@ namespace vatACARS.Components
 
             for(var i = 0; i < response[responseIndex].Placeholders.Count(); i++)
             {
-                PlaceholderStr item = response[responseIndex].Placeholders[i];
+                ResponseItemPlaceholderData item = response[responseIndex].Placeholders[i];
                 if (new Rectangle(item.TopLeftLoc, item.Size).Contains(e.Location))
                 {
                     try
@@ -420,10 +427,10 @@ namespace vatACARS.Components
     class ResponseItem
     {
         public string Text;
-        public PlaceholderStr[] Placeholders;
+        public ResponseItemPlaceholderData[] Placeholders;
     }
 
-    class PlaceholderStr
+    class ResponseItemPlaceholderData
     {
         public string Placeholder;
         public string UserValue;

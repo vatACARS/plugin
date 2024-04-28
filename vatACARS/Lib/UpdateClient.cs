@@ -68,6 +68,7 @@ namespace vatACARS.Lib
     public class DependencyInfo
     {
         public string fileName;
+        public string location;
         public string subFolder;
         public string hash;
     }
