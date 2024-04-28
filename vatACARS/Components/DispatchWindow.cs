@@ -31,11 +31,11 @@ namespace vatACARS.Components
             timer.Enabled = true;
 
             UpdateMessages();
-            AddStation("QFA100");
-            AddStation("JST100");
-            AddStation("VOZ100");
-            AddStation("BNZ100");
-            AddStation("GIA100");
+            AddStation("SIA212");
+            AddStation("JST057");
+            AddStation("MXD172");
+            AddStation("BTK6012");
+            AddStation("QFA1919");
         }
 
         private void StyleComponent()
@@ -71,32 +71,32 @@ namespace vatACARS.Components
                 messages.Add(new CPDLCMessage()
                 {
                     State = 3,
-                    Station = "QFA100",
-                    Text = "EXAMPLE FINISHED MESSAGE ",
+                    Station = "QFA437",
+                    Text = "REQUEST PREDEP CLEARANCE QFA437 B738 TO YMML AT YSSY STAND D9 ATIS DELTA ",
                     TimeReceived = new DateTime()
                 });
 
                 messages.Add(new CPDLCMessage()
                 {
                     State = 1,
-                    Station = "JST100",
-                    Text = "EXAMPLE STBY/DEFER MESSAGE ",
+                    Station = "SIA212",
+                    Text = "REQUEST CLIMB TO FL400 ",
                     TimeReceived = new DateTime()
                 });
 
                 messages.Add(new CPDLCMessage()
                 {
                     State = 2,
-                    Station = "BNZ100",
-                    Text = "EXAMPLE UPLINKED MESSAGE ",
+                    Station = "QFA1919",
+                    Text = "REQUEST HEADING 105 DUE WEATHER ",
                     TimeReceived = new DateTime()
                 });
 
                 messages.Add(new CPDLCMessage()
                 {
                     State = 0,
-                    Station = "VOZ100",
-                    Text = "EXAMPLE DOWNLINKED MESSAGE ",
+                    Station = "QFA1919",
+                    Text = "WHEN CAN WE EXPECT LOWER LEVEL ",
                     TimeReceived = new DateTime()
                 });
 
