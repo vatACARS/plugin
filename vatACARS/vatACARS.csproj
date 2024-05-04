@@ -85,6 +85,12 @@
     <Compile Include="Components\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\LogonConsentWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\LogonConsentWindow.Designer.cs">
+      <DependentUpon>LogonConsentWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\PDCWindow.cs">
       <SubType>designer</SubType>
     </Compile>
@@ -140,6 +146,9 @@
     <EmbeddedResource Include="Components\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\LogonConsentWindow.resx">
+      <DependentUpon>LogonConsentWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\PDCWindow.resx">
       <DependentUpon>PDCWindow.cs</DependentUpon>
