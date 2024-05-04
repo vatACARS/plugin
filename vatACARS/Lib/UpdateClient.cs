@@ -58,7 +58,7 @@ namespace vatACARS.Lib
                 {
                     logger.Log($"Downloading {dependency.fileName}...");
                     //File.Delete($"{dirPath}\\{dependency.subFolder}\\{dependency.fileName}"); // temporarily stop this to stop updates
-                    await httpClient.DownloadFileTaskAsync($"/files/{dependency.fileName}", $"{dirPath}\\{dependency.subFolder}\\{dependency.fileName}", "https://cdn.vatacars.com");
+                    await httpClient.DownloadFileTaskAsync($"/{dependency.location}/{dependency.fileName}", $"{dirPath}\\{dependency.subFolder}\\{dependency.fileName}", "https://cdn.vatacars.com");
                 }
             }
             logger.Log("Finished update!");

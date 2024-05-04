@@ -29,12 +29,12 @@ namespace vatACARS.Helpers
             timer.Interval = 1.8e06;
             timer.Enabled = true;
 
-            CheckLatestVersion();
+            _ = CheckLatestVersion();
         }
 
         private static void CheckTimer(object sender, ElapsedEventArgs e)
         {
-            CheckLatestVersion();
+            _ = CheckLatestVersion();
         }
 
         private static async Task CheckLatestVersion()
