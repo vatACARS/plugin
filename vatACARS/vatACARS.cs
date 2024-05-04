@@ -25,13 +25,9 @@ namespace vatACARS
 
         private static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow;
-        private static EditorWindow editorWindow;
-        private static PDCWindow PDCWindow;
 
         private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
-        private CustomToolStripMenuItem editorWindowMenu;
-        private CustomToolStripMenuItem PDCWindowMenu;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
@@ -66,12 +62,6 @@ namespace vatACARS
             dispatchWindowMenu.Item.Click += DispatchWindowMenu_Click;
             MMI.AddCustomMenuItem(dispatchWindowMenu);
 
-            // Temporary for testing
-            PDCWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("[DEV] PDC Editor"));
-            PDCWindowMenu.CustomCategoryName = "ACARS";
-            PDCWindowMenu.Item.Click += PDCWindowMenu_Click;
-            MMI.AddCustomMenuItem(PDCWindowMenu);
-
             // Update Checking
             logger.Log("Starting version checker...");
             VersionChecker.StartListening();
@@ -98,7 +88,7 @@ namespace vatACARS
             else if (setupWindow.Visible)
                 return;
 
-            setupWindow.Show();
+            setupWindow.Show(Form.ActiveForm);
         }
 
         private void DispatchWindowMenu_Click(object sender, EventArgs e)
@@ -114,21 +104,6 @@ namespace vatACARS
                 return;
 
             dispatchWindow.Show(Form.ActiveForm);
-        }
-
-        private void PDCWindowMenu_Click(object sender, EventArgs e)
-        {
-            MMI.InvokeOnGUI(delegate () { DoShowPDCWindow(); });
-        }
-
-        private static void DoShowPDCWindow()
-        {
-            if (PDCWindow == null || PDCWindow.IsDisposed)
-                PDCWindow = new PDCWindow();
-            else if (PDCWindow.Visible)
-                return;
-                      
-            PDCWindow.Show(Form.ActiveForm);
         }
 
         public void OnFDRUpdate(FDP2.FDR updated) { }
