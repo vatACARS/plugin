@@ -25,13 +25,9 @@ namespace vatACARS
 
         private static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow;
-        private static EditorWindow editorWindow;
-        private static PDCWindow PDCWindow;
 
         private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
-        private CustomToolStripMenuItem editorWindowMenu;
-        private CustomToolStripMenuItem PDCWindowMenu;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
