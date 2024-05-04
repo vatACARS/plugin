@@ -68,7 +68,7 @@ namespace vatACARS.Components
 
         private void btn_reply_Click(object sender, EventArgs e) { }
 
-        private async void scr_messageSelector_Scroll(object sender, EventArgs e) { }
+        private void scr_messageSelector_Scroll(object sender, EventArgs e) { }
 
         // There has got to be a better way to do this, will look into it
         private void btn_suspend_Click(object sender, EventArgs e) { }
