@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Timers;
 using System.Windows.Forms;
 using vatACARS.Helpers;
@@ -14,10 +13,12 @@ namespace vatACARS.Components
     public partial class DispatchWindow : BaseForm
     {
         private static Logger logger = new Logger("DispatchWindow");
-        private List<CPDLCMessage> messages = new List<CPDLCMessage>();
+        private List<TelexMessage> telexMessages = new List<TelexMessage>();
+        private List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
+        private List<Station> stations = new List<Station>();
         private static System.Timers.Timer timer;
         private static ImageList il;
-        public static CPDLCMessage SelectedMessage;
+        public static IMessageData SelectedMessage;
 
         public DispatchWindow()
         {
@@ -31,11 +32,6 @@ namespace vatACARS.Components
             timer.Enabled = true;
 
             UpdateMessages();
-            AddStation("SIA212");
-            AddStation("JST057");
-            AddStation("MXD172");
-            AddStation("BTK6012");
-            AddStation("QFA1919");
         }
 
         private void StyleComponent()
@@ -63,48 +59,23 @@ namespace vatACARS.Components
         {
             try
             {
-                var tMsgs = Tranceiver.getAllCPDLCMessages().ToList();
-                //if (tMsgs == messages) return;
-
-                messages = tMsgs;
-
-                messages.Add(new CPDLCMessage()
-                {
-                    State = 3,
-                    Station = "QFA437",
-                    Text = "REQUEST PREDEP CLEARANCE QFA437 B738 TO YMML AT YSSY STAND D9 ATIS DELTA ",
-                    TimeReceived = new DateTime()
-                });
-
-                messages.Add(new CPDLCMessage()
-                {
-                    State = 1,
-                    Station = "SIA212",
-                    Text = "REQUEST CLIMB TO FL400 ",
-                    TimeReceived = new DateTime()
-                });
-
-                messages.Add(new CPDLCMessage()
-                {
-                    State = 2,
-                    Station = "QFA1919",
-                    Text = "REQUEST HEADING 105 DUE WEATHER ",
-                    TimeReceived = new DateTime()
-                });
-
-                messages.Add(new CPDLCMessage()
-                {
-                    State = 0,
-                    Station = "QFA1919",
-                    Text = "WHEN CAN WE EXPECT LOWER LEVEL ",
-                    TimeReceived = new DateTime()
-                });
+                telexMessages = Tranceiver.getAllTelexMessages().ToList();
+                CPDLCMessages = Tranceiver.getAllCPDLCMessages().ToList();
+                stations = Tranceiver.getAllStations().ToList();
 
                 lvw_messages.Items.Clear();
-                foreach (var message in messages.OrderBy(item => item.State).ToArray())
+                var messages = telexMessages.ToList<IMessageData>().Concat(CPDLCMessages.ToList<IMessageData>()).ToList<IMessageData>();
+                foreach (var message in messages.OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList<IMessageData>())
                 {
-                    AddMessage(message);
+                    if (message is CPDLCMessage)
+                    {
+                        AddMessage((CPDLCMessage)message);
+                        continue;
+                    }
+                    AddMessage((TelexMessage)message);
                 }
+
+                foreach (var station in stations) AddStation(station);
 
                 lvw_messages.Invalidate();
             }
@@ -114,13 +85,12 @@ namespace vatACARS.Components
             }
         }
 
-        public void AddMessage(CPDLCMessage message)
+        public void AddMessage(TelexMessage message)
         {
             try
             {
-                messages.Add(message);
                 ListViewItem item = new ListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State);
-                item.SubItems.Add($"{message.Station}: {message.Text}");
+                item.SubItems.Add($"{message.Station}: {message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
                 item.Group = lvw_messages.Groups[message.State];
@@ -145,16 +115,54 @@ namespace vatACARS.Components
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
                 lvw_messages.Items.Add(item);
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.Log($"Something went wrong:\n{ex.ToString()}");
             }
         }
 
-        private void AddStation(string callsign)
+        public void AddMessage(CPDLCMessage message)
+        {
+            try
+            {
+                ListViewItem item = new ListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State);
+                item.SubItems.Add($"{message.Station}: {message.Content}");
+                item.Font = MMI.eurofont_winsml;
+                item.Tag = message;
+                item.Group = lvw_messages.Groups[message.State];
+                if (message.State == 0)
+                { // DOWNLINK
+                    item.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                }
+                else if (message.State == 1)
+                { // STBY/DEFER
+                    item.BackColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCFreetext);
+                }
+                else if (message.State == 2)
+                { // UPLINK
+                    item.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                }
+                else
+                {
+                    item.BackColor = Colours.GetColour(Colours.Identities.CPDLCFreetext);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                }
+                lvw_messages.Items.Add(item);
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"Something went wrong:\n{ex.ToString()}");
+            }
+        }
+
+        private void AddStation(Station station)
         {
             Label callsignLabel = new Label();
-            callsignLabel.Text = callsign;
+            callsignLabel.Text = station.Callsign;
             callsignLabel.TextAlign = ContentAlignment.MiddleCenter;
             callsignLabel.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
             callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
@@ -167,11 +175,11 @@ namespace vatACARS.Components
             {
                 if(e.Button == MouseButtons.Left)
                 {
-                    SelectedMessage = new CPDLCMessage()
+                    SelectedMessage = new TelexMessage()
                     {
                         State = 0,
                         Station = callsignLabel.Text,
-                        Text = "(no message received)",
+                        Content = "(no message received)",
                         TimeReceived = DateTime.Now
                     };
 
@@ -230,23 +238,33 @@ namespace vatACARS.Components
 
             if(selected != null)
             {
-                CPDLCMessage msg = (CPDLCMessage)selected.Tag;
+                var msg = (IMessageData)selected.Tag;
 
                 if (e.Button == MouseButtons.Left)
                 {
                     if(msg.State == 0 || msg.State == 1)
                     {
                         SelectedMessage = msg;
+                        if(msg is CPDLCMessage)
+                        {
+                            var m = (CPDLCMessage)msg;
+                            if(m.Content == "REQUEST LOGON")
+                            {
+                                LogonConsentWindow consentWindow = new LogonConsentWindow();
+                                consentWindow.Show(ActiveForm);
+                                return;
+                            }
+                        }
                         EditorWindow window = new EditorWindow();
-                        window.Show(Form.ActiveForm);
+                        window.Show(ActiveForm);
                     }
                     lvw_messages.Invalidate();
                 } else if(e.Button == MouseButtons.Right)
                 {
                     if(msg.State == 0)
                     {
-                        msg.SetCPDLCMessageState(2);
-                        lvw_messages.Invalidate();
+                        msg.setMessageState(1);
+                        UpdateMessages();
                     }
                 }
             }
