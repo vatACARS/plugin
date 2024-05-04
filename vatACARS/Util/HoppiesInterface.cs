@@ -58,7 +58,8 @@ namespace vatACARS.Util
             }
 
             var responses = hoppieParse.Matches(rawMessages);
-            List<CPDLCMessageReponse> newMessages = new List<CPDLCMessageReponse>();
+            List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
+            List<TelexMessage> telexMessages = new List<TelexMessage>();
 
             logger.Log($"Received {responses.Count} messages.");
             if (responses.Count > 0)
@@ -76,38 +77,29 @@ namespace vatACARS.Util
                         {
                             if (rawMessage[1].StartsWith("/DATA2/"))
                             {
-                                var parsedMessage = parseCPDLCMessage(rawMessage[1], station);
-                                logger.Log($"CPDLC: {station} | ({parsedMessage.MessageType}) {parsedMessage.PacketData}");
-                                newMessages.Add(parsedMessage);
+                                CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
+                                logger.Log($"CPDLC: {station} | (M:{parsedMessage.MessageId} / R:{(parsedMessage.ReplyMessageId != -1 ? parsedMessage.ReplyMessageId.ToString() : "X")}) [{parsedMessage.ResponseType}] {parsedMessage.Content}");
+                                CPDLCMessages.Add(parsedMessage);
                                 break;
                             } else
                             {
                                 logger.Log($"TELEX: {station} | {rawMessage[1]}");
-                                newMessages.Add(new CPDLCMessageReponse()
+                                telexMessages.Add(new TelexMessage()
                                 {
+                                    State = 0,
                                     Station = station,
-                                    MessageType = "TELEX",
-                                    PacketData = rawMessage[1]
+                                    TimeReceived = DateTime.Now,
+                                    Content = rawMessage[1]
                                 });
                                 break;
                             }
                         }
                     }
                 }
-            } else
-            {
             }
 
-            foreach(var message in newMessages)
-            {
-                Tranceiver.addCPDLCMessage(new CPDLCMessage()
-                {
-                    State = 0,
-                    Station = message.Station,
-                    Text = message.PacketData.ToString(),
-                    TimeReceived = DateTime.Now
-                });
-            }
+            foreach (var message in telexMessages) Tranceiver.addTelexMessage(message);
+            foreach (var message in CPDLCMessages) Tranceiver.addCPDLCMessage(message);
         }
 
         private static async Task<string> PollMessages()
@@ -141,16 +133,35 @@ namespace vatACARS.Util
 
         public static async Task<string> SendMessage(FormUrlEncodedContent request)
         {
+            Tranceiver.SentMessages++;
             return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
         }
 
-        private static CPDLCMessageReponse parseCPDLCMessage(string rawMessage, string station)
+        private static CPDLCMessage parseCPDLCMessage(string rawMessage, string station)
         {
-            CPDLCMessageReponse msg = new CPDLCMessageReponse();
-            msg.Station = station;
-            var headerData = cpdlcHeaderParse.Matches(rawMessage);
-            msg.MessageType = headerData[0].Value.Trim('/');
-            msg.PacketData = rawMessage.Split(new string[] { headerData[3].Value.Trim('/') + "/" }, StringSplitOptions.None)[1];
+            string dataPortion = rawMessage.Substring(rawMessage.IndexOf('/') + 1);
+            string[] fields = dataPortion.Split('/');
+
+            CPDLCMessage msg;
+
+            try
+            {
+                msg = new CPDLCMessage()
+                {
+                    State = 0,
+                    TimeReceived = DateTime.Now,
+                    Station = station,
+                    MessageId = int.Parse(fields[1]),
+                    ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,
+                    ResponseType = fields[3],
+                    Content = fields[4]
+                };
+            } catch (FormatException ex)
+            {
+                // Somebody forged a CPDLCMessage format that was invalid
+                logger.Log($"CPDLCMessage from {station} was invalid! Might have been intentional forgery. {ex.Message}");
+                msg = new CPDLCMessage();
+            }
 
             return msg;
         }
