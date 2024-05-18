@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
 using System.Timers;
 using System.Windows.Forms;
 using vatACARS.Helpers;
@@ -263,6 +264,18 @@ namespace vatACARS.Components
                 {
                     if(msg.State == 0)
                     {
+                        if(msg is CPDLCMessage)
+                        {
+                            CPDLCMessage m = (CPDLCMessage)msg;
+                            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(m.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{m.MessageId}/N/STANDBY");
+                            _ = HoppiesInterface.SendMessage(req);
+                        }
+                        if(msg is TelexMessage)
+                        {
+                            TelexMessage m = (TelexMessage)msg;
+                            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(m.Station, "telex", $"STANDBY");
+                            _ = HoppiesInterface.SendMessage(req);
+                        }
                         msg.setMessageState(1);
                         UpdateMessages();
                     }

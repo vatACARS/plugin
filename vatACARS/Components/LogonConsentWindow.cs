@@ -9,6 +9,7 @@ namespace vatACARS.Components
     public partial class LogonConsentWindow : BaseForm
     {
         private CPDLCMessage selectedMsg;
+        private static Logger logger = new Logger("LogonConsentWindow");
 
         public LogonConsentWindow()
         {
@@ -23,7 +24,7 @@ namespace vatACARS.Components
             lbl_callsign.Text = selectedMsg.Station;
         }
 
-        private void btn_accept_Click(object sender, System.EventArgs e)
+        private void btn_accept_Click(object sender, EventArgs e)
         {
             try
             {
@@ -35,13 +36,13 @@ namespace vatACARS.Components
                 });
                 FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{selectedMsg.MessageId}/N/LOGON ACCEPTED");
                 _ = HoppiesInterface.SendMessage(req);
-            } catch(Exception) {
-                // womp womp
+            } catch(Exception ex) {
+                logger.Log(ex.ToString());
             }
             Close();
         }
 
-        private void btn_unable_Click(object sender, System.EventArgs e)
+        private void btn_unable_Click(object sender, EventArgs e)
         {
             try
             {
