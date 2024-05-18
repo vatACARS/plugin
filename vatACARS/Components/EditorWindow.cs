@@ -19,26 +19,41 @@ namespace vatACARS.Components
         private static ResponseItem[] response = new ResponseItem[5];
         private static int responseIndex = 0;
         private static readonly Regex placeholderParse = new Regex(@"\((.*?)\)");
-        private CPDLCMessage msg;
+        private IMessageData selectedMsg;
 
         public EditorWindow()
         {
             InitializeComponent();
             StyleComponent();
-            msg = DispatchWindow.SelectedMessage;
-
-            this.Text = $"Replying to {msg.Station}";
-            ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
-            lvMsg.SubItems.Add($"{msg.Text}");
-            lvMsg.Font = MMI.eurofont_winsml;
-
-            lvw_messages.Items.Add(lvMsg);
-
-            if(msg.Text == "(no message received)")
+            selectedMsg = DispatchWindow.SelectedMessage;
+            
+            if(selectedMsg is TelexMessage)
             {
-                this.Text = $"Sending to {msg.Station}";
-                btn_editor_Click(null, null);
-                return;
+                var msg = (TelexMessage)selectedMsg;
+
+                this.Text = $"Replying to {msg.Station}";
+                ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
+                lvMsg.SubItems.Add($"{msg.Content}");
+                lvMsg.Font = MMI.eurofont_winsml;
+
+                lvw_messages.Items.Add(lvMsg);
+
+                if (msg.Content == "(no message received)")
+                {
+                    this.Text = $"Sending to {msg.Station}";
+                    btn_editor_Click(null, null);
+                    return;
+                }
+            } else if(selectedMsg is CPDLCMessage)
+            {
+                var msg = (CPDLCMessage)selectedMsg;
+
+                this.Text = $"Replying to {msg.Station}";
+                ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
+                lvMsg.SubItems.Add($"{msg.Content}");
+                lvMsg.Font = MMI.eurofont_winsml;
+
+                lvw_messages.Items.Add(lvMsg);
             }
 
             lvw_messageSelector.Items.Clear();
@@ -47,7 +62,7 @@ namespace vatACARS.Components
                 lvw_messageSelector.Items.Add(uplink.Element);
             }
 
-            logger.Log("Window opened and populated.");
+            lbl_response.Invalidate();
         }
 
         private void StyleComponent()
@@ -128,19 +143,19 @@ namespace vatACARS.Components
         {
             if (lvw_messageSelector.SelectedItems.Count > 0)
             {
-                var selected = lvw_messageSelector.SelectedItems[0].Text; //Uplinks.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Element;
-                var placeholders = placeholderParse.Matches(selected);
+                UplinkEntry selected = XMLReader.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault();
+                var placeholders = placeholderParse.Matches(selected.Element);
 
                 
                 response[responseIndex] = new ResponseItem()
                 {
-                    Text = selected,
+                    Entry = selected,
                     Placeholders = null
                 };
 
                 if (placeholders.Count > 0)
                 {
-                    response[responseIndex].Placeholders = new PlaceholderStr[placeholders.Count];
+                    response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
                     Graphics graphics = lbl_response.CreateGraphics();
                     StringFormat format = new StringFormat();
                     format.LineAlignment = StringAlignment.Center;
@@ -151,64 +166,64 @@ namespace vatACARS.Components
                         CharacterRange[] ranges = { new CharacterRange(placeholders[i].Index, placeholders[i].Length) };
                         format.SetMeasurableCharacterRanges(ranges);
 
-                        Region region = graphics.MeasureCharacterRanges(response[responseIndex].Text, lbl_response.Font, lbl_response.Bounds, format)[0];
+                        Region region = graphics.MeasureCharacterRanges(response[responseIndex].Entry.Element, lbl_response.Font, lbl_response.Bounds, format)[0];
                         Rectangle bounds = Rectangle.Round(region.GetBounds(graphics));
 
-                        response[responseIndex].Placeholders[i] = new PlaceholderStr()
+                        response[responseIndex].Placeholders[i] = new ResponseItemPlaceholderData()
                         {
                             Placeholder = placeholders[i].Value,
                             UserValue = "",
-                            TopLeftLoc = new Point(bounds.X, bounds.Y),
-                            Size = new Size(bounds.Width, bounds.Height)
+                            TopLeftLoc = new Point(bounds.X - 4, bounds.Y - 2),
+                            Size = new Size(bounds.Width + 4, bounds.Height + 2)
                         };
                     }
-                } else response[responseIndex].Placeholders = new PlaceholderStr[placeholders.Count];
+                } else response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
 
-                lbl_response.Text = selected;
+                lbl_response.Text = selected.Element;
                 lbl_response.Refresh();
             }
         }
 
         private void btn_standby_Click(object sender, EventArgs e)
         {
-            var standby = XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Element;
-            lbl_response.Text = standby;
+            var standby = XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault();
+            lbl_response.Text = standby.Element;
             response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Text = standby };
+            response[0] = new ResponseItem() { Entry = standby };
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
 
         private void btn_defer_Click(object sender, EventArgs e)
         {
-            var defer = XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Element;
-            lbl_response.Text = defer;
+            var defer = XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault();
+            lbl_response.Text = defer.Element;
             response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Text = defer };
+            response[0] = new ResponseItem() { Entry = defer };
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
 
         private void btn_tfc_Click(object sender, EventArgs e)
         {
-            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
-            var tfc = XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Element;
-            lbl_response.Text = tfc;
+            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault();
+            var tfc = XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault();
+            lbl_response.Text = tfc.Element;
             response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Text = unable };
-            response[1] = new ResponseItem() { Text = tfc };
+            response[0] = new ResponseItem() { Entry = unable };
+            response[1] = new ResponseItem() { Entry = tfc };
             responseIndex = 1;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
 
         private void btn_air_Click(object sender, EventArgs e)
         {
-            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Element;
-            var air = XMLReader.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault().Element;
-            lbl_response.Text = air;
+            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault();
+            var air = XMLReader.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault();
+            lbl_response.Text = air.Element;
             response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Text = unable };
-            response[1] = new ResponseItem() { Text = air };
+            response[0] = new ResponseItem() { Entry = unable };
+            response[1] = new ResponseItem() { Entry = air };
             responseIndex = 1;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
         }
@@ -238,7 +253,7 @@ namespace vatACARS.Components
             }
 
             if (response[responseIndex] == null) response[responseIndex] = new ResponseItem();
-            lbl_response.Text = response[responseIndex].Text;
+            lbl_response.Text = response[responseIndex].Entry.Element;
         }
 
         private void btn_send_Click(object sender, EventArgs e)
@@ -246,12 +261,38 @@ namespace vatACARS.Components
             try
             {
                 // TODO: replace placeholder content
-                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(msg.Station, "telex", string.Join("\n", response.Where(obj => obj != null && obj.Text != "").Select(obj => obj.Text)));
-                HoppiesInterface.SendMessage(req);
+                foreach(ResponseItem item in response.Where(obj => obj != null && obj.Entry.Element != ""))
+                {
+                    foreach (ResponseItemPlaceholderData placeholder in item.Placeholders)
+                    {
+                        item.Entry.Element = item.Entry.Element.Replace(placeholder.Placeholder, $"@{placeholder.UserValue}@");
+                    }
+                }
+
+                if(selectedMsg is TelexMessage)
+                {
+                    TelexMessage message = (TelexMessage)selectedMsg;
+                    string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
+                    if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
+                    FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
+                    _ = HoppiesInterface.SendMessage(req);
+                } else if(selectedMsg is CPDLCMessage)
+                {
+                    var responseCode = "N";
+                    if (response.Any(obj => obj.Entry.Response == "R")) responseCode = "R";
+                    CPDLCMessage message = (CPDLCMessage)selectedMsg;
+                    string resp = $"/data2/{Tranceiver.SentMessages}/{message.MessageId}/{responseCode}/{string.Join("+", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element))}";
+                    if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
+                    FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
+                    _ = HoppiesInterface.SendMessage(req);
+                }
             } catch(Exception ex)
             {
                 logger.Log($"Oops: {ex.ToString()}");
             }
+
+            selectedMsg.setMessageState(2);
+            Close();
         }
 
         private void scr_messageSelector_Scroll(object sender, EventArgs e)
@@ -352,7 +393,7 @@ namespace vatACARS.Components
             e.Graphics.FillRectangle(new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground)), lbl_response.ClientRectangle);
             e.Graphics.DrawString(lbl_response.Text, lbl_response.Font, new SolidBrush(Colours.GetColour(Colours.Identities.InteractiveText)), lbl_response.ClientRectangle, format);
 
-            foreach (PlaceholderStr item in response[responseIndex].Placeholders)
+            foreach (ResponseItemPlaceholderData item in response[responseIndex].Placeholders)
             {
                 e.Graphics.FillRectangle(highlight, new Rectangle(item.TopLeftLoc, item.Size));
                 format.Alignment = StringAlignment.Center;
@@ -394,7 +435,7 @@ namespace vatACARS.Components
 
             for(var i = 0; i < response[responseIndex].Placeholders.Count(); i++)
             {
-                PlaceholderStr item = response[responseIndex].Placeholders[i];
+                ResponseItemPlaceholderData item = response[responseIndex].Placeholders[i];
                 if (new Rectangle(item.TopLeftLoc, item.Size).Contains(e.Location))
                 {
                     try
@@ -419,11 +460,11 @@ namespace vatACARS.Components
 
     class ResponseItem
     {
-        public string Text;
-        public PlaceholderStr[] Placeholders;
+        public UplinkEntry Entry;
+        public ResponseItemPlaceholderData[] Placeholders;
     }
 
-    class PlaceholderStr
+    class ResponseItemPlaceholderData
     {
         public string Placeholder;
         public string UserValue;
