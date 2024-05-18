@@ -6,7 +6,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using vatACARS.Util;
+using vatsys;
 
 namespace vatACARS.Helpers
 {
@@ -22,11 +24,41 @@ namespace vatACARS.Helpers
         {
             return TelexMessages.ToArray();
         }
-        
+
         public static void addTelexMessage(TelexMessage message)
         {
             logger.Log("TelexMessage successfully received.");
             TelexMessages.Add(message);
+        }
+
+        private static bool Connected = false;
+
+        public static bool IsConnected()
+        {
+            return Connected;
+        }
+
+        public static void TryConnect(bool value)
+        {
+            //FIX THIS PLEASE
+        }
+
+        public static void SetConnected(bool value)
+        {
+            //RUN TRY CONNECT BEFORE LETTING CON NECT
+
+            if (Connected != value)
+            {
+                Connected = value;
+                if (Connected)
+                {
+                    logger.Log("Connection established.");
+                }
+                else
+                {
+                    logger.Log("Connection lost.");
+                }
+            }
         }
 
         public static CPDLCMessage[] getAllCPDLCMessages()
@@ -43,11 +75,11 @@ namespace vatACARS.Helpers
         public static async void setMessageState(this IMessageData message, int state)
         {
             message.State = state;
-            
-            if(state == 2)
+
+            if (state == 2)
             {
                 await Task.Delay(TimeSpan.FromSeconds(10));
-                if(message.State == 2) message.State = 3;
+                if (message.State == 2) message.State = 3;
             }
         }
 
@@ -60,60 +92,61 @@ namespace vatACARS.Helpers
         {
             Stations.Add(station);
         }
-    }
 
-    public static class ClientInformation
-    {
-        public static string LogonCode = "KFuVQyZR9Mx4W9G"; // Hoppies logon code
-        public static string Callsign = "YBCS";
 
-    }
+        public static class ClientInformation
+        {
+            public static string LogonCode = ""; // Hoppies logon code
+            public static string Callsign = "";
 
-    public interface IMessageData
-    {
-        int State { get; set; }
-        DateTime TimeReceived { get; set; }
-        string Station { get; set; }
-    }
+        }
 
-    public class CPDLCMessage : IMessageData
-    {
-        /* State:
-         * 0 = Downlink
-         * 1 = Stby/Defer
-         * 2 = Uplink
-         * 3 = Finished
-         */
-        public int State { get; set; }
-        public DateTime TimeReceived { get; set; }
-        public string Station { get; set; }
-        public int MessageId;
-        public int ReplyMessageId;
-        public string ResponseType;
-        public string Content;
-    }
+        public interface IMessageData
+        {
+            int State { get; set; }
+            DateTime TimeReceived { get; set; }
+            string Station { get; set; }
+        }
 
-    public class TelexMessage : IMessageData
-    {
-        /* State:
-         * 0 = Downlink
-         * 1 = Stby/Defer
-         * 2 = Uplink
-         * 3 = Finished
-         */
-        public int State { get; set; }
-        public DateTime TimeReceived { get; set; }
-        public string Station { get; set; }
-        public string Content;
-    }
+        public class CPDLCMessage : IMessageData
+        {
+            /* State:
+             * 0 = Downlink
+             * 1 = Stby/Defer
+             * 2 = Uplink
+             * 3 = Finished
+             */
+            public int State { get; set; }
+            public DateTime TimeReceived { get; set; }
+            public string Station { get; set; }
+            public int MessageId;
+            public int ReplyMessageId;
+            public string ResponseType;
+            public string Content;
+        }
 
-    public class Station
-    {
-        /* Provider:
-         * 0 = Hoppies
-         * 1 = vatACARS
-         */
-        public int Provider;
-        public string Callsign;
+        public class TelexMessage : IMessageData
+        {
+            /* State:
+             * 0 = Downlink
+             * 1 = Stby/Defer
+             * 2 = Uplink
+             * 3 = Finished
+             */
+            public int State { get; set; }
+            public DateTime TimeReceived { get; set; }
+            public string Station { get; set; }
+            public string Content;
+        }
+
+        public class Station
+        {
+            /* Provider:
+             * 0 = Hoppies
+             * 1 = vatACARS
+             */
+            public int Provider;
+            public string Callsign;
+        }
     }
 }

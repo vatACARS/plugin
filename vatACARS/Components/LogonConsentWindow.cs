@@ -3,6 +3,7 @@ using System.Net.Http;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
+using static vatACARS.Helpers.Tranceiver;
 
 namespace vatACARS.Components
 {

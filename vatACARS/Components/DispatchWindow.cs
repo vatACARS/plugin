@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
+using static vatACARS.Helpers.Tranceiver;
 
 namespace vatACARS.Components
 {

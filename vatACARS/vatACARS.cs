@@ -66,9 +66,6 @@ namespace vatACARS
             logger.Log("Starting version checker...");
             VersionChecker.StartListening();
 
-            logger.Log("Starting Hoppies integration...");
-            // Start Hoppies Polling
-            HoppiesInterface.StartListening();
 
             XMLReader.MakeUplinks();
             JSONReader.MakeQuickFillItems();
@@ -110,4 +107,6 @@ namespace vatACARS
 
         public void OnRadarTrackUpdate(RDP.RadarTrack updated) { }
     }
+
+
 }
