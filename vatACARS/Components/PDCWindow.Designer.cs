@@ -352,7 +352,7 @@
             // 
             this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_send.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btn_send.Location = new System.Drawing.Point(15, 337);
+            this.btn_send.Location = new System.Drawing.Point(303, 337);
             this.btn_send.Name = "btn_send";
             this.btn_send.Size = new System.Drawing.Size(90, 28);
             this.btn_send.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -365,7 +365,7 @@
             // 
             this.btn_escape.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_escape.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btn_escape.Location = new System.Drawing.Point(303, 337);
+            this.btn_escape.Location = new System.Drawing.Point(15, 337);
             this.btn_escape.Name = "btn_escape";
             this.btn_escape.Size = new System.Drawing.Size(90, 28);
             this.btn_escape.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

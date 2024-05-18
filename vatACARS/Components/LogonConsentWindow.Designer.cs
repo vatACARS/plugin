@@ -80,13 +80,13 @@
             this.Controls.Add(this.btn_accept);
             this.Controls.Add(this.lbl_callsign);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.HasCloseButton = false;
             this.HasMinimizeButton = false;
+            this.HasSendBackButton = false;
+            this.MiddleClickClose = false;
             this.MinimizeBox = false;
             this.Name = "LogonConsentWindow";
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Logon Request";
             this.ResumeLayout(false);
 

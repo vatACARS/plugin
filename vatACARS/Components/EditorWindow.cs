@@ -62,7 +62,7 @@ namespace vatACARS.Components
                 lvw_messageSelector.Items.Add(uplink.Element);
             }
 
-            logger.Log("Window opened and populated.");
+            lbl_response.Invalidate();
         }
 
         private void StyleComponent()
