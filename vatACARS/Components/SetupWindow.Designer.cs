@@ -58,7 +58,7 @@
             this.lbl_stationCode.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_stationCode.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_stationCode.HasBorder = false;
-            this.lbl_stationCode.InteractiveText = false;
+            this.lbl_stationCode.InteractiveText = true;
             this.lbl_stationCode.Location = new System.Drawing.Point(12, 7);
             this.lbl_stationCode.Name = "lbl_stationCode";
             this.lbl_stationCode.Size = new System.Drawing.Size(159, 26);
@@ -72,7 +72,7 @@
             this.lbl_enablehop.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_enablehop.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_enablehop.HasBorder = false;
-            this.lbl_enablehop.InteractiveText = false;
+            this.lbl_enablehop.InteractiveText = true;
             this.lbl_enablehop.Location = new System.Drawing.Point(12, 40);
             this.lbl_enablehop.Name = "lbl_enablehop";
             this.lbl_enablehop.Size = new System.Drawing.Size(159, 26);
@@ -86,7 +86,7 @@
             this.lbl_hoplogon.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_hoplogon.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_hoplogon.HasBorder = false;
-            this.lbl_hoplogon.InteractiveText = false;
+            this.lbl_hoplogon.InteractiveText = true;
             this.lbl_hoplogon.Location = new System.Drawing.Point(12, 73);
             this.lbl_hoplogon.Name = "lbl_hoplogon";
             this.lbl_hoplogon.Size = new System.Drawing.Size(159, 26);
@@ -139,7 +139,7 @@
             this.lbl_error.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_error.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_error.HasBorder = false;
-            this.lbl_error.InteractiveText = false;
+            this.lbl_error.InteractiveText = true;
             this.lbl_error.Location = new System.Drawing.Point(12, 166);
             this.lbl_error.Name = "lbl_error";
             this.lbl_error.Size = new System.Drawing.Size(296, 28);
