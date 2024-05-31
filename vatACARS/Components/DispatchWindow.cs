@@ -257,6 +257,16 @@ namespace vatACARS.Components
                                 return;
                             }
                         }
+                        else if (msg is TelexMessage)
+                        {
+                            var m = (TelexMessage)msg;
+                            if (m.Content.StartsWith("REQUEST PREDEP CLEARANCE"))
+                            {
+                                PDCWindow PDCWindow = new PDCWindow();
+                                PDCWindow.Show(ActiveForm);
+                                return;
+                            }
+                        }
                         EditorWindow window = new EditorWindow();
                         window.Show(ActiveForm);
                     }

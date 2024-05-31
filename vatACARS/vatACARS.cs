@@ -70,6 +70,7 @@ namespace vatACARS
             XMLReader.MakeUplinks();
             JSONReader.MakeQuickFillItems();
 
+
             logger.Log("Started successfully.");
         }
 
