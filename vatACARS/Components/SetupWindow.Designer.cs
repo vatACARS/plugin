@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.btn_connect = new vatsys.GenericButton();
-            this.btn_save = new vatsys.GenericButton();
             this.lbl_stationCode = new vatsys.TextLabel();
             this.lbl_enablehop = new vatsys.TextLabel();
             this.lbl_hoplogon = new vatsys.TextLabel();
             this.tbx_logonCode = new vatsys.TextField();
             this.tbx_hoplogon = new vatsys.TextField();
             this.toggle_hop = new vatsys.GenericButton();
+            this.lbl_error = new vatsys.TextLabel();
             this.SuspendLayout();
             // 
             // btn_connect
@@ -50,19 +50,7 @@
             this.btn_connect.TabIndex = 1;
             this.btn_connect.Text = "Connect";
             this.btn_connect.UseVisualStyleBackColor = true;
-            // 
-            // btn_save
-            // 
-            this.btn_save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_save.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_save.Location = new System.Drawing.Point(12, 166);
-            this.btn_save.Name = "btn_save";
-            this.btn_save.Size = new System.Drawing.Size(101, 28);
-            this.btn_save.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_save.SubText = "";
-            this.btn_save.TabIndex = 9;
-            this.btn_save.Text = "Save";
-            this.btn_save.UseVisualStyleBackColor = true;
+            this.btn_connect.Click += new System.EventHandler(this.btn_connect_Click);
             // 
             // lbl_stationCode
             // 
@@ -118,6 +106,7 @@
             this.tbx_logonCode.OctalOnly = false;
             this.tbx_logonCode.Size = new System.Drawing.Size(85, 25);
             this.tbx_logonCode.TabIndex = 15;
+            this.tbx_logonCode.TextChanged += new System.EventHandler(this.tbx_logonCode_TextChanged);
             // 
             // tbx_hoplogon
             // 
@@ -130,6 +119,7 @@
             this.tbx_hoplogon.OctalOnly = false;
             this.tbx_hoplogon.Size = new System.Drawing.Size(238, 25);
             this.tbx_hoplogon.TabIndex = 17;
+            this.tbx_hoplogon.TextChanged += new System.EventHandler(this.tbx_hoplogon_TextChanged);
             // 
             // toggle_hop
             // 
@@ -141,19 +131,33 @@
             this.toggle_hop.SubText = "";
             this.toggle_hop.TabIndex = 19;
             this.toggle_hop.UseVisualStyleBackColor = true;
+            this.toggle_hop.MouseUp += new System.Windows.Forms.MouseEventHandler(this.toggle_hop_MouseUp);
+            // 
+            // lbl_error
+            // 
+            this.lbl_error.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_error.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_error.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_error.HasBorder = false;
+            this.lbl_error.InteractiveText = false;
+            this.lbl_error.Location = new System.Drawing.Point(12, 166);
+            this.lbl_error.Name = "lbl_error";
+            this.lbl_error.Size = new System.Drawing.Size(296, 28);
+            this.lbl_error.TabIndex = 20;
+            this.lbl_error.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // SetupWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 206);
+            this.Controls.Add(this.lbl_error);
             this.Controls.Add(this.toggle_hop);
             this.Controls.Add(this.tbx_hoplogon);
             this.Controls.Add(this.tbx_logonCode);
             this.Controls.Add(this.lbl_hoplogon);
             this.Controls.Add(this.lbl_enablehop);
             this.Controls.Add(this.lbl_stationCode);
-            this.Controls.Add(this.btn_save);
             this.Controls.Add(this.btn_connect);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HasMinimizeButton = false;
@@ -174,12 +178,12 @@
         #endregion
 
         private vatsys.GenericButton btn_connect;
-        private vatsys.GenericButton btn_save;
         private vatsys.TextLabel lbl_stationCode;
         private vatsys.TextLabel lbl_enablehop;
         private vatsys.TextLabel lbl_hoplogon;
         private vatsys.TextField tbx_logonCode;
         private vatsys.TextField tbx_hoplogon;
         private vatsys.GenericButton toggle_hop;
+        private vatsys.TextLabel lbl_error;
     }
 }

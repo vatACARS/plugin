@@ -10,6 +10,7 @@ using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Components.QuickFillWindow;
+using static vatACARS.Helpers.Tranceiver;
 
 namespace vatACARS.Components
 {

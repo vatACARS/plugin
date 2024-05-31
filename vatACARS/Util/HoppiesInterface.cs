@@ -11,6 +11,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using vatACARS.Helpers;
+using static vatACARS.Helpers.Tranceiver;
+
 
 namespace vatACARS.Util
 {
@@ -54,6 +56,7 @@ namespace vatACARS.Util
             if (rawMessages.StartsWith("ERROR"))
             {
                 logger.Log($"Hoppies error: {rawMessages}");
+                Tranceiver.SetConnected(false); //NEEDS TO UPDATE THE SETUP WINDOW CONNECTION STATUS
                 return;
             }
 
