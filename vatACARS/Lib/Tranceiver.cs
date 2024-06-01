@@ -84,41 +84,15 @@ namespace vatACARS.Helpers
                 await Task.Delay(TimeSpan.FromSeconds(120));
                 if (message.State == 3)
                 {
-                    RemoveMessageFromList(message);
+                    message.removeMessage();
                 }
             }
         }
 
-        private static void RemoveMessageFromList(IMessageData message)
+        private static void removeMessage(this IMessageData message)
         {
-            if (message is CPDLCMessage)
-            {
-                var cpdlcMessage = message as CPDLCMessage;
-                lock (CPDLCMessages)
-                {
-                    var existingMessage = CPDLCMessages.FirstOrDefault(m => m.MessageId == cpdlcMessage.MessageId);
-                    if (existingMessage != null)
-                    {
-                        CPDLCMessages.Remove(existingMessage);
-                    }
-                }
-            }
-            else if (message is TelexMessage)
-            {
-                var telexMessage = message as TelexMessage;
-                lock (TelexMessages)
-                {
-                    var existingMessage = TelexMessages.FirstOrDefault(m =>
-                        m.State == telexMessage.State &&
-                        m.TimeReceived == telexMessage.TimeReceived &&
-                        m.Station == telexMessage.Station &&
-                        m.Content == telexMessage.Content);
-                    if (existingMessage != null)
-                    {
-                        TelexMessages.Remove(existingMessage);
-                    }
-                }
-            }
+            if (message is CPDLCMessage) CPDLCMessages.Remove(message);
+            if (message is TelexMessage) TelexMessages.Remove(message);
         }
 
 
