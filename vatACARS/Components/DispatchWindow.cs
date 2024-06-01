@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using vatACARS.Helpers;
@@ -30,7 +31,7 @@ namespace vatACARS.Components
             timer = new System.Timers.Timer();
             timer.Elapsed += PollTimer;
             timer.AutoReset = true; // Keep the timer running
-            timer.Interval = 10_000;
+            timer.Interval = 5_000;
             timer.Enabled = true;
 
             UpdateMessages();
@@ -57,7 +58,7 @@ namespace vatACARS.Components
             UpdateMessages();
         }
 
-        private void UpdateMessages()
+        public void UpdateMessages()
         {
             try
             {
@@ -163,38 +164,82 @@ namespace vatACARS.Components
 
         private void AddStation(Station station)
         {
-            Label callsignLabel = new Label();
-            callsignLabel.Text = station.Callsign;
-            callsignLabel.TextAlign = ContentAlignment.MiddleCenter;
-            callsignLabel.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
-            callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-            callsignLabel.Margin = new Padding(3); // A bit of spacing
-
-            callsignLabel.MouseEnter += (sender, e) => callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
-            callsignLabel.MouseLeave += (sender, e) => callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-
-            callsignLabel.MouseDown += (sender, e) =>
+            // Check if a station with the same callsign already exists fix loop?
+            bool stationExists = false;
+            foreach (Control control in tbl_connected.Controls)
             {
-                if(e.Button == MouseButtons.Left)
+                if (control is Label label && label.Text == station.Callsign)
                 {
-                    SelectedMessage = new TelexMessage()
-                    {
-                        State = 0,
-                        Station = callsignLabel.Text,
-                        Content = "(no message received)",
-                        TimeReceived = DateTime.Now
-                    };
-
-                    EditorWindow window = new EditorWindow();
-                    window.Show(Form.ActiveForm);
-                } else
-                {
-                    // Confirm logout
+                    stationExists = true;
+                    break;
                 }
-            };
+            }
 
-            tbl_connected.Controls.Add(callsignLabel);
+            // If the station doesn't exist, add it
+            if (!stationExists)
+            {
+                Label callsignLabel = new Label();
+                callsignLabel.Text = station.Callsign;
+                callsignLabel.TextAlign = ContentAlignment.MiddleCenter;
+                callsignLabel.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                callsignLabel.Margin = new Padding(3); // A bit of spacing
+
+                callsignLabel.MouseEnter += (sender, e) => callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
+                callsignLabel.MouseLeave += (sender, e) => callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+
+                callsignLabel.MouseUp += (sender, e) =>
+                {
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        SelectedMessage = new TelexMessage()
+                        {
+                            State = 0,
+                            Station = callsignLabel.Text,
+                            Content = "(no message received)",
+                            TimeReceived = DateTime.Now
+                        };
+
+                        EditorWindow window = new EditorWindow();
+                        window.Show(Form.ActiveForm);
+                    }
+                    else if (e.Button == MouseButtons.Right)
+                    {
+                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(callsignLabel.Text, "CPDLC", $"/data2/{Tranceiver.SentMessages}//N/CONTROLLER TERMINATED CPDLC");
+                        FormUrlEncodedContent req2 = HoppiesInterface.ConstructMessage(callsignLabel.Text, "CPDLC", $"/data2/{Tranceiver.SentMessages}//N/LOGOFF");
+                        _ = HoppiesInterface.SendMessage(req);
+                        _ = HoppiesInterface.SendMessage(req2);
+
+                        callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+
+                        // Find the station and remove
+                        Station stationToRemove = Tranceiver.Stations.FirstOrDefault(s => s.Callsign == callsignLabel.Text);
+
+                        // Remove the station if found
+                        if (stationToRemove != null)
+                        {
+                            Tranceiver.removeStation(stationToRemove);
+                        }
+                    }
+                };
+
+                if (tbl_connected.InvokeRequired)
+                {
+                    tbl_connected.Invoke((MethodInvoker)delegate
+                    {
+                        tbl_connected.Controls.Add(callsignLabel);
+                    });
+                }
+                else
+                {
+                    tbl_connected.Controls.Add(callsignLabel);
+                }
+            }
         }
+
+        //NEEDS REMOVE STATION CODE FROM THE LIST
+
+
 
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {

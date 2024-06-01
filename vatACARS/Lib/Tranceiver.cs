@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using vatACARS.Components;
 using vatACARS.Util;
 using vatsys;
 
@@ -18,7 +19,8 @@ namespace vatACARS.Helpers
         private static Logger logger = new Logger("Tranceiver");
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
-        private static List<Station> Stations = new List<Station>();
+        public static  List<Station> Stations = new List<Station>();
+        private static DispatchWindow dispatch = new DispatchWindow();
 
         public static TelexMessage[] getAllTelexMessages()
         {
@@ -91,6 +93,12 @@ namespace vatACARS.Helpers
         public static void addStation(Station station)
         {
             Stations.Add(station);
+        }
+
+        public static void removeStation(Station station)
+        {
+
+            Stations.Remove(station);
         }
 
 

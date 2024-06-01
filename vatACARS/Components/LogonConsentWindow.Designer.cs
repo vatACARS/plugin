@@ -60,6 +60,7 @@
             // 
             // btn_unable
             // 
+            this.btn_unable.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btn_unable.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_unable.Location = new System.Drawing.Point(136, 47);
             this.btn_unable.Name = "btn_unable";
@@ -73,8 +74,10 @@
             // 
             // LogonConsentWindow
             // 
+            this.AcceptButton = this.btn_accept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btn_unable;
             this.ClientSize = new System.Drawing.Size(253, 87);
             this.Controls.Add(this.btn_unable);
             this.Controls.Add(this.btn_accept);

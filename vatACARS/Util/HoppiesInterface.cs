@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
+using vatACARS.Components;
 using vatACARS.Helpers;
 using static vatACARS.Helpers.Tranceiver;
 
@@ -22,9 +23,11 @@ namespace vatACARS.Util
         private static Random random = new Random();
         private static Logger logger = new Logger("Hoppies");
         private static HttpClient client = new HttpClient();
+        private static DispatchWindow dispatch = new DispatchWindow();
         private static readonly Regex hoppieParse = new Regex(@"{(.*?)}"); // easyCPDLC
         private static readonly Regex cpdlcHeaderParse = new Regex(@"(\/\s*)\w*"); // easyCPDLC
         private static readonly Regex cpdlcUnitParse = new Regex(@"_@([\w]*)@_"); // easyCPDLC
+
 
         public static void StartListening()
         {
@@ -83,6 +86,16 @@ namespace vatACARS.Util
                                 CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
                                 logger.Log($"CPDLC: {station} | (M:{parsedMessage.MessageId} / R:{(parsedMessage.ReplyMessageId != -1 ? parsedMessage.ReplyMessageId.ToString() : "X")}) [{parsedMessage.ResponseType}] {parsedMessage.Content}");
                                 CPDLCMessages.Add(parsedMessage);
+                                if (parsedMessage.Content.StartsWith("LOGOFF"))
+                                {
+                                    Station stationToRemove = Tranceiver.Stations.FirstOrDefault(s => s.Callsign == station);
+
+                                    // Remove the station if found
+                                    if (stationToRemove != null)
+                                    {
+                                        Tranceiver.removeStation(stationToRemove);
+                                    }
+                                }
                                 break;
                             } else
                             {
