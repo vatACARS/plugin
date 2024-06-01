@@ -29,7 +29,7 @@ namespace vatACARS.Components
         {
             try
             {
-                selectedMsg.setMessageState(2);
+                selectedMsg.setMessageState(3);
                 Tranceiver.addStation(new Station()
                 {
                     Provider = 0,
@@ -47,7 +47,7 @@ namespace vatACARS.Components
         {
             try
             {
-                selectedMsg.setMessageState(2);
+                selectedMsg.setMessageState(3);
                 FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{selectedMsg.MessageId}/N/UNABLE");
                 _ = HoppiesInterface.SendMessage(req);
             } catch (Exception)
