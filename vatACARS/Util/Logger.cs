@@ -18,7 +18,7 @@ namespace vatACARS.Util
             {
                 using (StreamWriter w = File.AppendText($"{dirPath}\\vatACARS.log"))
                 {
-                    w.WriteLine("{0} [{1}]: {2}", DateTime.Now.ToLongTimeString(), name, msg);
+                    w.WriteLine("{0} [{1}]: {2}", DateTime.UtcNow.ToLongTimeString(), name, msg);
                 }
             } catch
             {
