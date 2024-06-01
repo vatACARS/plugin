@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -22,9 +21,7 @@ namespace vatACARS.Util
         private static Random random = new Random();
         private static Logger logger = new Logger("Hoppies");
         private static HttpClient client = new HttpClient();
-        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}"); // easyCPDLC
-        private static readonly Regex cpdlcHeaderParse = new Regex(@"(\/\s*)\w*"); // easyCPDLC
-        private static readonly Regex cpdlcUnitParse = new Regex(@"_@([\w]*)@_"); // easyCPDLC
+        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}");
 
         public static void StartListening()
         {
