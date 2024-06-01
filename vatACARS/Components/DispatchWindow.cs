@@ -21,6 +21,7 @@ namespace vatACARS.Components
         private List<Station> stations = new List<Station>();
         private static ImageList il;
         public static IMessageData SelectedMessage;
+        private static LogonConsentWindow LogonConsentWindow;
 
         public DispatchWindow()
         {
@@ -294,8 +295,12 @@ namespace vatACARS.Components
                             var m = (CPDLCMessage)msg;
                             if(m.Content == "REQUEST LOGON")
                             {
-                                LogonConsentWindow consentWindow = new LogonConsentWindow();
-                                consentWindow.Show(ActiveForm);
+                                if (LogonConsentWindow == null || LogonConsentWindow.IsDisposed)
+                                    LogonConsentWindow = new LogonConsentWindow();
+                                else if (LogonConsentWindow.Visible)
+                                    return;
+
+                                LogonConsentWindow.Show(ActiveForm);
                                 return;
                             }
                         }
