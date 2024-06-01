@@ -56,7 +56,7 @@ namespace vatACARS.Util
             if (rawMessages.StartsWith("ERROR"))
             {
                 logger.Log($"Hoppies error: {rawMessages}");
-                Tranceiver.SetConnected(false); //NEEDS TO UPDATE THE SETUP WINDOW CONNECTION STATUS
+                //Tranceiver.SetConnected(false); //NEEDS TO UPDATE THE SETUP WINDOW CONNECTION STATUS
                 return;
             }
 
