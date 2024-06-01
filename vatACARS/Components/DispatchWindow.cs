@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static vatACARS.Helpers.Tranceiver;
 
 namespace vatACARS.Components
@@ -22,6 +21,7 @@ namespace vatACARS.Components
         private static ImageList il;
         public static IMessageData SelectedMessage;
         private static LogonConsentWindow LogonConsentWindow;
+        private static PDCWindow PDCWindow;
 
         public DispatchWindow()
         {
@@ -309,7 +309,11 @@ namespace vatACARS.Components
                             var m = (TelexMessage)msg;
                             if (m.Content.StartsWith("REQUEST PREDEP CLEARANCE"))
                             {
-                                PDCWindow PDCWindow = new PDCWindow();
+                                if (PDCWindow == null || PDCWindow.IsDisposed)
+                                    PDCWindow = new PDCWindow();
+                                else if (PDCWindow.Visible)
+                                    return;
+
                                 PDCWindow.Show(ActiveForm);
                                 return;
                             }
