@@ -6,9 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using vatACARS.Util;
-using vatsys;
 
 namespace vatACARS.Helpers
 {
@@ -20,6 +18,10 @@ namespace vatACARS.Helpers
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
         private static List<Station> Stations = new List<Station>();
 
+        public static event EventHandler<TelexMessage> TelexMessageReceived;
+        public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
+        public static event EventHandler<Station> StationAdded;
+
         public static TelexMessage[] getAllTelexMessages()
         {
             return TelexMessages.ToArray();
@@ -28,37 +30,8 @@ namespace vatACARS.Helpers
         public static void addTelexMessage(TelexMessage message)
         {
             logger.Log("TelexMessage successfully received.");
+            TelexMessageReceived?.Invoke(null, message);
             TelexMessages.Add(message);
-        }
-
-        private static bool Connected = false;
-
-        public static bool IsConnected()
-        {
-            return Connected;
-        }
-
-        public static void TryConnect(bool value)
-        {
-            //FIX THIS PLEASE
-        }
-
-        public static void SetConnected(bool value)
-        {
-            //RUN TRY CONNECT BEFORE LETTING CON NECT
-
-            if (Connected != value)
-            {
-                Connected = value;
-                if (Connected)
-                {
-                    logger.Log("Connection established.");
-                }
-                else
-                {
-                    logger.Log("Connection lost.");
-                }
-            }
         }
 
         public static CPDLCMessage[] getAllCPDLCMessages()
@@ -69,6 +42,7 @@ namespace vatACARS.Helpers
         public static void addCPDLCMessage(CPDLCMessage message)
         {
             logger.Log("CPDLCMessage successfully received.");
+            CPDLCMessageReceived?.Invoke(null, message);
             CPDLCMessages.Add(message);
         }
 
@@ -90,6 +64,7 @@ namespace vatACARS.Helpers
 
         public static void addStation(Station station)
         {
+            StationAdded?.Invoke(null, station);
             Stations.Add(station);
         }
 

@@ -9,6 +9,7 @@ using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Helpers.Tranceiver;
+using static vatsys.CPDLC;
 
 namespace vatACARS.Components
 {
@@ -27,11 +28,9 @@ namespace vatACARS.Components
             InitializeComponent();
             StyleComponent();
 
-            timer = new System.Timers.Timer();
-            timer.Elapsed += PollTimer;
-            timer.AutoReset = true; // Keep the timer running
-            timer.Interval = 10_000;
-            timer.Enabled = true;
+            TelexMessageReceived += new EventHandler<TelexMessage>(UpdateTelexList);
+            CPDLCMessageReceived += new EventHandler<CPDLCMessage>(UpdateCPDLCList);
+            StationAdded += new EventHandler<Station>(UpdateStationsList);
 
             UpdateMessages();
         }
@@ -54,6 +53,36 @@ namespace vatACARS.Components
 
         private void PollTimer(object sender, ElapsedEventArgs e)
         {
+            UpdateMessages();
+        }
+
+        private void UpdateTelexList(object sender, TelexMessage message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateTelexList(sender, message)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateCPDLCList(object sender, CPDLCMessage message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateCPDLCList(sender, message)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateStationsList(object sender, Station station)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateStationsList(sender, station)));
+                return;
+            }
             UpdateMessages();
         }
 
