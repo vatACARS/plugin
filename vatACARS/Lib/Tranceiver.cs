@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using vatACARS.Util;
@@ -79,9 +80,52 @@ namespace vatACARS.Helpers
             if (state == 2)
             {
                 await Task.Delay(TimeSpan.FromSeconds(10));
+                logger.Log("STATE 2");
                 if (message.State == 2) message.State = 3;
+                logger.Log("STATE 3");
+                await Task.Delay(TimeSpan.FromSeconds(120));
+                logger.Log("STATE remove?");
+                if (message.State == 3)
+                {
+                    RemoveMessageFromList(message);
+                }
             }
         }
+
+        private static void RemoveMessageFromList(IMessageData message)
+        {
+            if (message is CPDLCMessage)
+            {
+                var cpdlcMessage = message as CPDLCMessage;
+                lock (CPDLCMessages)
+                {
+                    var existingMessage = CPDLCMessages.FirstOrDefault(m => m.MessageId == cpdlcMessage.MessageId);
+                    if (existingMessage != null)
+                    {
+                        logger.Log("CPDLCMessage removed (timeout)");
+                        CPDLCMessages.Remove(existingMessage);
+                    }
+                }
+            }
+            else if (message is TelexMessage)
+            {
+                var telexMessage = message as TelexMessage;
+                lock (TelexMessages)
+                {
+                    var existingMessage = TelexMessages.FirstOrDefault(m =>
+                        m.State == telexMessage.State &&
+                        m.TimeReceived == telexMessage.TimeReceived &&
+                        m.Station == telexMessage.Station &&
+                        m.Content == telexMessage.Content);
+                    if (existingMessage != null)
+                    {
+                        logger.Log("TelexMessage removed (timeout)");
+                        TelexMessages.Remove(existingMessage);
+                    }
+                }
+            }
+        }
+
 
         public static Station[] getAllStations()
         {
