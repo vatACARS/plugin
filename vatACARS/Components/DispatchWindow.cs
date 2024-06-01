@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static vatACARS.Helpers.Tranceiver;
-using static vatsys.CPDLC;
 
 namespace vatACARS.Components
 {
@@ -19,7 +19,6 @@ namespace vatACARS.Components
         private List<TelexMessage> telexMessages = new List<TelexMessage>();
         private List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private List<Station> stations = new List<Station>();
-        private static System.Timers.Timer timer;
         private static ImageList il;
         public static IMessageData SelectedMessage;
 
@@ -28,9 +27,9 @@ namespace vatACARS.Components
             InitializeComponent();
             StyleComponent();
 
-            TelexMessageReceived += new EventHandler<TelexMessage>(UpdateTelexList);
-            CPDLCMessageReceived += new EventHandler<CPDLCMessage>(UpdateCPDLCList);
-            StationAdded += new EventHandler<Station>(UpdateStationsList);
+            TelexMessageReceived += UpdateTelexList;
+            CPDLCMessageReceived += UpdateCPDLCList;
+            StationAdded += UpdateStationsList;
 
             UpdateMessages();
         }
@@ -94,21 +93,35 @@ namespace vatACARS.Components
                 CPDLCMessages = Tranceiver.getAllCPDLCMessages().ToList();
                 stations = Tranceiver.getAllStations().ToList();
 
-                lvw_messages.Items.Clear();
-                var messages = telexMessages.ToList<IMessageData>().Concat(CPDLCMessages.ToList<IMessageData>()).ToList<IMessageData>();
-                foreach (var message in messages.OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList<IMessageData>())
+                var messages = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList();
+                var stationList = stations.ToList();
+
+                lvw_messages.BeginInvoke(new Action(() =>
                 {
-                    if (message is CPDLCMessage)
+                    lvw_messages.Items.Clear();
+                    foreach (var message in messages)
                     {
-                        AddMessage((CPDLCMessage)message);
-                        continue;
+                        if (message is CPDLCMessage)
+                        {
+                            AddMessage((CPDLCMessage)message);
+                        }
+                        else
+                        {
+                            AddMessage((TelexMessage)message);
+                        }
                     }
-                    AddMessage((TelexMessage)message);
-                }
+                    lvw_messages.Refresh();
+                }));
 
-                foreach (var station in stations) AddStation(station);
-
-                lvw_messages.Invalidate();
+                tbl_connected.BeginInvoke(new Action(() =>
+                {
+                    tbl_connected.Controls.Clear();
+                    foreach (var station in stationList)
+                    {
+                        AddStation(station);
+                    }
+                    tbl_connected.Refresh();
+                }));
             }
             catch (Exception ex)
             {

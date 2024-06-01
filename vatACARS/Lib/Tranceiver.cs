@@ -30,8 +30,8 @@ namespace vatACARS.Helpers
         public static void addTelexMessage(TelexMessage message)
         {
             logger.Log("TelexMessage successfully received.");
-            TelexMessageReceived?.Invoke(null, message);
             TelexMessages.Add(message);
+            TelexMessageReceived?.Invoke(null, message);
         }
 
         public static CPDLCMessage[] getAllCPDLCMessages()
@@ -42,8 +42,8 @@ namespace vatACARS.Helpers
         public static void addCPDLCMessage(CPDLCMessage message)
         {
             logger.Log("CPDLCMessage successfully received.");
-            CPDLCMessageReceived?.Invoke(null, message);
             CPDLCMessages.Add(message);
+            CPDLCMessageReceived?.Invoke(null, message);
         }
 
         public static async void setMessageState(this IMessageData message, int state)
@@ -64,8 +64,8 @@ namespace vatACARS.Helpers
 
         public static void addStation(Station station)
         {
-            StationAdded?.Invoke(null, station);
             Stations.Add(station);
+            StationAdded?.Invoke(null, station);
         }
 
 

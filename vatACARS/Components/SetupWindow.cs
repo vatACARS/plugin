@@ -131,6 +131,9 @@ namespace vatACARS
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
+            ClientInformation.LogonCode = Properties.Settings.Default.hoplogon;
+            ClientInformation.Callsign = tbx_logonCode.Text;
+            HoppiesInterface.StartListening();
             /*
             if (Tranceiver.IsConnected())
             {
