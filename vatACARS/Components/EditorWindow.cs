@@ -56,7 +56,8 @@ namespace vatACARS.Components
 
                 lvw_messages.Items.Add(lvMsg);
             }
-
+            response = new ResponseItem[5]; 
+            responseIndex = 0;
             lvw_messageSelector.Items.Clear();
             foreach (var uplink in XMLReader.uplinks.Entries.Where(entry => entry.Response == "N").ToList())
             {
@@ -242,19 +243,28 @@ namespace vatACARS.Components
 
         private void btn_messageScroller_MouseDown(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && responseIndex < 4)
-            {
-                responseIndex++;
-                btn_messageScroller.Text = (responseIndex + 1).ToString();
-            }
-            else if (e.Button == MouseButtons.Right && responseIndex > 0)
-            {
-                responseIndex--;
-                btn_messageScroller.Text = (responseIndex + 1).ToString();
-            }
+                if (e.Button == MouseButtons.Left && responseIndex < 4)
+                {
+                    responseIndex++;
+                    btn_messageScroller.Text = (responseIndex + 1).ToString();
+                }
+                else if (e.Button == MouseButtons.Right && responseIndex > 0)
+                {
+                    responseIndex--;
+                    btn_messageScroller.Text = (responseIndex + 1).ToString();
+                }
 
-            if (response[responseIndex] == null) response[responseIndex] = new ResponseItem();
-            lbl_response.Text = response[responseIndex].Entry.Element;
+                if (response[responseIndex] == null)
+                {
+                    response[responseIndex] = new ResponseItem();
+                }
+
+                if (response[responseIndex].Entry == null)
+                {
+                    response[responseIndex].Entry = new UplinkEntry();
+                }
+
+                lbl_response.Text = response[responseIndex].Entry.Element ?? string.Empty;
         }
 
         private void btn_send_Click(object sender, EventArgs e)
@@ -262,32 +272,44 @@ namespace vatACARS.Components
             try
             {
                 // TODO: replace placeholder content
-                foreach(ResponseItem item in response.Where(obj => obj != null && obj.Entry.Element != ""))
+                foreach (ResponseItem item in response.Where(obj => obj != null && obj.Entry.Element != ""))
                 {
-                    foreach (ResponseItemPlaceholderData placeholder in item.Placeholders)
+
+                    if (item.Placeholders != null)
                     {
-                        item.Entry.Element = item.Entry.Element.Replace(placeholder.Placeholder, $"@{placeholder.UserValue}@");
+                        foreach (ResponseItemPlaceholderData placeholder in item.Placeholders)
+                        {
+                            item.Entry.Element = item.Entry.Element.Replace(placeholder.Placeholder, $"@{placeholder.UserValue}@");
+                        }
+                    }
+                    else
+                    {
+                        //idk
                     }
                 }
 
-                if(selectedMsg is TelexMessage)
+                if (selectedMsg is TelexMessage)
                 {
                     TelexMessage message = (TelexMessage)selectedMsg;
                     string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
                     _ = HoppiesInterface.SendMessage(req);
-                } else if(selectedMsg is CPDLCMessage)
+                }
+                else if (selectedMsg is CPDLCMessage)
                 {
                     var responseCode = "N";
-                    if (response.Any(obj => obj.Entry.Response == "R")) responseCode = "R";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "R")) responseCode = "R"; //handle null causing error
                     CPDLCMessage message = (CPDLCMessage)selectedMsg;
-                    string resp = $"/data2/{Tranceiver.SentMessages}/{message.MessageId}/{responseCode}/{string.Join("+", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element))}";
+                    string resp = $"/data2/{Tranceiver.SentMessages}/{message.MessageId}/{responseCode}/{string.Join("+", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element))}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
                     _ = HoppiesInterface.SendMessage(req);
                 }
-            } catch(Exception ex)
+
+                logger.Log("Message sent successfully");
+            }
+            catch (Exception ex)
             {
                 logger.Log($"Oops: {ex.ToString()}");
             }
