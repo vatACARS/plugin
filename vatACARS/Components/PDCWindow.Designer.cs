@@ -73,14 +73,14 @@
             // 
             this.lbl_PDC.AutoSize = true;
             this.lbl_PDC.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_PDC.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_PDC.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_PDC.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_PDC.HasBorder = false;
             this.lbl_PDC.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_PDC.InteractiveText = true;
             this.lbl_PDC.Location = new System.Drawing.Point(8, 9);
             this.lbl_PDC.Name = "lbl_PDC";
-            this.lbl_PDC.Size = new System.Drawing.Size(130, 21);
+            this.lbl_PDC.Size = new System.Drawing.Size(128, 18);
             this.lbl_PDC.TabIndex = 47;
             this.lbl_PDC.Text = "PDC        :";
             this.lbl_PDC.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -103,13 +103,13 @@
             // 
             this.lbl_dep.AutoSize = true;
             this.lbl_dep.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_dep.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_dep.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_dep.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_dep.HasBorder = false;
             this.lbl_dep.InteractiveText = true;
             this.lbl_dep.Location = new System.Drawing.Point(8, 77);
             this.lbl_dep.Name = "lbl_dep";
-            this.lbl_dep.Size = new System.Drawing.Size(130, 21);
+            this.lbl_dep.Size = new System.Drawing.Size(128, 18);
             this.lbl_dep.TabIndex = 51;
             this.lbl_dep.Text = "DEPARTURE  :";
             this.lbl_dep.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -132,14 +132,14 @@
             // 
             this.lbl_route.AutoSize = true;
             this.lbl_route.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_route.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_route.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_route.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_route.HasBorder = false;
             this.lbl_route.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_route.InteractiveText = true;
             this.lbl_route.Location = new System.Drawing.Point(8, 179);
             this.lbl_route.Name = "lbl_route";
-            this.lbl_route.Size = new System.Drawing.Size(130, 21);
+            this.lbl_route.Size = new System.Drawing.Size(128, 18);
             this.lbl_route.TabIndex = 59;
             this.lbl_route.Text = "ROUTE      :";
             this.lbl_route.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -148,14 +148,14 @@
             // 
             this.lbl_freq.AutoSize = true;
             this.lbl_freq.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_freq.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_freq.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_freq.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_freq.HasBorder = false;
             this.lbl_freq.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_freq.InteractiveText = true;
             this.lbl_freq.Location = new System.Drawing.Point(323, 77);
             this.lbl_freq.Name = "lbl_freq";
-            this.lbl_freq.Size = new System.Drawing.Size(100, 21);
+            this.lbl_freq.Size = new System.Drawing.Size(98, 18);
             this.lbl_freq.TabIndex = 64;
             this.lbl_freq.Text = "DEP FREQ:";
             this.lbl_freq.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -165,13 +165,13 @@
             // 
             this.lbl_ssr.AutoSize = true;
             this.lbl_ssr.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_ssr.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_ssr.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_ssr.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_ssr.HasBorder = false;
             this.lbl_ssr.InteractiveText = true;
             this.lbl_ssr.Location = new System.Drawing.Point(323, 145);
             this.lbl_ssr.Name = "lbl_ssr";
-            this.lbl_ssr.Size = new System.Drawing.Size(100, 21);
+            this.lbl_ssr.Size = new System.Drawing.Size(98, 18);
             this.lbl_ssr.TabIndex = 66;
             this.lbl_ssr.Text = "SQUAWK  :";
             this.lbl_ssr.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -180,14 +180,14 @@
             // 
             this.lbl_callsign.AutoSize = true;
             this.lbl_callsign.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_callsign.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_callsign.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_callsign.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_callsign.HasBorder = false;
             this.lbl_callsign.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_callsign.InteractiveText = true;
             this.lbl_callsign.Location = new System.Drawing.Point(8, 43);
             this.lbl_callsign.Name = "lbl_callsign";
-            this.lbl_callsign.Size = new System.Drawing.Size(130, 21);
+            this.lbl_callsign.Size = new System.Drawing.Size(128, 18);
             this.lbl_callsign.TabIndex = 71;
             this.lbl_callsign.Text = "CALLSIGN   :";
             this.lbl_callsign.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -196,14 +196,14 @@
             // 
             this.lbl_type.AutoSize = true;
             this.lbl_type.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_type.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_type.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_type.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_type.HasBorder = false;
             this.lbl_type.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_type.InteractiveText = true;
             this.lbl_type.Location = new System.Drawing.Point(323, 9);
             this.lbl_type.Name = "lbl_type";
-            this.lbl_type.Size = new System.Drawing.Size(100, 21);
+            this.lbl_type.Size = new System.Drawing.Size(98, 18);
             this.lbl_type.TabIndex = 72;
             this.lbl_type.Text = "TYPE    :";
             this.lbl_type.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -225,14 +225,14 @@
             // 
             this.lbl_runway.AutoSize = true;
             this.lbl_runway.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_runway.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_runway.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_runway.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_runway.HasBorder = false;
             this.lbl_runway.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_runway.InteractiveText = true;
             this.lbl_runway.Location = new System.Drawing.Point(323, 43);
             this.lbl_runway.Name = "lbl_runway";
-            this.lbl_runway.Size = new System.Drawing.Size(100, 21);
+            this.lbl_runway.Size = new System.Drawing.Size(98, 18);
             this.lbl_runway.TabIndex = 74;
             this.lbl_runway.Text = "RUNWAY  :";
             this.lbl_runway.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -254,13 +254,13 @@
             // 
             this.lbl_clrto.AutoSize = true;
             this.lbl_clrto.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_clrto.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_clrto.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_clrto.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_clrto.HasBorder = false;
             this.lbl_clrto.InteractiveText = true;
             this.lbl_clrto.Location = new System.Drawing.Point(8, 111);
             this.lbl_clrto.Name = "lbl_clrto";
-            this.lbl_clrto.Size = new System.Drawing.Size(130, 21);
+            this.lbl_clrto.Size = new System.Drawing.Size(128, 18);
             this.lbl_clrto.TabIndex = 76;
             this.lbl_clrto.Text = "CLEARED TO :";
             this.lbl_clrto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -282,14 +282,14 @@
             // 
             this.lbl_via.AutoSize = true;
             this.lbl_via.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_via.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_via.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_via.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_via.HasBorder = false;
             this.lbl_via.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_via.InteractiveText = true;
             this.lbl_via.Location = new System.Drawing.Point(8, 146);
             this.lbl_via.Name = "lbl_via";
-            this.lbl_via.Size = new System.Drawing.Size(130, 21);
+            this.lbl_via.Size = new System.Drawing.Size(128, 18);
             this.lbl_via.TabIndex = 78;
             this.lbl_via.Text = "VIA        :";
             this.lbl_via.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -311,14 +311,14 @@
             // 
             this.lbl_climb.AutoSize = true;
             this.lbl_climb.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_climb.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_climb.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_climb.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_climb.HasBorder = false;
             this.lbl_climb.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_climb.InteractiveText = true;
             this.lbl_climb.Location = new System.Drawing.Point(323, 111);
             this.lbl_climb.Name = "lbl_climb";
-            this.lbl_climb.Size = new System.Drawing.Size(100, 21);
+            this.lbl_climb.Size = new System.Drawing.Size(98, 18);
             this.lbl_climb.TabIndex = 80;
             this.lbl_climb.Text = "CLIMB   :";
             this.lbl_climb.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -392,14 +392,14 @@
             // 
             this.lbl_free.AutoSize = true;
             this.lbl_free.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_free.Font = new System.Drawing.Font("Terminus (TTF)", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_free.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_free.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_free.HasBorder = false;
             this.lbl_free.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_free.InteractiveText = true;
             this.lbl_free.Location = new System.Drawing.Point(8, 213);
             this.lbl_free.Name = "lbl_free";
-            this.lbl_free.Size = new System.Drawing.Size(130, 21);
+            this.lbl_free.Size = new System.Drawing.Size(128, 18);
             this.lbl_free.TabIndex = 87;
             this.lbl_free.Text = "FREE TEXT  :";
             this.lbl_free.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
