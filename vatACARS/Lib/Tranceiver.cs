@@ -91,8 +91,8 @@ namespace vatACARS.Helpers
 
         private static void removeMessage(this IMessageData message)
         {
-            if (message is CPDLCMessage) CPDLCMessages.Remove(message);
-            if (message is TelexMessage) TelexMessages.Remove(message);
+            if (message is CPDLCMessage) CPDLCMessages.Remove((CPDLCMessage)message);
+            if (message is TelexMessage) TelexMessages.Remove((TelexMessage)message);
         }
 
 
