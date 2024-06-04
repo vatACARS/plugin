@@ -159,7 +159,7 @@ namespace vatACARS.Util
             } catch (FormatException ex)
             {
                 // Somebody forged a CPDLCMessage format that was invalid
-                logger.Log($"CPDLCMessage from {station} was invalid! Might have been intentional forgery. {ex.Message}");
+                logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
                 msg = new CPDLCMessage();
             }
 
