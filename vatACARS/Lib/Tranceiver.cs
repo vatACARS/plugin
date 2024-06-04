@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using vatACARS.Util;
 
@@ -54,8 +55,20 @@ namespace vatACARS.Helpers
             {
                 await Task.Delay(TimeSpan.FromSeconds(10));
                 if (message.State == 2) message.State = 3;
+                await Task.Delay(TimeSpan.FromSeconds(120));
+                if (message.State == 3)
+                {
+                    message.removeMessage();
+                }
             }
         }
+
+        private static void removeMessage(this IMessageData message)
+        {
+            if (message is CPDLCMessage) CPDLCMessages.Remove((CPDLCMessage)message);
+            if (message is TelexMessage) TelexMessages.Remove((TelexMessage)message);
+        }
+
 
         public static Station[] getAllStations()
         {

@@ -88,7 +88,7 @@ namespace vatACARS.Util
                                 {
                                     State = 0,
                                     Station = station,
-                                    TimeReceived = DateTime.Now,
+                                    TimeReceived = DateTime.UtcNow,
                                     Content = rawMessage[1]
                                 });
                                 break;
@@ -149,7 +149,7 @@ namespace vatACARS.Util
                 msg = new CPDLCMessage()
                 {
                     State = 0,
-                    TimeReceived = DateTime.Now,
+                    TimeReceived = DateTime.UtcNow,
                     Station = station,
                     MessageId = int.Parse(fields[1]),
                     ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,

@@ -25,46 +25,27 @@ namespace vatACARS
             lbl_enablehop.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_hoplogon.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_error.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            lbl_vol.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
 
             lbl_stationCode.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_enablehop.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_hoplogon.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_error.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_vol.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
 
             btn_connect.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
             btn_connect.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+
+            slider_vol.ForeColor = Colours.GetColour(Colours.Identities.ListSeparator);
+            slider_vol.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
         }
-
-
-
-        //JOSH PLEASE FIX :D
-
-        //public void UpdateErrorLabel(string errorMsg)
-        //{
-        //    if (lbl_error.InvokeRequired)
-        //    {
-        //        lbl_error.Invoke((MethodInvoker)delegate { UpdateErrorLabel(errorMsg); });
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            lbl_error.Text = errorMsg;
-        //            lbl_error.Invalidate();
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // I think this works.
-        //            logger.Log($"Error updating label: {ex.Message}");
-        //        }
-        //    }
-        //}
 
 
         private void SetupWindow_Shown(object sender, EventArgs e)
         {
             tbx_hoplogon.Text = Properties.Settings.Default.hoplogon;
             tbx_logonCode.Text = Properties.Settings.Default.callsign;
+            slider_vol.Value = Properties.Settings.Default.volume;
             if (Properties.Settings.Default.toggle_hop)
             {
                 toggle_hop.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
@@ -241,6 +222,26 @@ namespace vatACARS
                 }
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void SetupWindow_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void slider_vol_Scroll(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.volume = slider_vol.Value;
+        }
+
+        private void btn_test_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_test_MouseUp(object sender, MouseEventArgs e)
+        {
+            AudioInterface.playSound("incomingMessage");
         }
     }
 }

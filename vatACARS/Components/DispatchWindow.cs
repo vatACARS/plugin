@@ -225,8 +225,8 @@ namespace vatACARS.Components
                         State = 0,
                         Station = callsignLabel.Text,
                         Content = "(no message received)",
-                        TimeReceived = DateTime.Now
-                    };
+                        TimeReceived = DateTime.UtcNow
+                };
 
                     EditorWindow window = new EditorWindow();
                     window.Show(Form.ActiveForm);
