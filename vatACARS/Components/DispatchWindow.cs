@@ -18,20 +18,19 @@ namespace vatACARS.Components
         private List<TelexMessage> telexMessages = new List<TelexMessage>();
         private List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private List<Station> stations = new List<Station>();
-        private static System.Timers.Timer timer;
         private static ImageList il;
         public static IMessageData SelectedMessage;
+        private static LogonConsentWindow LogonConsentWindow;
+        private static PDCWindow PDCWindow;
 
         public DispatchWindow()
         {
             InitializeComponent();
             StyleComponent();
 
-            timer = new System.Timers.Timer();
-            timer.Elapsed += PollTimer;
-            timer.AutoReset = true; // Keep the timer running
-            timer.Interval = 10_000;
-            timer.Enabled = true;
+            TelexMessageReceived += UpdateTelexList;
+            CPDLCMessageReceived += UpdateCPDLCList;
+            StationAdded += UpdateStationsList;
 
             UpdateMessages();
         }
@@ -57,6 +56,36 @@ namespace vatACARS.Components
             UpdateMessages();
         }
 
+        private void UpdateTelexList(object sender, TelexMessage message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateTelexList(sender, message)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateCPDLCList(object sender, CPDLCMessage message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateCPDLCList(sender, message)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateStationsList(object sender, Station station)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateStationsList(sender, station)));
+                return;
+            }
+            UpdateMessages();
+        }
+
         private void UpdateMessages()
         {
             try
@@ -65,21 +94,35 @@ namespace vatACARS.Components
                 CPDLCMessages = Tranceiver.getAllCPDLCMessages().ToList();
                 stations = Tranceiver.getAllStations().ToList();
 
-                lvw_messages.Items.Clear();
-                var messages = telexMessages.ToList<IMessageData>().Concat(CPDLCMessages.ToList<IMessageData>()).ToList<IMessageData>();
-                foreach (var message in messages.OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList<IMessageData>())
+                var messages = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList();
+                var stationList = stations.ToList();
+
+                lvw_messages.BeginInvoke(new Action(() =>
                 {
-                    if (message is CPDLCMessage)
+                    lvw_messages.Items.Clear();
+                    foreach (var message in messages)
                     {
-                        AddMessage((CPDLCMessage)message);
-                        continue;
+                        if (message is CPDLCMessage)
+                        {
+                            AddMessage((CPDLCMessage)message);
+                        }
+                        else
+                        {
+                            AddMessage((TelexMessage)message);
+                        }
                     }
-                    AddMessage((TelexMessage)message);
-                }
+                    lvw_messages.Refresh();
+                }));
 
-                foreach (var station in stations) AddStation(station);
-
-                lvw_messages.Invalidate();
+                tbl_connected.BeginInvoke(new Action(() =>
+                {
+                    tbl_connected.Controls.Clear();
+                    foreach (var station in stationList)
+                    {
+                        AddStation(station);
+                    }
+                    tbl_connected.Refresh();
+                }));
             }
             catch (Exception ex)
             {
@@ -252,8 +295,12 @@ namespace vatACARS.Components
                             var m = (CPDLCMessage)msg;
                             if(m.Content == "REQUEST LOGON")
                             {
-                                LogonConsentWindow consentWindow = new LogonConsentWindow();
-                                consentWindow.Show(ActiveForm);
+                                if (LogonConsentWindow == null || LogonConsentWindow.IsDisposed)
+                                    LogonConsentWindow = new LogonConsentWindow();
+                                else if (LogonConsentWindow.Visible)
+                                    return;
+
+                                LogonConsentWindow.Show(ActiveForm);
                                 return;
                             }
                         }
@@ -262,7 +309,11 @@ namespace vatACARS.Components
                             var m = (TelexMessage)msg;
                             if (m.Content.StartsWith("REQUEST PREDEP CLEARANCE"))
                             {
-                                PDCWindow PDCWindow = new PDCWindow();
+                                if (PDCWindow == null || PDCWindow.IsDisposed)
+                                    PDCWindow = new PDCWindow();
+                                else if (PDCWindow.Visible)
+                                    return;
+
                                 PDCWindow.Show(ActiveForm);
                                 return;
                             }

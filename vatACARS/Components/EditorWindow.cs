@@ -328,6 +328,7 @@ namespace vatACARS.Components
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
                     _ = HoppiesInterface.SendMessage(req);
+                    selectedMsg.setMessageState(3); // Done
                 }
                 else if (selectedMsg is CPDLCMessage)
                 {
@@ -338,6 +339,12 @@ namespace vatACARS.Components
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
                     _ = HoppiesInterface.SendMessage(req);
+                    if(responseCode == "N") {
+                        selectedMsg.setMessageState(3);
+                    } else
+                    {
+                        selectedMsg.setMessageState(2); // Uplink
+                    }
                 }
 
                 logger.Log("Message sent successfully");

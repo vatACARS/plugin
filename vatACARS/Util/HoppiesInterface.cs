@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -22,9 +21,7 @@ namespace vatACARS.Util
         private static Random random = new Random();
         private static Logger logger = new Logger("Hoppies");
         private static HttpClient client = new HttpClient();
-        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}"); // easyCPDLC
-        private static readonly Regex cpdlcHeaderParse = new Regex(@"(\/\s*)\w*"); // easyCPDLC
-        private static readonly Regex cpdlcUnitParse = new Regex(@"_@([\w]*)@_"); // easyCPDLC
+        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}");
 
         public static void StartListening()
         {
@@ -32,7 +29,7 @@ namespace vatACARS.Util
             timer = new Timer();
             timer.Elapsed += PollTimer;
             timer.AutoReset = true; // Keep the timer running
-            timer.Interval = 1000;
+            timer.Interval = 50;
             timer.Enabled = true;
         }
 
@@ -56,7 +53,7 @@ namespace vatACARS.Util
             if (rawMessages.StartsWith("ERROR"))
             {
                 logger.Log($"Hoppies error: {rawMessages}");
-                Tranceiver.SetConnected(false); //NEEDS TO UPDATE THE SETUP WINDOW CONNECTION STATUS
+                //Tranceiver.SetConnected(false); //NEEDS TO UPDATE THE SETUP WINDOW CONNECTION STATUS
                 return;
             }
 
@@ -67,7 +64,6 @@ namespace vatACARS.Util
             logger.Log($"Received {responses.Count} messages.");
             if (responses.Count > 0)
             {
-                AudioInterface.playSound("incomingMessage");
                 foreach (Match response in responses)
                 {
                     string[] rawMessage = response.Groups[1].Value.Replace("}", "").Split('{');
@@ -162,7 +158,7 @@ namespace vatACARS.Util
             } catch (FormatException ex)
             {
                 // Somebody forged a CPDLCMessage format that was invalid
-                logger.Log($"CPDLCMessage from {station} was invalid! Might have been intentional forgery. {ex.Message}");
+                logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
                 msg = new CPDLCMessage();
             }
 

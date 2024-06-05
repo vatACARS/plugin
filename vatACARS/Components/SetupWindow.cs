@@ -57,6 +57,7 @@ namespace vatACARS
                 toggle_hop.Invalidate();
             }
 
+            /*
             if (Tranceiver.IsConnected())
             {
                 btn_connect.Text = ("Disconnect");
@@ -94,6 +95,7 @@ namespace vatACARS
                     tbx_hoplogon.Enabled = false;
                 }
             }
+            */
         }
 
 
@@ -110,6 +112,10 @@ namespace vatACARS
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
+            ClientInformation.LogonCode = Properties.Settings.Default.hoplogon;
+            ClientInformation.Callsign = tbx_logonCode.Text;
+            HoppiesInterface.StartListening();
+            /*
             if (Tranceiver.IsConnected())
             {
                 Tranceiver.SetConnected(false);
@@ -154,6 +160,7 @@ namespace vatACARS
                     toggle_hop.Invalidate();;
                 }
             }
+            */
         }
 
         public void tbx_logonCode_TextChanged(object sender, EventArgs e)
