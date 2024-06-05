@@ -63,7 +63,6 @@
             this.UnableLabel = new vatsys.TextLabel();
             this.ToEditLabel = new vatsys.TextLabel();
             this.DelayLabel = new vatsys.TextLabel();
-            this.label1 = new vatsys.TextLabel();
             this.btn_tfc = new vatsys.GenericButton();
             this.btn_air = new vatsys.GenericButton();
             this.btn_defer = new vatsys.GenericButton();
@@ -202,7 +201,7 @@
             this.pnl_categories.Controls.Add(this.btn_blk);
             this.pnl_categories.Controls.Add(this.btn_cfm);
             this.pnl_categories.Controls.Add(this.btn_misc);
-            this.pnl_categories.Location = new System.Drawing.Point(10, 95);
+            this.pnl_categories.Location = new System.Drawing.Point(11, 92);
             this.pnl_categories.Name = "pnl_categories";
             this.pnl_categories.Size = new System.Drawing.Size(565, 69);
             this.pnl_categories.TabIndex = 34;
@@ -447,7 +446,7 @@
             this.lbl_response.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_response.HasBorder = false;
             this.lbl_response.InteractiveText = false;
-            this.lbl_response.Location = new System.Drawing.Point(2, 1);
+            this.lbl_response.Location = new System.Drawing.Point(2, 2);
             this.lbl_response.Name = "lbl_response";
             this.lbl_response.Size = new System.Drawing.Size(525, 27);
             this.lbl_response.TabIndex = 0;
@@ -475,7 +474,6 @@
             this.panel1.Controls.Add(this.UnableLabel);
             this.panel1.Controls.Add(this.ToEditLabel);
             this.panel1.Controls.Add(this.DelayLabel);
-            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.btn_tfc);
             this.panel1.Controls.Add(this.btn_air);
             this.panel1.Controls.Add(this.btn_defer);
@@ -524,20 +522,6 @@
             this.DelayLabel.TabIndex = 44;
             this.DelayLabel.Text = "Delay Response";
             this.DelayLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.label1.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.label1.HasBorder = false;
-            this.label1.InteractiveText = false;
-            this.label1.Location = new System.Drawing.Point(252, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 17);
-            this.label1.TabIndex = 40;
-            this.label1.Text = "label1";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btn_tfc
             // 
@@ -641,7 +625,6 @@
             this.pnl_categories.ResumeLayout(false);
             this.insetPanel3.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -685,7 +668,6 @@
         private vatsys.TextLabel UnableLabel;
         private vatsys.TextLabel ToEditLabel;
         private vatsys.TextLabel DelayLabel;
-        private vatsys.TextLabel label1;
         private System.Windows.Forms.ColumnHeader col_timestamp;
         private System.Windows.Forms.ColumnHeader col_message;
         private System.Windows.Forms.ColumnHeader columnHeader1;
