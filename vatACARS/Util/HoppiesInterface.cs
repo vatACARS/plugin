@@ -29,7 +29,7 @@ namespace vatACARS.Util
             timer = new Timer();
             timer.Elapsed += PollTimer;
             timer.AutoReset = true; // Keep the timer running
-            timer.Interval = 1000;
+            timer.Interval = 50;
             timer.Enabled = true;
         }
 
@@ -64,7 +64,6 @@ namespace vatACARS.Util
             logger.Log($"Received {responses.Count} messages.");
             if (responses.Count > 0)
             {
-                AudioInterface.playSound("incomingMessage");
                 foreach (Match response in responses)
                 {
                     string[] rawMessage = response.Groups[1].Value.Replace("}", "").Split('{');
