@@ -21,6 +21,23 @@ namespace vatACARS.Components
         private static int responseIndex = 0;
         private static readonly Regex placeholderParse = new Regex(@"\((.*?)\)");
         private IMessageData selectedMsg;
+        private static readonly Dictionary<string, List<string>> keywordGroupMapping = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+        {
+            { "14", new List<string> { "EMERG", "EMERGENCY", "MAYDAY", "PAN PAN" } } ,
+            { "1", new List<string> { "LEVEL", "ALTITUDE", "FL", "DECENT", "CLIMB", "CLIMBING", "DESCENDING", "LEAVING" } },
+            { "11", new List<string> { "M", "K", "SPEED" } },
+            { "2", new List<string> { "ROUTE", "DIRECT", "HEADING", "TRACK", "DIVERTING" } },
+            { "3", new List<string> { "TRANSFR", "HANDOFF", "TRANSFER" } },
+            { "4", new List<string> { "CROSS", "OVERFLY", "PASS" } },
+            { "5", new List<string> { "ENQ", "INQUIRE", "QUESTION", "TXT", "TEXT" } },
+            { "6", new List<string> { "SURV", "SURVEILLANCE", "MONITOR" } },
+            { "7", new List<string> { "EXPECT", "ANTICIPATE", "WAIT" } },
+            { "8", new List<string> { "CONDITION" } },
+            { "9", new List<string> { "WX", "WEATHER", } },
+            { "10", new List<string> { "COMM", "CONTACT", "MESSAGE", "VOICE" } },
+            { "12", new List<string> { "CONFIRM", "REPORT" } },
+            { "13", new List<string> { "MISC", "OTHER" } }
+        };
 
         public EditorWindow()
         {
@@ -45,6 +62,8 @@ namespace vatACARS.Components
                     btn_editor_Click(null, null);
                     return;
                 }
+
+                ShowGroupBasedOnMessageContent(msg.Content);
             } else if(selectedMsg is CPDLCMessage)
             {
                 var msg = (CPDLCMessage)selectedMsg;
@@ -55,14 +74,12 @@ namespace vatACARS.Components
                 lvMsg.Font = MMI.eurofont_winsml;
 
                 lvw_messages.Items.Add(lvMsg);
+
+                ShowGroupBasedOnMessageContent(msg.Content);
             }
+
             response = new ResponseItem[5]; 
             responseIndex = 0;
-            lvw_messageSelector.Items.Clear();
-            foreach (var uplink in XMLReader.uplinks.Entries.Where(entry => entry.Response == "N").ToList())
-            {
-                lvw_messageSelector.Items.Add(uplink.Element);
-            }
 
             lbl_response.Invalidate();
         }
@@ -95,6 +112,22 @@ namespace vatACARS.Components
 
             scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
+        }
+
+        private void ShowGroupBasedOnMessageContent(string content)
+        {
+            foreach (var entry in keywordGroupMapping)
+            {
+                foreach (var keyword in entry.Value)
+                {
+                    if (content.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        ShowGroup(entry.Key);
+                        return;
+                    }
+                }
+            }
+            ShowGroup("1");
         }
 
         private void ShowGroup(string group_id)
