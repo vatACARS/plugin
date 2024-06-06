@@ -332,7 +332,9 @@ namespace vatACARS.Components
                 else if (selectedMsg is CPDLCMessage)
                 {
                     var responseCode = "N";
-                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "R")) responseCode = "R"; //handle null causing error
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "R")) responseCode = "R"; // TODO: Fix priorities here
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
+                    if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "W/U")) responseCode = "WU";
                     CPDLCMessage message = (CPDLCMessage)selectedMsg;
                     string resp = $"/data2/{Tranceiver.SentMessages}/{message.MessageId}/{responseCode}/{string.Join("+", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element))}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);

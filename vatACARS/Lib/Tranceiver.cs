@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using vatACARS.Util;
 
@@ -17,6 +18,7 @@ namespace vatACARS.Helpers
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
         private static List<Station> Stations = new List<Station>();
+        private static List<string> ClosingMessages = new List<string>() { "WILCO", "UNABLE", "ROGER", "STANDBY" };
 
         public static event EventHandler<TelexMessage> TelexMessageReceived;
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
@@ -43,9 +45,34 @@ namespace vatACARS.Helpers
 
         public static void addCPDLCMessage(CPDLCMessage message)
         {
-            logger.Log("CPDLCMessage successfully received.");
-            AudioInterface.playSound("incomingMessage");
-            CPDLCMessages.Add(message);
+            try
+            {
+                logger.Log("CPDLCMessage successfully received.");
+                AudioInterface.playSound("incomingMessage");
+
+                if (message.ReplyMessageId != -1 && ClosingMessages.Contains(message.Content))
+                {
+                    CPDLCMessage originalMessage = CPDLCMessages.FirstOrDefault(msg => msg.MessageId == message.ReplyMessageId);
+                    if (originalMessage == null)
+                    {
+                        CPDLCMessages.Add(message);
+                    }
+                    else
+                    {
+                        originalMessage.Content = message.Content;
+                        originalMessage.setMessageState(3); // Done
+                    }
+                }
+                else
+                {
+                    CPDLCMessages.Add(message);
+                    if(message.ResponseType == "N") message.setMessageState(3);
+                }
+            } catch (Exception ex)
+            {
+                logger.Log($"Oops: {ex.ToString()}");
+            }
+
             CPDLCMessageReceived?.Invoke(null, message);
         }
 
@@ -65,6 +92,8 @@ namespace vatACARS.Helpers
                 await Task.Delay(TimeSpan.FromSeconds(120));
                 message.removeMessage();
             }
+
+            MessageUpdated.Invoke(null, message);
         }
 
         private static void removeMessage(this IMessageData message)
