@@ -70,5 +70,17 @@ namespace vatACARS.Properties {
                 this["volume"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("120")]
+        public int fin_timeout {
+            get {
+                return ((int)(this["fin_timeout"]));
+            }
+            set {
+                this["fin_timeout"] = value;
+            }
+        }
     }
 }
