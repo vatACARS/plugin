@@ -1,12 +1,10 @@
-<img width="150" height="150" align="left" style="float: left; margin: 0 20px 0 0;" alt="Arlo" src="https://placehold.co/150x150" />
+<img width="150" height="150" align="left" style="float: left; margin: 0 20px 0 0;" alt="Arlo" src="https://i.vgy.me/Bly4xt.png" />
 
-# vatACARS/plugin
+**vatACARS/plugin**
 
 [![](https://img.shields.io/github/issues/vatACARS/plugin)](https://github.com/vatACARS/plugin/issues)
 
 vatACARS is designed to enhance the functionality of vatSys, a popular air traffic control simulation software, by integrating ACARS capabilities.
-
----
 
 ## Features
 
