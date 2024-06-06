@@ -30,6 +30,7 @@ namespace vatACARS.Components
 
             TelexMessageReceived += UpdateTelexList;
             CPDLCMessageReceived += UpdateCPDLCList;
+            MessageUpdated += UpdateList;
             StationAdded += UpdateStationsList;
 
             UpdateMessages();
@@ -81,6 +82,16 @@ namespace vatACARS.Components
             if (InvokeRequired)
             {
                 Invoke(new Action(() => UpdateStationsList(sender, station)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateList(object sender, IMessageData message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateList(sender, message)));
                 return;
             }
             UpdateMessages();

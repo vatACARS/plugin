@@ -178,7 +178,7 @@ namespace vatACARS.Components
         {
             if (lvw_messageSelector.SelectedItems.Count > 0)
             {
-                UplinkEntry selected = XMLReader.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault();
+                UplinkEntry selected = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Clone();
                 var placeholders = placeholderParse.Matches(selected.Element);
 
                 
@@ -221,7 +221,7 @@ namespace vatACARS.Components
 
         private void btn_standby_Click(object sender, EventArgs e)
         {
-            var standby = XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault();
+            var standby = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Clone();
             lbl_response.Text = standby.Element;
             response = new ResponseItem[5];
             response[0] = new ResponseItem() { Entry = standby };
@@ -231,7 +231,7 @@ namespace vatACARS.Components
 
         private void btn_defer_Click(object sender, EventArgs e)
         {
-            var defer = XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault();
+            var defer = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Clone();
             lbl_response.Text = defer.Element;
             response = new ResponseItem[5];
             response[0] = new ResponseItem() { Entry = defer };
@@ -241,8 +241,8 @@ namespace vatACARS.Components
 
         private void btn_tfc_Click(object sender, EventArgs e)
         {
-            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault();
-            var tfc = XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault();
+            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
+            var tfc = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Clone();
             lbl_response.Text = tfc.Element;
             response = new ResponseItem[5];
             response[0] = new ResponseItem() { Entry = unable };
@@ -253,8 +253,8 @@ namespace vatACARS.Components
 
         private void btn_air_Click(object sender, EventArgs e)
         {
-            var unable = XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault();
-            var air = XMLReader.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault();
+            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
+            var air = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault().Clone();
             lbl_response.Text = air.Element;
             response = new ResponseItem[5];
             response[0] = new ResponseItem() { Entry = unable };
@@ -265,7 +265,6 @@ namespace vatACARS.Components
 
         private void btn_editor_Click(object sender, EventArgs e)
         {
-            logger.Log("Transferring to Editor");
             lbl_response.Text = "";
             pnl_categories.Visible = true;
             response = new ResponseItem[5];
@@ -348,14 +347,12 @@ namespace vatACARS.Components
                 }
 
                 logger.Log("Message sent successfully");
+                Close();
             }
             catch (Exception ex)
             {
                 logger.Log($"Oops: {ex.ToString()}");
             }
-
-            selectedMsg.setMessageState(2);
-            Close();
         }
 
         private void scr_messageSelector_Scroll(object sender, EventArgs e)
