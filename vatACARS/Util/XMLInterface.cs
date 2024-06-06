@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using System.Xml.Serialization;
 
 namespace vatACARS.Util
@@ -10,7 +11,7 @@ namespace vatACARS.Util
         public List<UplinkEntry> Entries { get; set; }
     }
 
-    public class UplinkEntry
+    public class UplinkEntry : System.ICloneable
     {
         [XmlAttribute("CODE")]
         public string Code { get; set; }
@@ -25,5 +26,16 @@ namespace vatACARS.Util
         public string Group { get; set; }
 
         // TODO: "URG" & "ALRT" elems
+
+        public object Clone()
+        {
+            return new UplinkEntry
+            {
+                Code = this.Code,
+                Element = this.Element,
+                Response = this.Response,
+                Group = this.Group
+            };
+        }
     }
 }
