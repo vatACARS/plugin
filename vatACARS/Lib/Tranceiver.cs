@@ -21,6 +21,7 @@ namespace vatACARS.Helpers
         public static event EventHandler<TelexMessage> TelexMessageReceived;
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
         public static event EventHandler<Station> StationAdded;
+        public static event EventHandler<IMessageData> MessageUpdated;
 
         public static TelexMessage[] getAllTelexMessages()
         {
@@ -51,6 +52,13 @@ namespace vatACARS.Helpers
         public static async void setMessageState(this IMessageData message, int state)
         {
             message.State = state;
+            try
+            {
+                MessageUpdated.Invoke(null, message); // TODO: Fix this
+            } catch (Exception ex)
+            {
+                logger.Log($"Oops: {ex.ToString()}");
+            }
 
             if (state == 3)
             {
