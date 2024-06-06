@@ -132,8 +132,15 @@ namespace vatACARS.Util
 
         public static async Task<string> SendMessage(FormUrlEncodedContent request)
         {
-            Tranceiver.SentMessages++;
-            return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
+            SentMessages++;
+            try
+            {
+                return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
+            } catch (Exception e)
+            {
+                logger.Log($"Oops: {e.ToString()}");
+                return "ERROR";
+            }
         }
 
         private static CPDLCMessage parseCPDLCMessage(string rawMessage, string station)
