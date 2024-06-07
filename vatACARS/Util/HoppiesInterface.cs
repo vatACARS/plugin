@@ -132,7 +132,7 @@ namespace vatACARS.Util
 
         public static async Task<string> SendMessage(FormUrlEncodedContent request)
         {
-            SentMessages++;
+            SentMessages++; // TODO: Shouldn't be incremented for polling requests.
             try
             {
                 return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
