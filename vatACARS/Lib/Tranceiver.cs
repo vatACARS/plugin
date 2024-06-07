@@ -102,7 +102,7 @@ namespace vatACARS.Helpers
 
             if (state == 3)
             {
-                await Task.Delay(TimeSpan.FromSeconds(120));
+                await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.fin_timeout));
                 message.removeMessage();
             }
 

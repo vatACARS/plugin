@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using vatACARS.Helpers;
@@ -26,12 +27,14 @@ namespace vatACARS
             lbl_hoplogon.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_error.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_vol.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            lbl_timeout.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
 
             lbl_stationCode.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_enablehop.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_hoplogon.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_error.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_vol.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_timeout.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
 
             btn_connect.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
             btn_connect.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
@@ -45,6 +48,7 @@ namespace vatACARS
         {
             tbx_hoplogon.Text = Properties.Settings.Default.hoplogon;
             tbx_logonCode.Text = Properties.Settings.Default.callsign;
+            tbx_timeout.Text = Properties.Settings.Default.fin_timeout.ToString();
             slider_vol.Value = Properties.Settings.Default.volume;
             if (Properties.Settings.Default.toggle_hop)
             {
@@ -232,6 +236,7 @@ namespace vatACARS
         private void slider_vol_Scroll(object sender, EventArgs e)
         {
             Properties.Settings.Default.volume = slider_vol.Value;
+            Properties.Settings.Default.Save();
         }
 
         private void btn_test_Click(object sender, EventArgs e)
@@ -243,5 +248,23 @@ namespace vatACARS
         {
             AudioInterface.playSound("incomingMessage");
         }
+
+        public void tbx_timeout_TextChanged(object sender, EventArgs e)
+        {
+            string newText = new string(tbx_timeout.Text.Where(char.IsDigit).ToArray());
+
+            if (tbx_timeout.Text != newText)
+            {
+                tbx_timeout.Text = newText;
+                tbx_timeout.SelectionStart = tbx_timeout.Text.Length;
+            }
+
+            if (int.TryParse(newText, out int timeout))
+            {
+                Properties.Settings.Default.fin_timeout = timeout;
+                Properties.Settings.Default.Save();
+            }
+        }
+
     }
 }

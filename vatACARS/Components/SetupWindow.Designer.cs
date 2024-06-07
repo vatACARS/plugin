@@ -39,6 +39,8 @@
             this.slider_vol = new VATSYSControls.Slider();
             this.btn_test = new vatsys.GenericButton();
             this.lbl_vol = new vatsys.TextLabel();
+            this.tbx_timeout = new vatsys.TextField();
+            this.lbl_timeout = new vatsys.TextLabel();
             ((System.ComponentModel.ISupportInitialize)(this.slider_vol)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,7 +48,7 @@
             // 
             this.btn_connect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_connect.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_connect.Location = new System.Drawing.Point(314, 166);
+            this.btn_connect.Location = new System.Drawing.Point(314, 227);
             this.btn_connect.Name = "btn_connect";
             this.btn_connect.Size = new System.Drawing.Size(101, 28);
             this.btn_connect.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -189,11 +191,40 @@
             this.lbl_vol.Text = "NOTIFICATION VOLUME";
             this.lbl_vol.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // tbx_timeout
+            // 
+            this.tbx_timeout.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_timeout.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.tbx_timeout.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.tbx_timeout.Location = new System.Drawing.Point(177, 166);
+            this.tbx_timeout.Name = "tbx_timeout";
+            this.tbx_timeout.NumericCharOnly = false;
+            this.tbx_timeout.OctalOnly = false;
+            this.tbx_timeout.Size = new System.Drawing.Size(85, 25);
+            this.tbx_timeout.TabIndex = 25;
+            this.tbx_timeout.TextChanged += new System.EventHandler(this.tbx_timeout_TextChanged);
+            // 
+            // lbl_timeout
+            // 
+            this.lbl_timeout.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_timeout.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_timeout.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_timeout.HasBorder = false;
+            this.lbl_timeout.InteractiveText = true;
+            this.lbl_timeout.Location = new System.Drawing.Point(12, 158);
+            this.lbl_timeout.Name = "lbl_timeout";
+            this.lbl_timeout.Size = new System.Drawing.Size(159, 45);
+            this.lbl_timeout.TabIndex = 26;
+            this.lbl_timeout.Text = "FINISHED MESSAGE TIMEOUT";
+            this.lbl_timeout.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // SetupWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 206);
+            this.ClientSize = new System.Drawing.Size(427, 267);
+            this.Controls.Add(this.lbl_timeout);
+            this.Controls.Add(this.tbx_timeout);
             this.Controls.Add(this.lbl_vol);
             this.Controls.Add(this.btn_test);
             this.Controls.Add(this.slider_vol);
@@ -236,5 +267,7 @@
         private vatsys.GenericButton btn_test;
         public VATSYSControls.Slider slider_vol;
         private vatsys.TextLabel lbl_vol;
+        private vatsys.TextField tbx_timeout;
+        private vatsys.TextLabel lbl_timeout;
     }
 }
