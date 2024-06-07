@@ -101,9 +101,9 @@ namespace vatACARS.Components
         {
             try
             {
-                telexMessages = Tranceiver.getAllTelexMessages().ToList();
-                CPDLCMessages = Tranceiver.getAllCPDLCMessages().ToList();
-                stations = Tranceiver.getAllStations().ToList();
+                telexMessages = getAllTelexMessages().ToList();
+                CPDLCMessages = getAllCPDLCMessages().ToList();
+                stations = getAllStations().ToList();
 
                 var messages = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList();
                 var stationList = stations.ToList();
@@ -231,7 +231,7 @@ namespace vatACARS.Components
             {
                 if(e.Button == MouseButtons.Left)
                 {
-                    SelectedMessage = new TelexMessage()
+                    SelectedMessage = new CPDLCMessage()
                     {
                         State = 0,
                         Station = callsignLabel.Text,
@@ -340,7 +340,7 @@ namespace vatACARS.Components
                         if(msg is CPDLCMessage)
                         {
                             CPDLCMessage m = (CPDLCMessage)msg;
-                            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(m.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{m.MessageId}/N/STANDBY");
+                            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(m.Station, "CPDLC", $"/data2/{SentMessages}/{m.MessageId}/N/STANDBY");
                             _ = HoppiesInterface.SendMessage(req);
                         }
                         if(msg is TelexMessage)
