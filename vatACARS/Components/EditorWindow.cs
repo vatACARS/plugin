@@ -25,7 +25,6 @@ namespace vatACARS.Components
         {
             { "14", new List<string> { "EMERG", "EMERGENCY", "MAYDAY", "PAN PAN" } } ,
             { "1", new List<string> { "LEVEL", "ALTITUDE", "FL", "DECENT", "CLIMB", "CLIMBING", "DESCENDING", "LEAVING" } },
-            { "11", new List<string> { "M", "K", "SPEED" } },
             { "2", new List<string> { "ROUTE", "DIRECT", "HEADING", "TRACK", "DIVERTING" } },
             { "3", new List<string> { "TRANSFR", "HANDOFF", "TRANSFER" } },
             { "4", new List<string> { "CROSS", "OVERFLY", "PASS" } },
@@ -33,10 +32,11 @@ namespace vatACARS.Components
             { "6", new List<string> { "SURV", "SURVEILLANCE", "MONITOR" } },
             { "7", new List<string> { "EXPECT", "ANTICIPATE", "WAIT" } },
             { "8", new List<string> { "CONDITION" } },
-            { "9", new List<string> { "WX", "WEATHER", } },
             { "10", new List<string> { "COMM", "CONTACT", "MESSAGE", "VOICE" } },
             { "12", new List<string> { "CONFIRM", "REPORT" } },
-            { "13", new List<string> { "MISC", "OTHER" } }
+            { "13", new List<string> { "MISC", "OTHER" } },
+            { "11", new List<string> { "M", "K", "SPEED" } },
+            { "9", new List<string> { "WX", "WEATHER", } }
         };
 
         public EditorWindow()
@@ -122,8 +122,35 @@ namespace vatACARS.Components
                 {
                     if (content.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
-                        ShowGroup(entry.Key);
-                        return;
+                        if (entry.Key == "11")
+                        {
+                            if (keyword.Equals("M", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Regex.IsMatch(content, @"M\s*\d+", RegexOptions.IgnoreCase))
+                                {
+                                    ShowGroup(entry.Key);
+                                    return;
+                                }
+                            }
+                            else if (keyword.Equals("K", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Regex.IsMatch(content, @"\d+\s*K", RegexOptions.IgnoreCase))
+                                {
+                                    ShowGroup(entry.Key);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                ShowGroup(entry.Key);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            ShowGroup(entry.Key);
+                            return;
+                        }
                     }
                 }
             }
