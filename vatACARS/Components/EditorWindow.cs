@@ -323,9 +323,9 @@ namespace vatACARS.Components
                 if (selectedMsg is TelexMessage)
                 {
                     TelexMessage message = (TelexMessage)selectedMsg;
-                    string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
-                    if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
+                    string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element)).Replace("@", "");
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
+                    selectedMsg.Content = resp;
                     _ = HoppiesInterface.SendMessage(req);
                     selectedMsg.setMessageState(3); // Done
                 }
@@ -348,7 +348,7 @@ namespace vatACARS.Components
                         ReplyMessageId = message.MessageId
                     });
 
-                    selectedMsg.Content = encodedMessage;
+                    selectedMsg.Content = resp.Replace("@", "");
 
                     _ = HoppiesInterface.SendMessage(req);
                     if(responseCode == "N") {
