@@ -1,4 +1,4 @@
-<img width="150" height="150" align="left" style="float: left; margin: 0 20px 0 0;" alt="Arlo" src="https://i.vgy.me/Bly4xt.png" />
+<img width="150" height="150" align="left" style="float: left; margin: 0 20px 0 0;" alt="vatACARS Logo" src="https://vatacars.com/img/logo-dark.png" />
 
 **vatACARS/plugin**
 
