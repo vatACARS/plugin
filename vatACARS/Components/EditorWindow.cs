@@ -336,9 +336,20 @@ namespace vatACARS.Components
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "W/U")) responseCode = "WU";
                     CPDLCMessage message = (CPDLCMessage)selectedMsg;
-                    string resp = $"/data2/{Tranceiver.SentMessages}/{message.MessageId}/{responseCode}/{string.Join("+", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element))}";
+                    string encodedMessage = string.Join("+", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
+                    string resp = $"/data2/{SentMessages}/{message.MessageId}/{responseCode}/{encodedMessage}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
+
+                    addSentCPDLCMessage(new SentCPDLCMessage()
+                    {
+                        Station = selectedMsg.Station,
+                        MessageId = SentMessages,
+                        ReplyMessageId = message.MessageId
+                    });
+
+                    selectedMsg.Content = encodedMessage;
+
                     _ = HoppiesInterface.SendMessage(req);
                     if(responseCode == "N") {
                         selectedMsg.setMessageState(3);
