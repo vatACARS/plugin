@@ -201,7 +201,7 @@
             this.pnl_categories.Controls.Add(this.btn_blk);
             this.pnl_categories.Controls.Add(this.btn_cfm);
             this.pnl_categories.Controls.Add(this.btn_misc);
-            this.pnl_categories.Location = new System.Drawing.Point(11, 92);
+            this.pnl_categories.Location = new System.Drawing.Point(0, 0);
             this.pnl_categories.Name = "pnl_categories";
             this.pnl_categories.Size = new System.Drawing.Size(565, 69);
             this.pnl_categories.TabIndex = 34;
@@ -471,6 +471,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.pnl_categories);
             this.panel1.Controls.Add(this.UnableLabel);
             this.panel1.Controls.Add(this.ToEditLabel);
             this.panel1.Controls.Add(this.DelayLabel);
@@ -599,7 +600,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 434);
             this.ControlBox = false;
-            this.Controls.Add(this.pnl_categories);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btn_messageScroller);
             this.Controls.Add(this.insetPanel3);

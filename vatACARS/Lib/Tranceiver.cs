@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using vatACARS.Util;
 
@@ -15,12 +16,15 @@ namespace vatACARS.Helpers
         public static int SentMessages = 1;
         private static Logger logger = new Logger("Tranceiver");
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
+        private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
         private static List<Station> Stations = new List<Station>();
+        private static List<string> ClosingMessages = new List<string>() { "WILCO", "UNABLE", "ROGER", "STANDBY", "AFFIRM", "NEGATIVE" };
 
         public static event EventHandler<TelexMessage> TelexMessageReceived;
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
         public static event EventHandler<Station> StationAdded;
+        public static event EventHandler<IMessageData> MessageUpdated;
 
         public static TelexMessage[] getAllTelexMessages()
         {
@@ -42,21 +46,67 @@ namespace vatACARS.Helpers
 
         public static void addCPDLCMessage(CPDLCMessage message)
         {
-            logger.Log("CPDLCMessage successfully received.");
-            AudioInterface.playSound("incomingMessage");
-            CPDLCMessages.Add(message);
+            try
+            {
+                logger.Log("CPDLCMessage successfully received.");
+                AudioInterface.playSound("incomingMessage");
+
+                if (message.ReplyMessageId != -1 && ClosingMessages.Contains(message.Content))
+                {
+                    logger.Log($"Closing message: '{message.Content}' - ReplyID: {message.ReplyMessageId}");
+                    SentCPDLCMessage sentCPDLCMessage = SentCPDLCMessages.FirstOrDefault(msg => msg.MessageId == message.ReplyMessageId);
+                    CPDLCMessage originalMessage = new CPDLCMessage();
+                    if (sentCPDLCMessage != null) originalMessage = CPDLCMessages.FirstOrDefault(msg => msg.MessageId == sentCPDLCMessage.ReplyMessageId);
+
+                    if (originalMessage == null)
+                    {
+                        logger.Log("Original message not found.");
+                        CPDLCMessages.Add(message);
+                    }
+                    else
+                    {
+                        logger.Log($"Found message: '{originalMessage.Content}' - ID: {originalMessage.MessageId}");
+                        SentCPDLCMessages.Remove(sentCPDLCMessage);
+                        originalMessage.Content = $"[{message.Content}] {originalMessage.Content}";
+                        originalMessage.setMessageState(3); // Done
+                    }
+                }
+                else
+                {
+                    CPDLCMessages.Add(message);
+                    if(message.ResponseType == "N") message.setMessageState(3);
+                }
+            } catch (Exception ex)
+            {
+                logger.Log($"Oops: {ex.ToString()}");
+            }
+
             CPDLCMessageReceived?.Invoke(null, message);
+        }
+
+        public static void addSentCPDLCMessage(SentCPDLCMessage message)
+        {
+            SentCPDLCMessages.Add(message);
         }
 
         public static async void setMessageState(this IMessageData message, int state)
         {
             message.State = state;
+            try
+            {
+                MessageUpdated.Invoke(null, message); // TODO: Fix this
+            } catch (Exception ex)
+            {
+                logger.Log($"Oops: {ex.ToString()}");
+            }
 
             if (state == 3)
             {
                 await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.fin_timeout));
                 message.removeMessage();
             }
+
+            MessageUpdated.Invoke(null, message);
         }
 
         private static void removeMessage(this IMessageData message)
@@ -90,6 +140,7 @@ namespace vatACARS.Helpers
             int State { get; set; }
             DateTime TimeReceived { get; set; }
             string Station { get; set; }
+            string Content { get; set; }
         }
 
         public class CPDLCMessage : IMessageData
@@ -106,7 +157,14 @@ namespace vatACARS.Helpers
             public int MessageId;
             public int ReplyMessageId;
             public string ResponseType;
-            public string Content;
+            public string Content { get; set; }
+        }
+
+        public class SentCPDLCMessage
+        {
+            public string Station;
+            public int MessageId;
+            public int ReplyMessageId;
         }
 
         public class TelexMessage : IMessageData
@@ -120,7 +178,7 @@ namespace vatACARS.Helpers
             public int State { get; set; }
             public DateTime TimeReceived { get; set; }
             public string Station { get; set; }
-            public string Content;
+            public string Content { get; set; }
         }
 
         public class Station
