@@ -244,6 +244,8 @@ namespace vatACARS.Components
                 lbl_response.Text = selected.Element;
                 lbl_response.Refresh();
             }
+
+            lvw_messageSelector.SelectedItems.Clear();
         }
 
         private void btn_standby_Click(object sender, EventArgs e)
