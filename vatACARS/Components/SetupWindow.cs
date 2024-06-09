@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Text;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Helpers.Tranceiver;
@@ -22,17 +19,19 @@ namespace vatACARS
 
         private void StyleComponent()
         {
+            lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_enablehop.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_hoplogon.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-            lbl_error.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_vol.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
             lbl_timeout.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
 
+            lbl_stationCodePrompt.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_stationCode.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_enablehop.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_hoplogon.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            lbl_error.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_vol.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lbl_timeout.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
 
@@ -47,7 +46,7 @@ namespace vatACARS
         private void SetupWindow_Shown(object sender, EventArgs e)
         {
             tbx_hoplogon.Text = Properties.Settings.Default.hoplogon;
-            tbx_logonCode.Text = Properties.Settings.Default.callsign;
+            tbx_stationCode.Text = Properties.Settings.Default.callsign;
             tbx_timeout.Text = Properties.Settings.Default.fin_timeout.ToString();
             slider_vol.Value = Properties.Settings.Default.volume;
             if (Properties.Settings.Default.toggle_hop)
@@ -102,12 +101,6 @@ namespace vatACARS
             */
         }
 
-
-        private void lbl_logonCode_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void tbx_hoplogon_TextChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.hoplogon = tbx_hoplogon.Text;
@@ -116,8 +109,41 @@ namespace vatACARS
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
+            foreach(Control ctl in Controls)
+            {
+                if(ctl is TextLabel)
+                {
+                    ctl.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                    ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                }
+            }
+
+            // Check if any information is missing
+            bool checksFailed = false;
+            if (!Network.Me.ATIS.Any((string atisLine) => new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
+            {
+                lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                tbx_stationCode.Text = "Try again.";
+                checksFailed = true;
+            }
+
+            if(tbx_vatAcarsToken.Text.Length != 32 && !tbx_vatAcarsToken.Text.StartsWith("vAcV1-"))
+            {
+                lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                checksFailed = true;
+            }
+
+            if(Properties.Settings.Default.toggle_hop && tbx_hoplogon.Text.Length < 15)
+            {
+                lbl_hoplogon.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                checksFailed = true;
+            }
+
+            if (checksFailed) return;
+
             ClientInformation.LogonCode = Properties.Settings.Default.hoplogon;
-            ClientInformation.Callsign = tbx_logonCode.Text;
+            ClientInformation.Callsign = tbx_stationCode.Text;
             HoppiesInterface.StartListening();
             /*
             if (Tranceiver.IsConnected())
@@ -166,26 +192,6 @@ namespace vatACARS
             }
             */
         }
-
-        public void tbx_logonCode_TextChanged(object sender, EventArgs e)
-        {
-            string newText = tbx_logonCode.Text.ToUpper();
-
-            if (newText.Length > 4)
-            {
-                newText = newText.Substring(0, 4);
-            }
-
-            if (tbx_logonCode.Text != newText)
-            {
-                tbx_logonCode.Text = newText;
-                tbx_logonCode.SelectionStart = tbx_logonCode.Text.Length;
-            }
-            Properties.Settings.Default.callsign = tbx_logonCode.Text;
-            Properties.Settings.Default.Save();
-        }
-
-
 
         private void toggle_hop_MouseUp(object sender, MouseEventArgs e)
         {
@@ -266,5 +272,33 @@ namespace vatACARS
             }
         }
 
+        private void btn_checkStationCode_Click(object sender, EventArgs e)
+        {
+            if (!Network.Me.ATIS.Any((string atisLine) => new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
+            {
+                lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                tbx_stationCode.Text = "Try again.";
+            } else
+            {
+                Match stationCode = Network.Me.ATIS.Select(atisLine => new {
+                Line = atisLine,
+                Match = new Regex(@"CPDLC").Match(atisLine.ToUpperInvariant()).Success
+                         ? new Regex(@"CPDLC [A-Z]{4}").Match(atisLine.ToUpperInvariant())
+                         : new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant())
+                }).FirstOrDefault(result => result.Match.Success)?.Match;
+                if (stationCode != null)
+                {
+                    lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                    lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                    tbx_stationCode.Text = stationCode.Value.Split(' ')[1].ToUpperInvariant();
+                } else
+                {
+                    lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                    lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                    tbx_stationCode.Text = "Try again.";
+                }
+            }
+        }
     }
 }
