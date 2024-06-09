@@ -169,7 +169,7 @@ namespace vatACARS.Components
         {
             try
             {
-                ListViewItem item = new ListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State);
+                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State, lvw_messages);
                 item.SubItems.Add($"{message.Station}: {message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
@@ -295,7 +295,7 @@ namespace vatACARS.Components
                 };
 
                     EditorWindow window = new EditorWindow();
-                    window.Show(Form.ActiveForm);
+                    window.Show(ActiveForm);
                 } else
                 {
                     // Confirm logout
