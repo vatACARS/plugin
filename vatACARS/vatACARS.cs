@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using vatACARS.Components;
 using vatACARS.Helpers;
@@ -113,21 +114,16 @@ namespace vatACARS
 
         public CustomLabelItem GetCustomLabelItem(string itemType, Track track, FDR flightDataRecord, RDP.RadarTrack radarTrack)
         {
-            // FDR flightDataRecord is unreliable?
-            
-            FDR fdr = flightDataRecord;
-            if (fdr == null) return null;
-
             Station[] stations = getAllStations();
-            Station cStation = stations.FirstOrDefault(station => station.Callsign == fdr.Callsign);
+            Station cStation = stations.FirstOrDefault(station => station.Callsign == flightDataRecord.Callsign);
 
             TelexMessage[] telexMessages = getAllTelexMessages();
             CPDLCMessage[] CPDLCMessages = getAllCPDLCMessages();
             IMessageData telexDownlink;
             IMessageData combinedDownlink;
 
-            telexDownlink = telexMessages.Cast<IMessageData>().FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
-            combinedDownlink = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
+            telexDownlink = telexMessages.Cast<IMessageData>().FirstOrDefault(message => message.State == 0 && message.Station == flightDataRecord.Callsign);
+            combinedDownlink = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).FirstOrDefault(message => message.State == 0 && message.Station == flightDataRecord.Callsign);
 
 
             switch (itemType)
@@ -140,7 +136,7 @@ namespace vatACARS
 
                 case "LABEL_ITEM_CPDLCAIR":
                     if (cStation == null) return null;
-                    if (!MMI.IsMySectorConcerned(fdr)) return new CustomLabelItem()
+                    if (!MMI.IsMySectorConcerned(flightDataRecord)) return new CustomLabelItem()
                     {
                         Text = "@ HANDOVER",
                         ForeColourIdentity = Colours.Identities.Warning,
@@ -189,6 +185,28 @@ namespace vatACARS
 
             EditorWindow window = new EditorWindow();
             window.Show(Form.ActiveForm);
+
+            e.Handled = true;
+        }
+
+        private void HandoffLabelClick(CustomLabelItemMouseClickEventArgs e)
+        {
+            FDR fdr = e.Track.GetFDR();
+            SectorsVolumes.Volume volume = null;
+            SectorsVolumes.Sector nextSector = null;
+            FDR.ExtractedRoute.Segment segment = (from s in fdr.ParsedRoute.ToList() where s.Type == FDR.ExtractedRoute.Segment.SegmentTypes.ZPOINT && fdr.ControllingSector != SectorsVolumes.FindSector((SectorsVolumes.Volume)s.Tag) select s).FirstOrDefault((FDR.ExtractedRoute.Segment s) => s.ETO > DateTime.UtcNow);
+            if (segment != null) volume = (SectorsVolumes.Volume)segment.Tag;
+            if (volume != null) nextSector = SectorsVolumes.FindSector(volume);
+
+            if(nextSector != null && !Network.GetOnlineATCs.Any((NetworkATC a) => a.Callsign == nextSector.Callsign && a.ValidATC && a.ATIS.Any((string atisLine) => new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine).Count > 0 || new Regex(@"CPDLC LOGON [A-Z]{4}").Matches(atisLine).Count > 0)))
+            {
+                SectorsVolumes.Sector sector = null;
+                foreach (SectorsVolumes.Sector s in SectorsVolumes.SectorGroupings.Keys)
+                {
+                    if (Network.GetOnlineATCs.Any((NetworkATC a) => a.Callsign == s.Callsign && a.ValidATC && a.ATIS.Any((string atisLine) => new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine).Count > 0 || new Regex(@"CPDLC LOGON [A-Z]{4}").Matches(atisLine).Count > 0)) && s.SubSectors.Contains(nextSector) && (sector == null || sector.SubSectors.Count > s.SubSectors.Count)) sector = s;
+                }
+                if (sector != null) nextSector = sector;
+            }
 
             e.Handled = true;
         }
