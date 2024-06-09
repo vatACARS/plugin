@@ -28,16 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
             this.insetPanel2 = new vatsys.InsetPanel();
             this.lvw_messages = new vatsys.ListViewEx();
             this.col_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.col_message = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.scr_messages = new VATSYSControls.ScrollBar();
-            this.scr_connections = new VATSYSControls.ScrollBar();
             this.insetPanel1 = new vatsys.InsetPanel();
             this.tbl_connected = new System.Windows.Forms.TableLayoutPanel();
             this.lbl_messages = new vatsys.TextLabel();
@@ -51,7 +50,7 @@
             this.insetPanel2.Controls.Add(this.lvw_messages);
             this.insetPanel2.Location = new System.Drawing.Point(3, 24);
             this.insetPanel2.Name = "insetPanel2";
-            this.insetPanel2.Size = new System.Drawing.Size(507, 130);
+            this.insetPanel2.Size = new System.Drawing.Size(507, 138);
             this.insetPanel2.TabIndex = 3;
             // 
             // lvw_messages
@@ -62,19 +61,19 @@
             this.col_message});
             this.lvw_messages.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lvw_messages.FullRowSelect = true;
-            listViewGroup1.Header = "";
-            listViewGroup1.Name = "downlink";
-            listViewGroup2.Header = "";
-            listViewGroup2.Name = "defer";
-            listViewGroup3.Header = "";
-            listViewGroup3.Name = "uplink";
-            listViewGroup4.Header = "";
-            listViewGroup4.Name = "finished";
+            listViewGroup5.Header = "";
+            listViewGroup5.Name = "downlink";
+            listViewGroup6.Header = "";
+            listViewGroup6.Name = "defer";
+            listViewGroup7.Header = "";
+            listViewGroup7.Name = "uplink";
+            listViewGroup8.Header = "";
+            listViewGroup8.Name = "finished";
             this.lvw_messages.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3,
-            listViewGroup4});
+            listViewGroup5,
+            listViewGroup6,
+            listViewGroup7,
+            listViewGroup8});
             this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messages.HideSelection = false;
             this.lvw_messages.Location = new System.Drawing.Point(3, 3);
@@ -82,7 +81,7 @@
             this.lvw_messages.Name = "lvw_messages";
             this.lvw_messages.OwnerDraw = true;
             this.lvw_messages.ShowGroups = false;
-            this.lvw_messages.Size = new System.Drawing.Size(501, 124);
+            this.lvw_messages.Size = new System.Drawing.Size(501, 132);
             this.lvw_messages.TabIndex = 2;
             this.lvw_messages.UseCompatibleStateImageBehavior = false;
             this.lvw_messages.View = System.Windows.Forms.View.Details;
@@ -109,30 +108,18 @@
             this.scr_messages.Name = "scr_messages";
             this.scr_messages.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
             this.scr_messages.PreferredHeight = 10;
-            this.scr_messages.Size = new System.Drawing.Size(20, 130);
+            this.scr_messages.Size = new System.Drawing.Size(20, 138);
             this.scr_messages.TabIndex = 5;
             this.scr_messages.Value = 0;
-            // 
-            // scr_connections
-            // 
-            this.scr_connections.ActualHeight = 10;
-            this.scr_connections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.scr_connections.Change = 1;
-            this.scr_connections.Location = new System.Drawing.Point(511, 193);
-            this.scr_connections.Name = "scr_connections";
-            this.scr_connections.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
-            this.scr_connections.PreferredHeight = 10;
-            this.scr_connections.Size = new System.Drawing.Size(20, 130);
-            this.scr_connections.TabIndex = 7;
-            this.scr_connections.Value = 0;
+            this.scr_messages.Scroll += new System.EventHandler(this.scr_messages_Scroll);
+            this.scr_messages.Scrolling += new System.EventHandler(this.scr_messages_Scroll);
             // 
             // insetPanel1
             // 
             this.insetPanel1.Controls.Add(this.tbl_connected);
             this.insetPanel1.Location = new System.Drawing.Point(3, 193);
             this.insetPanel1.Name = "insetPanel1";
-            this.insetPanel1.Size = new System.Drawing.Size(507, 130);
+            this.insetPanel1.Size = new System.Drawing.Size(528, 130);
             this.insetPanel1.TabIndex = 4;
             // 
             // tbl_connected
@@ -151,7 +138,7 @@
             this.tbl_connected.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tbl_connected.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tbl_connected.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tbl_connected.Size = new System.Drawing.Size(501, 124);
+            this.tbl_connected.Size = new System.Drawing.Size(522, 124);
             this.tbl_connected.TabIndex = 1;
             this.tbl_connected.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tbl_connected_MouseDown);
             // 
@@ -164,9 +151,9 @@
             this.lbl_messages.InteractiveText = false;
             this.lbl_messages.Location = new System.Drawing.Point(3, 4);
             this.lbl_messages.Name = "lbl_messages";
-            this.lbl_messages.Size = new System.Drawing.Size(160, 17);
+            this.lbl_messages.Size = new System.Drawing.Size(168, 17);
             this.lbl_messages.TabIndex = 8;
-            this.lbl_messages.Text = "Tranceiver Messages";
+            this.lbl_messages.Text = "Transceiver Messages";
             this.lbl_messages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbl_connections
@@ -192,7 +179,6 @@
             this.Controls.Add(this.lbl_connections);
             this.Controls.Add(this.lbl_messages);
             this.Controls.Add(this.insetPanel1);
-            this.Controls.Add(this.scr_connections);
             this.Controls.Add(this.scr_messages);
             this.Controls.Add(this.insetPanel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -219,7 +205,6 @@
         private VATSYSControls.ScrollBar scr_messages;
         private System.Windows.Forms.ColumnHeader col_message;
         private System.Windows.Forms.ColumnHeader col_timestamp;
-        private VATSYSControls.ScrollBar scr_connections;
         private vatsys.InsetPanel insetPanel1;
         private vatsys.TextLabel lbl_messages;
         private vatsys.TextLabel lbl_connections;

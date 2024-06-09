@@ -8,7 +8,9 @@ using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Util.ExtendedUI;
 
 namespace vatACARS.Components
 {
@@ -38,11 +40,12 @@ namespace vatACARS.Components
 
         private void StyleComponent()
         {
+            lbl_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_connections.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+
             lvw_messages.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messages.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messages.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-            scr_connections.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            scr_connections.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
 
             il = new ImageList();
             il.Images.Add(Properties.Resources.RXIcon);
@@ -110,6 +113,10 @@ namespace vatACARS.Components
 
                 lvw_messages.BeginInvoke(new Action(() =>
                 {
+                    foreach(ACARSListViewItem item in lvw_messages.Items)
+                    {
+                        item.Dispose();
+                    }
                     lvw_messages.Items.Clear();
                     foreach (var message in messages)
                     {
@@ -123,6 +130,23 @@ namespace vatACARS.Components
                         }
                     }
                     lvw_messages.Refresh();
+
+                    ListViewItem ph = lvw_messages.Items.Add("");
+                    int tileHeight = lvw_messages.GetItemRect(ph.Index).Height;
+                    lvw_messages.Items.Remove(ph);
+                    if (messages.Count > 6)
+                    {
+                        scr_messages.PreferredHeight = messages.Count * tileHeight;
+                        scr_messages.ActualHeight = lvw_messages.Height;
+                        scr_messages.Enabled = true;
+                        scr_messages.Change = tileHeight;
+                    }
+                    else
+                    {
+                        scr_messages.PreferredHeight = 1;
+                        scr_messages.ActualHeight = 1;
+                        scr_messages.Enabled = false;
+                    }
                 }));
 
                 tbl_connected.BeginInvoke(new Action(() =>
@@ -182,7 +206,8 @@ namespace vatACARS.Components
         {
             try
             {
-                ListViewItem item = new ListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State);
+                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State, lvw_messages);
+
                 item.SubItems.Add($"{message.Station}: {message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
@@ -208,6 +233,36 @@ namespace vatACARS.Components
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
                 lvw_messages.Items.Add(item);
+
+                if(message.State < 3)
+                {
+                    GenericButton finishBtn = item.ContextMenu.CreateButton();
+                    finishBtn.Text = "Finish";
+
+                    finishBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/UNABLE");
+                        _ = HoppiesInterface.SendMessage(req);
+                        message.setMessageState(3);
+                        UpdateMessages();
+                    };
+                }
+
+                if (message.State == 0)
+                {
+                    GenericButton stbyBtn = item.ContextMenu.CreateButton();
+                    stbyBtn.Text = "Standby";
+
+                    stbyBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/STANDBY");
+                        _ = HoppiesInterface.SendMessage(req);
+                        message.setMessageState(1);
+                        UpdateMessages();
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -252,37 +307,39 @@ namespace vatACARS.Components
 
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
+            ACARSListViewItem item = (ACARSListViewItem)e.Item;
             Font font = MMI.eurofont_winsml;
-            SolidBrush bg = new SolidBrush(e.Item.BackColor);
-            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
-            e.Graphics.FillRectangle(bg, e.Item.Bounds);
+            SolidBrush bg = new SolidBrush(item.BackColor);
+            SolidBrush fg = new SolidBrush(item.ForeColor);
+            e.Graphics.FillRectangle(bg, item.Bounds);
             int n = 0;
-            foreach(ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
+            foreach(ListViewItem.ListViewSubItem subItem in item.SubItems)
             {
                 StringFormat format = new StringFormat();
                 format.LineAlignment = StringAlignment.Center;
                 format.Alignment = StringAlignment.Near;
-                int offset = lvw_messages.Columns[n].Width - (n == 0 ? 0 : (int)e.Graphics.MeasureString("......", font).Width);
+                int offset = lvw_messages.Columns[n].Width - (n == 0 ? 0 : (int)e.Graphics.MeasureString("......", font).Width); // TODO: This sucks
                 SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
                 if (strSpace.Width > (float)offset)
                 {
                     int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
-                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
+                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format); // TODO: This sucks
                 }
                 else
                 {
                     e.Graphics.DrawString(subItem.Text, font, fg, n == 0 ? new Rectangle(subItem.Bounds.X + 2, subItem.Bounds.Y, subItem.Bounds.Width, subItem.Bounds.Height) : subItem.Bounds, format);
-                    if (n == 0 && e.Item.ImageIndex != -1) e.Graphics.DrawImage(il.Images[e.Item.ImageIndex], e.Bounds.Left + 55, e.Bounds.Top + ((e.Bounds.Height - il.Images[e.Item.ImageIndex].Height) / 2) - 1);
+                    if (n == 0 && item.ImageIndex != -1) e.Graphics.DrawImage(il.Images[item.ImageIndex], e.Bounds.Left + 55, e.Bounds.Top + ((e.Bounds.Height - il.Images[item.ImageIndex].Height) / 2) - 1);
                 }
                 n++;
             }
+            item.ContextMenu.Show(item.ContextMenu.Open);
         }
 
         private void lvw_messages_MouseUp(object sender, MouseEventArgs e)
         {
             lvw_messages.SelectedItems.Clear();
-            ListViewItem selected = null;
-            foreach(ListViewItem item in lvw_messages.Items)
+            ACARSListViewItem selected = null;
+            foreach(ACARSListViewItem item in lvw_messages.Items)
             {
                 if(item.Bounds.Contains(e.Location))
                 {
@@ -335,23 +392,9 @@ namespace vatACARS.Components
                     lvw_messages.Invalidate();
                 } else if(e.Button == MouseButtons.Right)
                 {
-                    if(msg.State == 0)
-                    {
-                        if(msg is CPDLCMessage)
-                        {
-                            CPDLCMessage m = (CPDLCMessage)msg;
-                            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(m.Station, "CPDLC", $"/data2/{SentMessages}/{m.MessageId}/N/STANDBY");
-                            _ = HoppiesInterface.SendMessage(req);
-                        }
-                        if(msg is TelexMessage)
-                        {
-                            TelexMessage m = (TelexMessage)msg;
-                            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(m.Station, "telex", $"STANDBY");
-                            _ = HoppiesInterface.SendMessage(req);
-                        }
-                        msg.setMessageState(1);
-                        UpdateMessages();
-                    }
+                    bool isOpen = selected.ContextMenu.Open;
+                    foreach (ACARSListViewItem item in lvw_messages.Items) item.ContextMenu.Show(false);
+                    selected.ContextMenu.Show(!isOpen);
                 }
             }
         }
@@ -359,6 +402,11 @@ namespace vatACARS.Components
         private void tbl_connected_MouseDown(object sender, MouseEventArgs e)
         {
             
+        }
+
+        private void scr_messages_Scroll(object sender, EventArgs e)
+        {
+            lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
         }
     }
 }
