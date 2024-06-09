@@ -375,7 +375,7 @@ namespace vatACARS.Components
                         ReplyMessageId = message.MessageId
                     });
 
-                    selectedMsg.Content = resp.Replace("@", "");
+                    selectedMsg.Content = encodedMessage.Replace("@", "");
 
                     _ = HoppiesInterface.SendMessage(req);
                     if(responseCode == "N") {
