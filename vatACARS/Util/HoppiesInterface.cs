@@ -35,25 +35,39 @@ namespace vatACARS.Util
             // Debugging purposes
             addCPDLCMessage(new CPDLCMessage()
             {
+                Content = "TEST",
+                State = 0,
+                Station = "JST528",
+                TimeReceived = DateTime.UtcNow,
                 MessageId = 1,
-                ReplyMessageId = -1,
-                ResponseType = "Y",
-                Content = "TEST ONE",
-                Station = "VATACARS"
+                ReplyMessageId = -1
             });
 
-            addCPDLCMessage(new CPDLCMessage()
+            /*addTelexMessage(new TelexMessage()
             {
-                MessageId = 2,
-                ReplyMessageId = -1,
-                ResponseType = "Y",
-                Content = "TEST TWO",
-                Station = "VATACARS"
+                State = 0,
+                TimeReceived = DateTime.UtcNow,
+                Content = "REQUEST PREDEP CLEARANCE QFA69 B738 YMML...",
+                Station = "QFA69"
+            });
+
+            addTelexMessage(new TelexMessage()
+            {
+                State = 0,
+                TimeReceived = DateTime.UtcNow,
+                Content = "TEST ONE TWO",
+                Station = "VOZ888"
+            });*/
+
+            addStation(new Station()
+            {
+                Callsign = "JST528",
+                Provider = 0
             });
 
             addStation(new Station()
             {
-                Callsign = "VATACARS",
+                Callsign = "JST524",
                 Provider = 0
             });
         }
@@ -96,9 +110,9 @@ namespace vatACARS.Util
                     string type = rawMessage[0].Split(' ')[1];
 
                     for (int i = 0; i < rawMessage.Length; i++)
+                        {
                     {
                         if (i > 0 && rawMessage[i].Length > 2)
-                        {
                             if (rawMessage[1].StartsWith("/DATA2/"))
                             {
                                 CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
