@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using vatACARS.Components;
 using vatACARS.Helpers;
@@ -8,6 +9,8 @@ using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
 using vatsys.Plugin;
+using static vatACARS.Helpers.Tranceiver;
+using static vatsys.FDP2;
 
 namespace vatACARS
 {
@@ -24,7 +27,7 @@ namespace vatACARS
         Logger logger = new Logger("vatACARS");
 
         private static SetupWindow setupWindow;
-        private static DispatchWindow dispatchWindow;
+        private static DispatchWindow dispatchWindow = new DispatchWindow();
 
         private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
@@ -107,7 +110,117 @@ namespace vatACARS
         public void OnFDRUpdate(FDP2.FDR updated) { }
 
         public void OnRadarTrackUpdate(RDP.RadarTrack updated) { }
+
+        public CustomLabelItem GetCustomLabelItem(string itemType, Track track, FDR flightDataRecord, RDP.RadarTrack radarTrack)
+        {
+            // FDR flightDataRecord is unreliable?
+            
+            FDR fdr = flightDataRecord;
+            if (fdr == null) return null;
+
+            Station[] stations = getAllStations();
+            Station cStation = stations.FirstOrDefault(station => station.Callsign == fdr.Callsign);
+
+            TelexMessage[] telexMessages = getAllTelexMessages();
+            CPDLCMessage[] CPDLCMessages = getAllCPDLCMessages();
+            IMessageData telexDownlink;
+            IMessageData combinedDownlink;
+
+            telexDownlink = telexMessages.Cast<IMessageData>().FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
+            combinedDownlink = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
+
+
+            switch (itemType)
+            {
+                case "LABEL_ITEM_CPDLCGROUND":
+                    if (telexDownlink == null) return null;
+
+                    if (telexDownlink.Content.StartsWith("REQUEST PREDEP CLEARANCE")) return new CustomLabelItem() { Text = "@ PDC" };
+                    return new CustomLabelItem() { Text = "@ REQ" };
+
+                case "LABEL_ITEM_CPDLCAIR":
+                    if (cStation == null) return null;
+                    if (!MMI.IsMySectorConcerned(fdr)) return new CustomLabelItem()
+                    {
+                        Text = "@ HANDOVER",
+                        ForeColourIdentity = Colours.Identities.Warning,
+                        Border = BorderFlags.Bottom,
+                        BorderColourIdentity = Colours.Identities.Warning
+                    };
+
+                    int level = radarTrack == null ? flightDataRecord.PRL / 100 : radarTrack.CorrectedAltitude / 100;
+                    if (level < 245)
+                    {
+                        return new CustomLabelItem()
+                        {
+                            Text = "@ TOO LOW",
+                            ForeColourIdentity = Colours.Identities.Warning,
+                            OnMouseClick = CPDLCLabelClick
+                        };
+                    }
+
+                    if (combinedDownlink != null) return new CustomLabelItem()
+                    {
+                        Text = "@ REQ",
+                        ForeColourIdentity = Colours.Identities.CPDLCDownlink,
+                        OnMouseClick = CPDLCLabelClick
+                    };
+
+                    return new CustomLabelItem()
+                    {
+                        Text = "@",
+                        ForeColourIdentity = Colours.Identities.StaticTools,
+                        OnMouseClick = CPDLCLabelClick
+                    };
+                default:
+                    return null;
+            }
+        }
+
+        private void CPDLCLabelClick(CustomLabelItemMouseClickEventArgs e)
+        {
+            DispatchWindow.SelectedMessage = new CPDLCMessage()
+            {
+                State = 0,
+                Station = e.Track.GetFDR().Callsign,
+                Content = "(no message received)",
+                TimeReceived = DateTime.UtcNow
+            };
+
+            EditorWindow window = new EditorWindow();
+            window.Show(Form.ActiveForm);
+
+            e.Handled = true;
+        }
+
+        public CustomColour SelectASDTrackColour(Track track)
+        {
+            FDR fdr = track.GetFDR(true);
+            if(!MMI.IsMySectorConcerned(fdr)) return null;
+
+            Station[] stations = getAllStations();
+            Station cStation = stations.FirstOrDefault(station => station.Callsign == fdr.Callsign);
+            if (cStation == null) return null;
+
+            CPDLCMessage[] CPDLCMessages = getAllCPDLCMessages();
+            TelexMessage[] telexMessages = getAllTelexMessages();
+            IMessageData downlink = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).FirstOrDefault(message => message.State == 0 && message.Station == cStation.Callsign);
+            if(downlink == null) return null;
+
+            // We have an active downlink from this aircraft
+            return new CustomColour(41, 178, 144);
+        }
+
+        public CustomColour SelectGroundTrackColour(Track track)
+        {
+            FDR fdr = track.GetFDR(true);
+
+            TelexMessage[] telexMessages = getAllTelexMessages();
+            TelexMessage downlink = telexMessages.FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
+            if (downlink == null) return null;
+
+            // We have an active downlink for this aircraft
+            return new CustomColour(41, 178, 144);
+        }
     }
-
-
 }
