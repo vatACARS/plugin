@@ -31,6 +31,31 @@ namespace vatACARS.Util
             timer.AutoReset = true; // Keep the timer running
             timer.Interval = 50;
             timer.Enabled = true;
+
+            // Debugging purposes
+            addCPDLCMessage(new CPDLCMessage()
+            {
+                MessageId = 1,
+                ReplyMessageId = -1,
+                ResponseType = "Y",
+                Content = "TEST ONE",
+                Station = "VATACARS"
+            });
+
+            addCPDLCMessage(new CPDLCMessage()
+            {
+                MessageId = 2,
+                ReplyMessageId = -1,
+                ResponseType = "Y",
+                Content = "TEST TWO",
+                Station = "VATACARS"
+            });
+
+            addStation(new Station()
+            {
+                Callsign = "VATACARS",
+                Provider = 0
+            });
         }
 
         // Set a random interval between 45 and 75 seconds for polling requests as per Hoppies guidelines
@@ -97,8 +122,8 @@ namespace vatACARS.Util
                 }
             }
 
-            foreach (var message in telexMessages) Tranceiver.addTelexMessage(message);
-            foreach (var message in CPDLCMessages) Tranceiver.addCPDLCMessage(message);
+            foreach (var message in telexMessages) addTelexMessage(message);
+            foreach (var message in CPDLCMessages) addCPDLCMessage(message);
         }
 
         private static async Task<string> PollMessages()
