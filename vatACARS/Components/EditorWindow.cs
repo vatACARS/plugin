@@ -558,6 +558,25 @@ namespace vatACARS.Components
                 }
             }
         }
+
+        private void btn_escape_Click(object sender, EventArgs e)
+        {
+            //Network.Me.ATIS[0] = $"{Network.Me.ATIS[0]} | CPDLC Logon YBIK";
+            foreach (string atisLine in Network.Me.ATIS)
+            {
+                logger.Log(atisLine);
+            }
+            
+            List<NetworkATC> atcL = Network.GetOnlineATCs.FindAll((NetworkATC a) => a.ValidATC && a.ATIS.Any((string atisLine) => new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOGON [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0));
+            foreach(NetworkATC atc in atcL)
+            {
+                logger.Log($"ATC Found: {atc.Callsign} | {atc.RealName}");
+                foreach(string atisLine in atc.ATIS)
+                {
+                    logger.Log(atisLine);
+                }
+            }
+        }
     }
 
     class ResponseItem
