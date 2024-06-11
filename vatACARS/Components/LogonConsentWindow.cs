@@ -48,7 +48,7 @@ namespace vatACARS.Components
             try
             {
                 selectedMsg.setMessageState(3);
-                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{selectedMsg.MessageId}/N/UNABLE");
+                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{selectedMsg.MessageId}/N/SERVICE UNAVAILABLE");
                 _ = HoppiesInterface.SendMessage(req);
             } catch (Exception)
             {
