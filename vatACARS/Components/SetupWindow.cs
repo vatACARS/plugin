@@ -128,10 +128,10 @@ namespace vatACARS
                 checksFailed = true;
             }
 
-            if(tbx_vatAcarsToken.Text.Length != 32 && !tbx_vatAcarsToken.Text.StartsWith("vAcV1-"))
+            if(tbx_vatAcarsToken.Text.Length != 0 && (!tbx_vatAcarsToken.Text.StartsWith("vAcV1-") && tbx_vatAcarsToken.Text.Length != 32))
             {
                 lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                checksFailed = true;
+                //checksFailed = true; // vatACARSToken is not required
             }
 
             if(Properties.Settings.Default.toggle_hop && tbx_hoplogon.Text.Length < 15)
@@ -140,7 +140,7 @@ namespace vatACARS
                 checksFailed = true;
             }
 
-            if (checksFailed) return;
+            //if (checksFailed) return;
 
             ClientInformation.LogonCode = Properties.Settings.Default.hoplogon;
             ClientInformation.Callsign = tbx_stationCode.Text;
@@ -283,9 +283,9 @@ namespace vatACARS
             {
                 Match stationCode = Network.Me.ATIS.Select(atisLine => new {
                 Line = atisLine,
-                Match = new Regex(@"CPDLC").Match(atisLine.ToUpperInvariant()).Success
-                         ? new Regex(@"CPDLC [A-Z]{4}").Match(atisLine.ToUpperInvariant())
-                         : new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant())
+                Match = new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant()).Success
+                         ? new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant())
+                         : new Regex(@"CPDLC [A-Z]{4}").Match(atisLine.ToUpperInvariant())
                 }).FirstOrDefault(result => result.Match.Success)?.Match;
                 if (stationCode != null)
                 {
@@ -299,6 +299,8 @@ namespace vatACARS
                     tbx_stationCode.Text = "Try again.";
                 }
             }
+            Invalidate();
+            Update();
         }
     }
 }
