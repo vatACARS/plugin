@@ -354,9 +354,23 @@ namespace vatACARS.Components
                     TelexMessage message = (TelexMessage)selectedMsg;
                     string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element)).Replace("@", "");
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
-                    selectedMsg.Content = resp;
+
+                    if (selectedMsg.Content == "(no message received)")
+                    {
+                        addTelexMessage(new TelexMessage()
+                        {
+                            State = 3,
+                            Station = selectedMsg.Station,
+                            Content = resp,
+                            TimeReceived = DateTime.Now
+                        });
+                    }
+                    else
+                    {
+                        selectedMsg.Content = resp;
+                        selectedMsg.setMessageState(3); // Done
+                    }
                     _ = HoppiesInterface.SendMessage(req);
-                    selectedMsg.setMessageState(3); // Done
                 }
                 else if (selectedMsg is CPDLCMessage)
                 {
@@ -365,27 +379,51 @@ namespace vatACARS.Components
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "W/U")) responseCode = "WU";
                     CPDLCMessage message = (CPDLCMessage)selectedMsg;
-                    string encodedMessage = string.Join("+", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
+                    string encodedMessage = string.Join("\n", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
                     string resp = $"/data2/{SentMessages}/{message.MessageId}/{responseCode}/{encodedMessage}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
 
-                    addSentCPDLCMessage(new SentCPDLCMessage()
+                    if (selectedMsg.Content == "(no message received)")
                     {
-                        Station = selectedMsg.Station,
-                        MessageId = SentMessages,
-                        ReplyMessageId = message.MessageId
-                    });
+                        addSentCPDLCMessage(new SentCPDLCMessage()
+                        {
+                            Station = selectedMsg.Station,
+                            MessageId = SentMessages,
+                            ReplyMessageId = SentMessages
+                        });
 
-                    selectedMsg.Content = encodedMessage.Replace("@", "");
+                        addCPDLCMessage(new CPDLCMessage()
+                        {
+                            State = responseCode == "N" ? 3 : 2,
+                            Station = selectedMsg.Station,
+                            Content = encodedMessage.Replace("@", "").Replace("\n", ""),
+                            TimeReceived = DateTime.Now,
+                            MessageId = SentMessages,
+                            ReplyMessageId = -1
+                        });
+                    }
+                    else
+                    {
+                        addSentCPDLCMessage(new SentCPDLCMessage()
+                        {
+                            Station = selectedMsg.Station,
+                            MessageId = SentMessages,
+                            ReplyMessageId = message.MessageId
+                        });
+
+                        selectedMsg.Content = encodedMessage.Replace("@", "");
+                        if (responseCode == "N")
+                        {
+                            selectedMsg.setMessageState(3);
+                        }
+                        else
+                        {
+                            selectedMsg.setMessageState(2); // Uplink
+                        }
+                    }
 
                     _ = HoppiesInterface.SendMessage(req);
-                    if(responseCode == "N") {
-                        selectedMsg.setMessageState(3);
-                    } else
-                    {
-                        selectedMsg.setMessageState(2); // Uplink
-                    }
                 }
 
                 logger.Log("Message sent successfully");
