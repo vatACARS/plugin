@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static vatACARS.Helpers.Tranceiver;
 using static vatACARS.Util.ExtendedUI;
 
@@ -22,7 +21,9 @@ namespace vatACARS.Components
         private List<Station> stations = new List<Station>();
         private static ImageList il;
         public static IMessageData SelectedMessage;
+        public static Station SelectedStation;
         private static LogonConsentWindow LogonConsentWindow;
+        private static HandoffSelector HandoffSelector;
         private static PDCWindow PDCWindow;
 
         public DispatchWindow()
@@ -34,6 +35,16 @@ namespace vatACARS.Components
             CPDLCMessageReceived += UpdateCPDLCList;
             MessageUpdated += UpdateList;
             StationAdded += UpdateStationsList;
+            StationRemoved += UpdateStationsList;
+
+            lvw_messages.MouseWheel += (sender, e) =>
+            {
+                if (scr_messages.Enabled)
+                {
+                    if (e.Delta > 0) scr_messages.Value -= scr_messages.Change;
+                    else scr_messages.Value += scr_messages.Change;
+                }
+            };
 
             UpdateMessages();
         }
@@ -208,7 +219,7 @@ namespace vatACARS.Components
             {
                 ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State, lvw_messages);
 
-                item.SubItems.Add($"{message.Station}: {message.Content}");
+                item.SubItems.Add($"{message.Station.PadRight(7)}: {(message.Response != "" ? $"[{message.Response}] " : "")}{message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
                 item.Group = lvw_messages.Groups[message.State];
@@ -292,13 +303,20 @@ namespace vatACARS.Components
                         Station = callsignLabel.Text,
                         Content = "(no message received)",
                         TimeReceived = DateTime.UtcNow
-                };
+                    };
 
                     EditorWindow window = new EditorWindow();
                     window.Show(ActiveForm);
                 } else
                 {
-                    // Confirm logout
+                    SelectedStation = station;
+                    if(HandoffSelector != null)
+                    {
+                        HandoffSelector.Close();
+                        HandoffSelector.Dispose();
+                    }
+                    HandoffSelector = new HandoffSelector();
+                    HandoffSelector.Show(ActiveForm);
                 }
             };
 
@@ -361,7 +379,7 @@ namespace vatACARS.Components
                         if(msg is CPDLCMessage)
                         {
                             var m = (CPDLCMessage)msg;
-                            if(m.Content == "REQUEST LOGON")
+                            if(m.Content.StartsWith("REQUEST LOGON"))
                             {
                                 if (LogonConsentWindow == null || LogonConsentWindow.IsDisposed)
                                     LogonConsentWindow = new LogonConsentWindow();
