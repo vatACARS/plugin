@@ -14,6 +14,7 @@ namespace vatACARS.Helpers
     public static class Tranceiver
     {
         public static int SentMessages = 1;
+        public static bool connected = false;
         private static Logger logger = new Logger("Tranceiver");
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
@@ -24,6 +25,7 @@ namespace vatACARS.Helpers
         public static event EventHandler<TelexMessage> TelexMessageReceived;
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
         public static event EventHandler<Station> StationAdded;
+        public static event EventHandler<Station> StationRemoved;
         public static event EventHandler<IMessageData> MessageUpdated;
 
         public static TelexMessage[] getAllTelexMessages()
@@ -55,7 +57,7 @@ namespace vatACARS.Helpers
                 {
                     logger.Log($"Closing message: '{message.Content}' - ReplyID: {message.ReplyMessageId}");
                     SentCPDLCMessage sentCPDLCMessage = SentCPDLCMessages.FirstOrDefault(msg => msg.MessageId == message.ReplyMessageId);
-                    CPDLCMessage originalMessage = new CPDLCMessage();
+                    CPDLCMessage originalMessage = null;
                     if (sentCPDLCMessage != null) originalMessage = CPDLCMessages.FirstOrDefault(msg => msg.MessageId == sentCPDLCMessage.ReplyMessageId);
 
                     if (originalMessage == null)
@@ -67,8 +69,8 @@ namespace vatACARS.Helpers
                     {
                         logger.Log($"Found message: '{originalMessage.Content}' - ID: {originalMessage.MessageId}");
                         SentCPDLCMessages.Remove(sentCPDLCMessage);
-                        originalMessage.Content = $"[{message.Content}] {originalMessage.Content}";
-                        originalMessage.setMessageState(3); // Done
+                        originalMessage.Response = message.Content;
+                        if(message.Content != "STANDBY") originalMessage.setMessageState(3); // Done
                     }
                 }
                 else
@@ -102,7 +104,7 @@ namespace vatACARS.Helpers
 
             if (state == 3)
             {
-                await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.fin_timeout));
+                await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.finishedMessageTimeout));
                 message.removeMessage();
             }
 
@@ -113,6 +115,12 @@ namespace vatACARS.Helpers
         {
             if (message is CPDLCMessage) CPDLCMessages.Remove((CPDLCMessage)message);
             if (message is TelexMessage) TelexMessages.Remove((TelexMessage)message);
+        }
+
+        public static void removeStation(this Station station)
+        {
+            Stations.Remove(station);
+            StationRemoved?.Invoke(null, station);
         }
 
 
@@ -158,6 +166,7 @@ namespace vatACARS.Helpers
             public int ReplyMessageId;
             public string ResponseType;
             public string Content { get; set; }
+            public string Response { get; set; } = "";
         }
 
         public class SentCPDLCMessage

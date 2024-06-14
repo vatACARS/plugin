@@ -101,6 +101,7 @@
             this.btn_escape.TabIndex = 2;
             this.btn_escape.Text = "Escape";
             this.btn_escape.UseVisualStyleBackColor = true;
+            this.btn_escape.Click += new System.EventHandler(this.btn_escape_Click);
             // 
             // insetPanel2
             // 

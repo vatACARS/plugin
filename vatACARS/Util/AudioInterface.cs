@@ -16,7 +16,7 @@ namespace vatACARS.Util
         {
             try
             {
-                int volume = (int)(Properties.Settings.Default.volume * 6553.5);
+                int volume = (int)(Properties.Settings.Default.auralAlertVolume * 6553.5);
                 SetVolume(volume);
 
                 SoundPlayer.SoundLocation = $"{dirPath}\\{sound}.wav";

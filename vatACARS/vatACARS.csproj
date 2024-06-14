@@ -85,6 +85,12 @@
     <Compile Include="Components\EditorWindow.Designer.cs">
       <DependentUpon>EditorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\HandoffSelector.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\HandoffSelector.Designer.cs">
+      <DependentUpon>HandoffSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\LogonConsentWindow.cs">
       <SubType>designer</SubType>
     </Compile>
@@ -131,10 +137,13 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Util\AudioInterface.cs" />
+    <Compile Include="Util\ExtendedUI.cs" />
     <Compile Include="Util\HoppiesInterface.cs" />
     <Compile Include="Util\HttpClient.cs" />
     <Compile Include="Util\JSONInterface.cs" />
+    <Compile Include="Util\LabelsXMLPatcher.cs" />
     <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\Types.cs" />
     <Compile Include="Util\VatACARSInterface.cs" />
     <Compile Include="Util\XMLInterface.cs" />
     <Compile Include="vatACARS.cs" />
@@ -151,6 +160,9 @@
     <EmbeddedResource Include="Components\EditorWindow.resx">
       <DependentUpon>EditorWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\HandoffSelector.resx">
+      <DependentUpon>HandoffSelector.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\LogonConsentWindow.resx">
       <DependentUpon>LogonConsentWindow.cs</DependentUpon>

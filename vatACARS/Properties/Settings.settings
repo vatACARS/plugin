@@ -2,20 +2,23 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="vatACARS.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="hoplogon" Type="System.String" Scope="User">
+    <Setting Name="hoppiesLogonCode" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="toggle_hop" Type="System.Boolean" Scope="User">
+    <Setting Name="enableHoppies" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="callsign" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="volume" Type="System.Int32" Scope="User">
+    <Setting Name="auralAlertVolume" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="fin_timeout" Type="System.Int32" Scope="User">
+    <Setting Name="finishedMessageTimeout" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">120</Value>
+    </Setting>
+    <Setting Name="vatACARSToken" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="stationCode" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

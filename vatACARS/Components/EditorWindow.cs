@@ -81,6 +81,12 @@ namespace vatACARS.Components
             response = new ResponseItem[5]; 
             responseIndex = 0;
 
+            lvw_messages.MouseWheel += (object sender, MouseEventArgs e) =>
+            {
+                if (e.Delta > 0) scr_messageSelector.Value -= scr_messageSelector.Change;
+                else scr_messageSelector.Value += scr_messageSelector.Change;
+            };
+
             lbl_response.Invalidate();
         }
 
@@ -244,6 +250,8 @@ namespace vatACARS.Components
                 lbl_response.Text = selected.Element;
                 lbl_response.Refresh();
             }
+
+            lvw_messageSelector.SelectedItems.Clear();
         }
 
         private void btn_standby_Click(object sender, EventArgs e)
@@ -350,11 +358,25 @@ namespace vatACARS.Components
                 if (selectedMsg is TelexMessage)
                 {
                     TelexMessage message = (TelexMessage)selectedMsg;
-                    string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
-                    if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
+                    string resp = string.Join("\n", response.Where(obj => obj != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element)).Replace("@", "");
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", resp);
+
+                    if (selectedMsg.Content == "(no message received)")
+                    {
+                        addTelexMessage(new TelexMessage()
+                        {
+                            State = 3,
+                            Station = selectedMsg.Station,
+                            Content = resp.Replace("\n", ", "),
+                            TimeReceived = DateTime.Now
+                        });
+                    }
+                    else
+                    {
+                        selectedMsg.Content = resp;
+                        selectedMsg.setMessageState(3); // Done
+                    }
                     _ = HoppiesInterface.SendMessage(req);
-                    selectedMsg.setMessageState(3); // Done
                 }
                 else if (selectedMsg is CPDLCMessage)
                 {
@@ -363,27 +385,51 @@ namespace vatACARS.Components
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "Y")) responseCode = "Y";
                     if (response.Any(obj => obj != null && obj.Entry != null && obj.Entry.Response == "W/U")) responseCode = "WU";
                     CPDLCMessage message = (CPDLCMessage)selectedMsg;
-                    string encodedMessage = string.Join("+", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
+                    string encodedMessage = string.Join("\n", response.Where(obj => obj != null && obj.Entry != null && obj.Entry.Element != "").Select(obj => obj.Entry.Element));
                     string resp = $"/data2/{SentMessages}/{message.MessageId}/{responseCode}/{encodedMessage}";
                     if (resp.EndsWith("@")) resp = resp.Substring(0, resp.Length - 1);
                     FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", resp);
 
-                    addSentCPDLCMessage(new SentCPDLCMessage()
+                    if (selectedMsg.Content == "(no message received)")
                     {
-                        Station = selectedMsg.Station,
-                        MessageId = SentMessages,
-                        ReplyMessageId = message.MessageId
-                    });
+                        addSentCPDLCMessage(new SentCPDLCMessage()
+                        {
+                            Station = selectedMsg.Station,
+                            MessageId = SentMessages,
+                            ReplyMessageId = SentMessages
+                        });
 
-                    selectedMsg.Content = encodedMessage;
+                        addCPDLCMessage(new CPDLCMessage()
+                        {
+                            State = responseCode == "N" ? 3 : 2,
+                            Station = selectedMsg.Station,
+                            Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
+                            TimeReceived = DateTime.Now,
+                            MessageId = SentMessages,
+                            ReplyMessageId = -1
+                        });
+                    }
+                    else
+                    {
+                        addSentCPDLCMessage(new SentCPDLCMessage()
+                        {
+                            Station = selectedMsg.Station,
+                            MessageId = SentMessages,
+                            ReplyMessageId = message.MessageId
+                        });
+
+                        selectedMsg.Content = encodedMessage.Replace("@", "");
+                        if (responseCode == "N")
+                        {
+                            selectedMsg.setMessageState(3);
+                        }
+                        else
+                        {
+                            selectedMsg.setMessageState(2); // Uplink
+                        }
+                    }
 
                     _ = HoppiesInterface.SendMessage(req);
-                    if(responseCode == "N") {
-                        selectedMsg.setMessageState(3);
-                    } else
-                    {
-                        selectedMsg.setMessageState(2); // Uplink
-                    }
                 }
 
                 logger.Log("Message sent successfully");
@@ -553,6 +599,25 @@ namespace vatACARS.Components
                         logger.Log($"Oops: {ex.ToString()}");
                     }
                     break;
+                }
+            }
+        }
+
+        private void btn_escape_Click(object sender, EventArgs e)
+        {
+            //Network.Me.ATIS[0] = $"{Network.Me.ATIS[0]} | CPDLC Logon YBIK";
+            foreach (string atisLine in Network.Me.ATIS)
+            {
+                logger.Log(atisLine);
+            }
+            
+            List<NetworkATC> atcL = Network.GetOnlineATCs.FindAll((NetworkATC a) => a.ValidATC && a.ATIS.Any((string atisLine) => new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOGON [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0));
+            foreach(NetworkATC atc in atcL)
+            {
+                logger.Log($"ATC Found: {atc.Callsign} | {atc.RealName}");
+                foreach(string atisLine in atc.ATIS)
+                {
+                    logger.Log(atisLine);
                 }
             }
         }

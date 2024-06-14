@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
-using vatACARS.Helpers;
 using static vatACARS.Helpers.Tranceiver;
 
 
@@ -18,6 +17,7 @@ namespace vatACARS.Util
     public static class HoppiesInterface
     {
         private static Timer timer;
+        private static bool discardedFirstRequest = false;
         private static Random random = new Random();
         private static Logger logger = new Logger("Hoppies");
         private static HttpClient client = new HttpClient();
@@ -31,6 +31,13 @@ namespace vatACARS.Util
             timer.AutoReset = true; // Keep the timer running
             timer.Interval = 50;
             timer.Enabled = true;
+        }
+
+        public static void StopListening()
+        {
+            logger.Log("Service stopped.");
+            timer.Stop();
+            timer.Dispose();
         }
 
         // Set a random interval between 45 and 75 seconds for polling requests as per Hoppies guidelines
@@ -53,7 +60,14 @@ namespace vatACARS.Util
             if (rawMessages.StartsWith("ERROR"))
             {
                 logger.Log($"Hoppies error: {rawMessages}");
-                //Tranceiver.SetConnected(false); //NEEDS TO UPDATE THE SETUP WINDOW CONNECTION STATUS
+                //connected = false;
+                AudioInterface.playSound("error");
+                return;
+            }
+
+            if(!discardedFirstRequest)
+            {
+                discardedFirstRequest = true;
                 return;
             }
 
@@ -71,9 +85,9 @@ namespace vatACARS.Util
                     string type = rawMessage[0].Split(' ')[1];
 
                     for (int i = 0; i < rawMessage.Length; i++)
+                        {
                     {
                         if (i > 0 && rawMessage[i].Length > 2)
-                        {
                             if (rawMessage[1].StartsWith("/DATA2/"))
                             {
                                 CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
@@ -97,8 +111,8 @@ namespace vatACARS.Util
                 }
             }
 
-            foreach (var message in telexMessages) Tranceiver.addTelexMessage(message);
-            foreach (var message in CPDLCMessages) Tranceiver.addCPDLCMessage(message);
+            foreach (var message in telexMessages) addTelexMessage(message);
+            foreach (var message in CPDLCMessages) addCPDLCMessage(message);
         }
 
         private static async Task<string> PollMessages()
@@ -132,7 +146,7 @@ namespace vatACARS.Util
 
         public static async Task<string> SendMessage(FormUrlEncodedContent request)
         {
-            SentMessages++; // TODO: Shouldn't be incremented for polling requests.
+            if(!request.ToString().Contains("poll")) SentMessages++;
             try
             {
                 return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
@@ -157,7 +171,7 @@ namespace vatACARS.Util
                     State = 0,
                     TimeReceived = DateTime.UtcNow,
                     Station = station,
-                    MessageId = int.Parse(fields[1]),
+                    MessageId = fields[1] != "" ? int.Parse(fields[1]) : -1,
                     ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,
                     ResponseType = fields[3],
                     Content = fields[4]

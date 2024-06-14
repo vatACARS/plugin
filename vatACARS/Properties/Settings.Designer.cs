@@ -12,7 +12,7 @@ namespace vatACARS.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -26,60 +26,72 @@ namespace vatACARS.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string hoplogon {
+        public string hoppiesLogonCode {
             get {
-                return ((string)(this["hoplogon"]));
+                return ((string)(this["hoppiesLogonCode"]));
             }
             set {
-                this["hoplogon"] = value;
+                this["hoppiesLogonCode"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool toggle_hop {
+        public bool enableHoppies {
             get {
-                return ((bool)(this["toggle_hop"]));
+                return ((bool)(this["enableHoppies"]));
             }
             set {
-                this["toggle_hop"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string callsign {
-            get {
-                return ((string)(this["callsign"]));
-            }
-            set {
-                this["callsign"] = value;
+                this["enableHoppies"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int volume {
+        public int auralAlertVolume {
             get {
-                return ((int)(this["volume"]));
+                return ((int)(this["auralAlertVolume"]));
             }
             set {
-                this["volume"] = value;
+                this["auralAlertVolume"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("120")]
-        public int fin_timeout {
+        public int finishedMessageTimeout {
             get {
-                return ((int)(this["fin_timeout"]));
+                return ((int)(this["finishedMessageTimeout"]));
             }
             set {
-                this["fin_timeout"] = value;
+                this["finishedMessageTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string vatACARSToken {
+            get {
+                return ((string)(this["vatACARSToken"]));
+            }
+            set {
+                this["vatACARSToken"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string stationCode {
+            get {
+                return ((string)(this["stationCode"]));
+            }
+            set {
+                this["stationCode"] = value;
             }
         }
     }

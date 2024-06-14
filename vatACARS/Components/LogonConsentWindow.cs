@@ -30,12 +30,12 @@ namespace vatACARS.Components
             try
             {
                 selectedMsg.setMessageState(3);
-                Tranceiver.addStation(new Station()
+                addStation(new Station()
                 {
                     Provider = 0,
                     Callsign = selectedMsg.Station
                 });
-                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{selectedMsg.MessageId}/N/LOGON ACCEPTED");
+                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}/{selectedMsg.MessageId}/N/LOGON ACCEPTED");
                 _ = HoppiesInterface.SendMessage(req);
             } catch(Exception ex) {
                 logger.Log(ex.ToString());
@@ -48,7 +48,7 @@ namespace vatACARS.Components
             try
             {
                 selectedMsg.setMessageState(3);
-                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{Tranceiver.SentMessages}/{selectedMsg.MessageId}/N/UNABLE");
+                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}/{selectedMsg.MessageId}/N/SERVICE UNAVAILABLE");
                 _ = HoppiesInterface.SendMessage(req);
             } catch (Exception)
             {
