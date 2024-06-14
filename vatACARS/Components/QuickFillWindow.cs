@@ -55,6 +55,7 @@ namespace vatACARS.Components
             {
                 Label quickFillItemLabel = new Label();
                 quickFillItemLabel.Text = label;
+                quickFillItemLabel.Size = new Size(62, 30);
                 quickFillItemLabel.TextAlign = ContentAlignment.MiddleCenter;
                 quickFillItemLabel.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 quickFillItemLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);

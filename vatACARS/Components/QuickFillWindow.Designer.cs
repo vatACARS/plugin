@@ -60,6 +60,7 @@ namespace vatACARS.Components
             this.tbl_quickFillSelector.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tbl_quickFillSelector.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tbl_quickFillSelector.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
+            this.tbl_quickFillSelector.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
             this.tbl_quickFillSelector.Location = new System.Drawing.Point(3, 3);
             this.tbl_quickFillSelector.Name = "tbl_quickFillSelector";
             this.tbl_quickFillSelector.RowCount = 4;
