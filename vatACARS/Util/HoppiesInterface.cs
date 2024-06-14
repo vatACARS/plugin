@@ -9,7 +9,6 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
-using vatACARS.Helpers;
 using static vatACARS.Helpers.Tranceiver;
 
 
@@ -18,6 +17,7 @@ namespace vatACARS.Util
     public static class HoppiesInterface
     {
         private static Timer timer;
+        private static bool discardedFirstRequest = false;
         private static Random random = new Random();
         private static Logger logger = new Logger("Hoppies");
         private static HttpClient client = new HttpClient();
@@ -31,45 +31,13 @@ namespace vatACARS.Util
             timer.AutoReset = true; // Keep the timer running
             timer.Interval = 50;
             timer.Enabled = true;
+        }
 
-            // Debugging purposes
-            addCPDLCMessage(new CPDLCMessage()
-            {
-                Content = "TEST",
-                State = 0,
-                Station = "JST528",
-                TimeReceived = DateTime.UtcNow,
-                MessageId = 1,
-                ReplyMessageId = -1
-            });
-
-            /*addTelexMessage(new TelexMessage()
-            {
-                State = 0,
-                TimeReceived = DateTime.UtcNow,
-                Content = "REQUEST PREDEP CLEARANCE QFA69 B738 YMML...",
-                Station = "QFA69"
-            });
-
-            addTelexMessage(new TelexMessage()
-            {
-                State = 0,
-                TimeReceived = DateTime.UtcNow,
-                Content = "TEST ONE TWO",
-                Station = "VOZ888"
-            });*/
-
-            addStation(new Station()
-            {
-                Callsign = "JST528",
-                Provider = 0
-            });
-
-            addStation(new Station()
-            {
-                Callsign = "JST524",
-                Provider = 0
-            });
+        public static void StopListening()
+        {
+            logger.Log("Service stopped.");
+            timer.Stop();
+            timer.Dispose();
         }
 
         // Set a random interval between 45 and 75 seconds for polling requests as per Hoppies guidelines
@@ -92,7 +60,14 @@ namespace vatACARS.Util
             if (rawMessages.StartsWith("ERROR"))
             {
                 logger.Log($"Hoppies error: {rawMessages}");
-                //Tranceiver.SetConnected(false); //NEEDS TO UPDATE THE SETUP WINDOW CONNECTION STATUS
+                //connected = false;
+                AudioInterface.playSound("error");
+                return;
+            }
+
+            if(!discardedFirstRequest)
+            {
+                discardedFirstRequest = true;
                 return;
             }
 
@@ -171,7 +146,7 @@ namespace vatACARS.Util
 
         public static async Task<string> SendMessage(FormUrlEncodedContent request)
         {
-            SentMessages++; // TODO: Shouldn't be incremented for polling requests.
+            if(!request.ToString().Contains("poll")) SentMessages++;
             try
             {
                 return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
