@@ -81,6 +81,12 @@ namespace vatACARS.Components
             response = new ResponseItem[5]; 
             responseIndex = 0;
 
+            lvw_messages.MouseWheel += (object sender, MouseEventArgs e) =>
+            {
+                if (e.Delta > 0) scr_messageSelector.Value -= scr_messageSelector.Change;
+                else scr_messageSelector.Value += scr_messageSelector.Change;
+            };
+
             lbl_response.Invalidate();
         }
 
@@ -361,7 +367,7 @@ namespace vatACARS.Components
                         {
                             State = 3,
                             Station = selectedMsg.Station,
-                            Content = resp,
+                            Content = resp.Replace("\n", ", "),
                             TimeReceived = DateTime.Now
                         });
                     }
@@ -397,7 +403,7 @@ namespace vatACARS.Components
                         {
                             State = responseCode == "N" ? 3 : 2,
                             Station = selectedMsg.Station,
-                            Content = encodedMessage.Replace("@", "").Replace("\n", ""),
+                            Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
                             TimeReceived = DateTime.Now,
                             MessageId = SentMessages,
                             ReplyMessageId = -1
