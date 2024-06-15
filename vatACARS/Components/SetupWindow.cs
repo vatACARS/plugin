@@ -80,6 +80,9 @@ namespace vatACARS
 
                 foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
                 btn_connect.Text = "Connect";
+                lbl_statusMessage.Text = "Disconnected from vatACARS.";
+                connected = false;
+                return;
             }
 
             btn_checkStationCode_Click(null, null);
@@ -127,12 +130,20 @@ namespace vatACARS
             if (tbx_vatACARSToken.Text.Length != 0 && (!tbx_vatACARSToken.Text.StartsWith("vAcV1-") && tbx_vatACARSToken.Text.Length != 32))
             {
                 lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                lbl_statusMessage.Text = "Your vatACARS token appears invalid.";
                 checksFailed = true;
             }
 
-            if (Properties.Settings.Default.enableHoppies && tbx_hoppiesLogonCode.Text.Length < 15)
+            if(!Properties.Settings.Default.enableHoppies)
+            {
+                lbl_statusMessage.Text = "Hoppies must be enabled for now.";
+                checksFailed = true;
+            }
+
+            if (Properties.Settings.Default.enableHoppies && tbx_hoppiesLogonCode.Text.Length < 10)
             {
                 lbl_hoppiesLogonCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                lbl_statusMessage.Text = "Your hoppies code appears invalid.";
                 checksFailed = true;
             }
             if (checksFailed)
