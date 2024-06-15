@@ -92,7 +92,7 @@ namespace vatACARS.Components
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            string encodedMessage = $"PDC {DateTime.UtcNow.ToString("ddHHmm")}\n{lbl_metaInfo.Text}\n{lbl_destRoute.Text}\n{lbl_sidRwy.Text}\n{lbl_route.Text}\n{lbl_initAlt.Text}\nDEP FREQ: {tbx_depfreq.Text}\n{tbx_freetext.Text}";
+            string encodedMessage = $"PDC {DateTime.UtcNow.ToString("ddHHmm")}\n{lbl_metaInfo.Text}\n{lbl_destRoute.Text}\n{lbl_sidRwy.Text}\n{lbl_route.Text}\n{lbl_initAlt.Text}\n{lbl_sqwkDeps.Text}\nDEP FREQ: {tbx_depfreq.Text}\n{tbx_freetext.Text}";
             FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
             _ = HoppiesInterface.SendMessage(req);
 
