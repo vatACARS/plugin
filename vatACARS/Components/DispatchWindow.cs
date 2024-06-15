@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Timers;
 using System.Windows.Forms;
 using vatACARS.Helpers;
@@ -393,7 +394,7 @@ namespace vatACARS.Components
                         else if (msg is TelexMessage)
                         {
                             var m = (TelexMessage)msg;
-                            if (m.Content.StartsWith("REQUEST PREDEP CLEARANCE"))
+                            if (Regex.IsMatch(m.Content, @"\b(?:REQ|REQUEST)\s+(?:(?:PRE?DEPARTURE|PREDEP)?\s+CLEARANCE)\b"))
                             {
                                 if (PDCWindow == null || PDCWindow.IsDisposed)
                                     PDCWindow = new PDCWindow();
