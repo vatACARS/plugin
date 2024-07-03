@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
@@ -14,85 +15,109 @@ namespace vatACARS.Components
         private IMessageData selectedMsg;
         private static Logger logger = new Logger("PDCWindow");
         private FDR networkPilotFDR;
+        private Dictionary<string, string> PDCElements = new Dictionary<string, string>();
 
         public PDCWindow()
         {
-            try {
-                InitializeComponent();
-                selectedMsg = DispatchWindow.SelectedMessage;
+            InitializeComponent();
+            selectedMsg = DispatchWindow.SelectedMessage;
+
+            StyleComponent();
+            InitPlaceholders();
+        }
+
+        private void StyleComponent()
+        {
+            try
+            {
+                foreach (Control ctl in Controls)
+                {
+                    if (ctl is TextLabel)
+                    {
+                        ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                        ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                    }
+                }
+
+                btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+                btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"Error: {ex.ToString()}");
+            }
+        }
+
+        private void InitPlaceholders()
+        {
+            try
+            {
                 networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
-                if(networkPilotFDR == null)
+                if (!GetFDRs.Contains(networkPilotFDR))
                 {
                     Close();
                     return;
                 }
 
-                StyleComponent();
-                InitPlaceholders();
-            } catch (Exception e) {
-                logger.Log(e.Message);
-            }
-        }
-
-        private void StyleComponent()
-        {
-            Text = $"PDC {networkPilotFDR.Callsign}";
-
-            foreach(Control ctl in Controls)
-            {
-                if(ctl is TextLabel)
+                if (new[] { "Callsign", "AircraftType", "DesAirport", "SID", "DepartureRunway", "Route", "CFLString", "AssignedSSRCode" }.Select(p => networkPilotFDR.GetType().GetProperty(p).GetValue(networkPilotFDR)).Any(v => v == null))
                 {
-                    ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-                    ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                    Close();
+                    return;
                 }
+
+                Text = $"PDC {networkPilotFDR.Callsign}";
+
+                string route = networkPilotFDR.Route;
+                string[] routeSegments = route.Split(' ');
+                if (routeSegments[0].Contains(networkPilotFDR.DepAirport) || routeSegments[0].Contains(networkPilotFDR.SID.Name)) route = route.Substring(route.IndexOf(' ') + 1);
+
+                PDCElements = new Dictionary<string, string>()
+                {
+                    { "PDC", $"PDC {DateTime.UtcNow.ToString("ddHHmm")}" },
+                    { "MetaInfo", $"{networkPilotFDR.Callsign} {networkPilotFDR.AircraftType} {networkPilotFDR.DepAirport} {networkPilotFDR.ETD.ToString("HHmm")}" },
+                    { "DestRoute", $"CLRD TO {networkPilotFDR.DesAirport} VIA" },
+                    { "SIDRwy", $"{networkPilotFDR.SID.Name} DEP RWY {networkPilotFDR.DepartureRunway.Name}" },
+                    { "Route", $"ROUTE: {CutStringAndAppendT(route)}" },
+                    { "InitAlt", $"CLIMB VIA SID TO: {(networkPilotFDR.CFLString != null && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL")}{networkPilotFDR.CFLString.PadLeft(3, '0')}" },
+                    { "SqwkDeps", $"SQUAWK {Convert.ToString(networkPilotFDR.AssignedSSRCode, 8).PadLeft(4, '0')}" }
+                };
+
+                lbl_pdcHeader.Text = PDCElements["PDC"];
+                lbl_metaInfo.Text = PDCElements["MetaInfo"];
+                lbl_destRoute.Text = PDCElements["DestRoute"];
+                lbl_sidRwy.Text = PDCElements["SIDRwy"];
+                lbl_route.Text = PDCElements["Route"];
+                lbl_initAlt.Text = PDCElements["InitAlt"];
+                lbl_sqwkDeps.Text = PDCElements["SqwkDeps"];
             }
-
-            btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            catch (Exception ex)
+            {
+                logger.Log($"Error: {ex.ToString()}");
+                Close();
+            }
         }
 
-        private void InitPlaceholders()
+        private string CutStringAndAppendT(string input, int maxLength = 36)
         {
-            string route = networkPilotFDR.Route;
-            string[] routeSegments = route.Split(' ');
-            if (routeSegments[0].Contains(networkPilotFDR.DepAirport) || routeSegments[0].Contains(networkPilotFDR.SID.Name)) route = route.Substring(route.IndexOf(' ') + 1);
-            
-            lbl_pdcHeader.Text = $"PDC {DateTime.UtcNow.ToString("ddHHmm")}";
-            lbl_metaInfo.Text = $"{networkPilotFDR.Callsign} {networkPilotFDR.AircraftType} {networkPilotFDR.DepAirport} {networkPilotFDR.ETD.ToString("HHmm")}";
-            lbl_destRoute.Text = $"CLRD TO {networkPilotFDR.DesAirport} VIA";
-            lbl_sidRwy.Text = $"{networkPilotFDR.SID.Name} DEP RWY {networkPilotFDR.DepartureRunway.Name}";
-            lbl_route.Text = $"ROUTE: {CutStringAndAppendT(route)}";
-            lbl_initAlt.Text = $"CLIMB VIA SID TO: {(int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL")}{networkPilotFDR.CFLString}";
-            lbl_sqwkDeps.Text = $"SQUAWK {networkPilotFDR.AssignedSSRCode.ToString()}";
-        }
+            if (input.Length <= maxLength) return input;
 
-        private string CutStringAndAppendT(string input, int maxLength = 48)
-        {
             string[] segments = input.Split(' ');
             string result = string.Empty;
             foreach (string segment in segments)
             {
-                if ((result + " " + segment).Trim().Length > maxLength)
-                {
-                    break;
-                }
-                if (result.Length > 0)
-                {
-                    result += " ";
-                }
+                if ((result + " " + segment).Trim().Length > maxLength) break;
+                if (result.Length > 0) result += " ";
                 result += segment;
             }
             result = result.Trim();
-            if (result.Length <= maxLength)
-            {
-                result += " T";
-            }
+            if (result.Length <= maxLength) result += " T";
+
             return result;
         }
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            string encodedMessage = $"PDC {DateTime.UtcNow.ToString("ddHHmm")}\n{lbl_metaInfo.Text}\n{lbl_destRoute.Text}\n{lbl_sidRwy.Text}\n{lbl_route.Text}\n{lbl_initAlt.Text}\n{lbl_sqwkDeps.Text}\nDEP FREQ: {tbx_depfreq.Text}\n{tbx_freetext.Text}";
+            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}\nDEP FREQ: {tbx_depfreq.Text}{(tbx_freetext.Text != "" ? $"\n{tbx_freetext.Text.ToUpperInvariant()}" : "")}";
             FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
             _ = HoppiesInterface.SendMessage(req);
 
