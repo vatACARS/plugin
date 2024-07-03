@@ -47,6 +47,14 @@ namespace vatACARS.Components
                 }
             };
 
+            addTelexMessage(new TelexMessage()
+            {
+                State = 0,
+                Station = "AFR1738",
+                Content = "REQUEST PREDEP CLEARANCE",
+                TimeReceived = DateTime.UtcNow
+            });
+
             UpdateMessages();
         }
 
@@ -427,11 +435,9 @@ namespace vatACARS.Components
                             var m = (TelexMessage)msg;
                             if (Regex.IsMatch(m.Content, @"\b(?:REQ|REQUEST)\s+(?:(?:PRE?DEPARTURE|PREDEP)?\s+CLEARANCE)\b"))
                             {
-                                if (PDCWindow == null || PDCWindow.IsDisposed)
-                                    PDCWindow = new PDCWindow();
-                                else if (PDCWindow.Visible)
-                                    return;
-
+                                if (PDCWindow.Visible) return;
+                                if (!PDCWindow.IsDisposed) PDCWindow.Dispose();
+                                PDCWindow = new PDCWindow();
                                 PDCWindow.Show(ActiveForm);
                                 return;
                             }
