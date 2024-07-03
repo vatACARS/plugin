@@ -11,7 +11,7 @@ namespace vatACARS.Components
 {
     public partial class PDCWindow : BaseForm
     {
-        private TelexMessage selectedMsg;
+        private IMessageData selectedMsg;
         private static Logger logger = new Logger("PDCWindow");
         private FDR networkPilotFDR;
 
@@ -19,7 +19,7 @@ namespace vatACARS.Components
         {
             try {
                 InitializeComponent();
-                selectedMsg = (TelexMessage)DispatchWindow.SelectedMessage;
+                selectedMsg = DispatchWindow.SelectedMessage;
                 networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
                 if(networkPilotFDR == null)
                 {
@@ -108,7 +108,7 @@ namespace vatACARS.Components
                 State = 2,
                 Station = selectedMsg.Station,
                 Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
-                TimeReceived = DateTime.Now,
+                TimeReceived = DateTime.UtcNow,
                 MessageId = SentMessages,
                 ReplyMessageId = -1
             });
