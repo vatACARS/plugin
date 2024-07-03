@@ -53,6 +53,8 @@ namespace vatACARS.Helpers
                 logger.Log("CPDLCMessage successfully received.");
                 AudioInterface.playSound("incomingMessage");
 
+                if (message.Content == "LOGOFF") getAllStations().FirstOrDefault(station => station.Callsign == message.Station).removeStation();
+
                 if (message.ReplyMessageId != -1 && ClosingMessages.Contains(message.Content))
                 {
                     logger.Log($"Closing message: '{message.Content}' - ReplyID: {message.ReplyMessageId}");
@@ -158,6 +160,7 @@ namespace vatACARS.Helpers
              * 1 = Stby/Defer
              * 2 = Uplink
              * 3 = Finished
+             * 4 = DownlinkRespNotReqd
              */
             public int State { get; set; }
             public DateTime TimeReceived { get; set; }
