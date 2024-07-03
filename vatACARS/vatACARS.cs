@@ -208,10 +208,11 @@ namespace vatACARS
 
         private void PDCLabelClick(CustomLabelItemMouseClickEventArgs e)
         {
+            // Should grab the actual TelexMessage we received to respond properly
             DispatchWindow.SelectedMessage = new TelexMessage()
             {
                 State = 0,
-                Station = e.Track.GetFDR().Callsign,
+                Station = e.Track.GetFDR(true).Callsign,
                 Content = "REQUEST PREDEP CLEARANCE",
                 TimeReceived = DateTime.UtcNow
             };
@@ -282,6 +283,7 @@ namespace vatACARS
             try
             {
                 FDR fdr = track.GetFDR(true);
+                if(!GetFDRs.Contains(fdr) || fdr == null) return null;
 
                 TelexMessage[] telexMessages = getAllTelexMessages();
                 TelexMessage downlink = telexMessages.FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
