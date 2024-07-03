@@ -207,6 +207,36 @@ namespace vatACARS.Components
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
                 lvw_messages.Items.Add(item);
+
+                if (message.State < 2)
+                {
+                    GenericButton finishBtn = item.ContextMenu.CreateButton();
+                    finishBtn.Text = "Unable";
+
+                    finishBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "telex", $"UNABLE");
+                        _ = HoppiesInterface.SendMessage(req);
+                        message.setMessageState(3);
+                        UpdateMessages();
+                    };
+                }
+
+                if (message.State == 0)
+                {
+                    GenericButton stbyBtn = item.ContextMenu.CreateButton();
+                    stbyBtn.Text = "Standby";
+
+                    stbyBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "telex", $"STANDBY");
+                        _ = HoppiesInterface.SendMessage(req);
+                        message.setMessageState(1);
+                        UpdateMessages();
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -249,13 +279,13 @@ namespace vatACARS.Components
                 if(message.State < 3)
                 {
                     GenericButton finishBtn = item.ContextMenu.CreateButton();
-                    finishBtn.Text = "Finish";
+                    finishBtn.Text = "Close";
 
                     finishBtn.Click += delegate
                     {
                         item.ContextMenu.Show(false);
-                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/UNABLE");
-                        _ = HoppiesInterface.SendMessage(req);
+                        //FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/UNABLE");
+                        //_ = HoppiesInterface.SendMessage(req);
                         message.setMessageState(3);
                         UpdateMessages();
                     };
@@ -271,6 +301,7 @@ namespace vatACARS.Components
                         item.ContextMenu.Show(false);
                         FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/STANDBY");
                         _ = HoppiesInterface.SendMessage(req);
+                        message.Content = "STANDBY";
                         message.setMessageState(1);
                         UpdateMessages();
                     };
