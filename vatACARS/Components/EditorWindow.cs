@@ -368,7 +368,7 @@ namespace vatACARS.Components
                             State = 3,
                             Station = selectedMsg.Station,
                             Content = resp.Replace("\n", ", "),
-                            TimeReceived = DateTime.Now
+                            TimeReceived = DateTime.UtcNow
                         });
                     }
                     else
@@ -404,7 +404,7 @@ namespace vatACARS.Components
                             State = responseCode == "N" ? 3 : 2,
                             Station = selectedMsg.Station,
                             Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
-                            TimeReceived = DateTime.Now,
+                            TimeReceived = DateTime.UtcNow,
                             MessageId = SentMessages,
                             ReplyMessageId = -1
                         });
@@ -579,46 +579,30 @@ namespace vatACARS.Components
         {
             if (response[responseIndex] == null || response[responseIndex].Placeholders == null) return;
 
-            for(var i = 0; i < response[responseIndex].Placeholders.Count(); i++)
+            try
             {
-                ResponseItemPlaceholderData item = response[responseIndex].Placeholders[i];
-                if (new Rectangle(item.TopLeftLoc, item.Size).Contains(e.Location))
+                for (var i = 0; i < response[responseIndex].Placeholders.Count(); i++)
                 {
-                    try
+                    ResponseItemPlaceholderData item = response[responseIndex].Placeholders[i];
+                    if (new Rectangle(item.TopLeftLoc, item.Size).Contains(e.Location))
                     {
-                        QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper(), item.UserValue);
-                        fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
-                        {
-                            item.UserValue = data.Setting;
-                            lbl_response.Refresh();
-                        };
+                    
+                            QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper(), item.UserValue);
+                            fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
+                            {
+                                item.UserValue = data.Setting;
+                                lbl_response.Refresh();
+                            };
 
-                        fillWindow.ShowDialog(ActiveForm);
-                    } catch(Exception ex)
-                    {
-                        logger.Log($"Oops: {ex.ToString()}");
+                            fillWindow.ShowDialog(ActiveForm);
+                    
+                        break;
                     }
-                    break;
                 }
             }
-        }
-
-        private void btn_escape_Click(object sender, EventArgs e)
-        {
-            //Network.Me.ATIS[0] = $"{Network.Me.ATIS[0]} | CPDLC Logon YBIK";
-            foreach (string atisLine in Network.Me.ATIS)
+            catch (Exception ex)
             {
-                logger.Log(atisLine);
-            }
-            
-            List<NetworkATC> atcL = Network.GetOnlineATCs.FindAll((NetworkATC a) => a.ValidATC && a.ATIS.Any((string atisLine) => new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOGON [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0));
-            foreach(NetworkATC atc in atcL)
-            {
-                logger.Log($"ATC Found: {atc.Callsign} | {atc.RealName}");
-                foreach(string atisLine in atc.ATIS)
-                {
-                    logger.Log(atisLine);
-                }
+                logger.Log($"Oops: {ex.ToString()}");
             }
         }
     }
