@@ -63,10 +63,17 @@ namespace vatACARS.Components
                                                        orderby Network.GetOnlineATCs.Any((NetworkATC a) => a.Callsign == s.Callsign) descending,
                                                        s.Name
                                                        select s).ToList();
-                    foreach (SectorsVolumes.Sector sector in sectors)
+                    foreach (SectorsVolumes.Sector sec in sectors)
                     {
+                        Sector sector = new Sector()
+                        {
+                            Name = sec.Name,
+                            Callsign = sec.Callsign,
+                            Frequency = sec.Frequency.ToString()
+                        };
+
                         Label sectorBtn = new Label();
-                        sectorBtn.Text = $"{sector.Name} {(sector.Frequency / 1000000.0).ToString("0.0##")}";
+                        sectorBtn.Text = $"{sector.Name} {(long.Parse(sector.Frequency) / 1000000.0).ToString("0.0##")}";
                         sectorBtn.Tag = sector;
                         sectorBtn.Size = new Size(130, 30);
                         sectorBtn.Font = MMI.eurofont_winsml;
@@ -102,6 +109,7 @@ namespace vatACARS.Components
             {
                 Label noneButton = new Label();
                 noneButton.Text = "(NONE)";
+                noneButton.Tag = null;
                 noneButton.Size = new Size(130, 30);
                 noneButton.Font = MMI.eurofont_winsml;
                 noneButton.TextAlign = ContentAlignment.MiddleCenter;
@@ -126,7 +134,6 @@ namespace vatACARS.Components
             }
         }
 
-        // TODO: This should be done periodically and stored somewhere
         private void FetchOnlineATSUs()
         {
             clearDataAuthorities();
@@ -212,29 +219,36 @@ namespace vatACARS.Components
 
         private void btn_handoff_Click(object sender, EventArgs e)
         {
-            string dataAuthority = SelectedDataAuthority.Tag == null ? "END SERVICE" : $"NEXT DATA AUTHORITY {((StationInformation)SelectedDataAuthority.Tag).Station_Code}";
-            string sector = SelectedSector.Tag == null ? "MONITOR UNICOM 122.8" : $"CONTACT @{((Sector)SelectedSector.Tag).Callsign}@ @{(long.Parse(((Sector)SelectedSector.Tag).Frequency) / 1000000.0).ToString("0.0##")}@";
-            string encodedMessage = $"{dataAuthority}\n{sector}";
-            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedStation.Callsign, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
-            _ = HoppiesInterface.SendMessage(req);
-
-            addSentCPDLCMessage(new SentCPDLCMessage()
+            try
             {
-                Station = selectedStation.Callsign,
-                MessageId = SentMessages,
-                ReplyMessageId = SentMessages
-            });
+                string dataAuthority = SelectedDataAuthority.Tag == null ? "END SERVICE" : $"NEXT DATA AUTHORITY {((StationInformation)SelectedDataAuthority.Tag).Station_Code}";
+                string sector = SelectedSector.Tag == null ? "MONITOR UNICOM 122.8" : $"CONTACT @{((Sector)SelectedSector.Tag).Callsign}@ @{(long.Parse(((Sector)SelectedSector.Tag).Frequency) / 1000000.0).ToString("0.0##")}@";
+                string encodedMessage = $"{dataAuthority}\n{sector}";
+                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedStation.Callsign, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
+                _ = HoppiesInterface.SendMessage(req);
 
-            addCPDLCMessage(new CPDLCMessage()
+                addSentCPDLCMessage(new SentCPDLCMessage()
+                {
+                    Station = selectedStation.Callsign,
+                    MessageId = SentMessages,
+                    ReplyMessageId = SentMessages
+                });
+
+                addCPDLCMessage(new CPDLCMessage()
+                {
+                    State = 2,
+                    Station = selectedStation.Callsign,
+                    Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
+                    TimeReceived = DateTime.UtcNow,
+                    MessageId = SentMessages,
+                    ReplyMessageId = -1
+                });
+
+                Close();
+            } catch(Exception ex)
             {
-                State = 2,
-                Station = selectedStation.Callsign,
-                Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
-                TimeReceived = DateTime.Now,
-                MessageId = SentMessages,
-                ReplyMessageId = -1
-            });
-            Close();
+                logger.Log($"Oops: {ex.ToString()}");
+            }
         }
     }
 }
