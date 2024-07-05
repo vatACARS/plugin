@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Timers;
 using System.Windows.Forms;
 using vatACARS.Helpers;
@@ -45,6 +46,14 @@ namespace vatACARS.Components
                     else scr_messages.Value += scr_messages.Change;
                 }
             };
+
+            addTelexMessage(new TelexMessage()
+            {
+                State = 0,
+                Station = "AFR1738",
+                Content = "REQUEST PREDEP CLEARANCE",
+                TimeReceived = DateTime.UtcNow
+            });
 
             UpdateMessages();
         }
@@ -206,6 +215,36 @@ namespace vatACARS.Components
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
                 lvw_messages.Items.Add(item);
+
+                if (message.State < 2)
+                {
+                    GenericButton finishBtn = item.ContextMenu.CreateButton();
+                    finishBtn.Text = "Unable";
+
+                    finishBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "telex", $"UNABLE");
+                        _ = HoppiesInterface.SendMessage(req);
+                        message.setMessageState(3);
+                        UpdateMessages();
+                    };
+                }
+
+                if (message.State == 0)
+                {
+                    GenericButton stbyBtn = item.ContextMenu.CreateButton();
+                    stbyBtn.Text = "Standby";
+
+                    stbyBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "telex", $"STANDBY");
+                        _ = HoppiesInterface.SendMessage(req);
+                        message.setMessageState(1);
+                        UpdateMessages();
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -248,13 +287,13 @@ namespace vatACARS.Components
                 if(message.State < 3)
                 {
                     GenericButton finishBtn = item.ContextMenu.CreateButton();
-                    finishBtn.Text = "Finish";
+                    finishBtn.Text = "Close";
 
                     finishBtn.Click += delegate
                     {
                         item.ContextMenu.Show(false);
-                        FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/UNABLE");
-                        _ = HoppiesInterface.SendMessage(req);
+                        //FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/UNABLE");
+                        //_ = HoppiesInterface.SendMessage(req);
                         message.setMessageState(3);
                         UpdateMessages();
                     };
@@ -270,6 +309,7 @@ namespace vatACARS.Components
                         item.ContextMenu.Show(false);
                         FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/STANDBY");
                         _ = HoppiesInterface.SendMessage(req);
+                        message.Content = "STANDBY";
                         message.setMessageState(1);
                         UpdateMessages();
                     };
@@ -393,13 +433,11 @@ namespace vatACARS.Components
                         else if (msg is TelexMessage)
                         {
                             var m = (TelexMessage)msg;
-                            if (m.Content.StartsWith("REQUEST PREDEP CLEARANCE"))
+                            if (Regex.IsMatch(m.Content, @"\b(?:REQ|REQUEST)\s+(?:(?:PRE?DEPARTURE|PREDEP)?\s+CLEARANCE)\b"))
                             {
-                                if (PDCWindow == null || PDCWindow.IsDisposed)
-                                    PDCWindow = new PDCWindow();
-                                else if (PDCWindow.Visible)
-                                    return;
-
+                                if (PDCWindow.Visible) return;
+                                if (!PDCWindow.IsDisposed) PDCWindow.Dispose();
+                                PDCWindow = new PDCWindow();
                                 PDCWindow.Show(ActiveForm);
                                 return;
                             }

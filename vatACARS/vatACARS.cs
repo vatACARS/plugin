@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using vatACARS.Components;
 using vatACARS.Helpers;
@@ -16,15 +17,15 @@ namespace vatACARS
 {
     public static class AppData
     {
-        public static Version CurrentVersion { get; } = new Version(1, 0, 0);
+        public static Version CurrentVersion { get; } = new Version(1, 0, 2);
     }
 
     [Export(typeof(IPlugin))]
     public class vatACARS : IPlugin
     {
-        public string Name { get => "vatACARS"; }
+        public string Name => "vatACARS";
 
-        Logger logger = new Logger("vatACARS");
+        private readonly Logger logger = new Logger("vatACARS");
 
         private static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow = new DispatchWindow();
@@ -36,19 +37,19 @@ namespace vatACARS
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
         {
-            string fp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            if (!Directory.Exists($"{fp}\\vatACARS")) Directory.CreateDirectory($"{fp}\\vatACARS");
-            if (!Directory.Exists($"{fp}\\vatACARS\\audio")) Directory.CreateDirectory($"{fp}\\vatACARS\\audio");
-            if (!Directory.Exists($"{fp}\\vatACARS\\data")) Directory.CreateDirectory($"{fp}\\vatACARS\\data");
-            if (File.Exists($"{fp}\\vatACARS\\vatACARS.log")) File.Delete($"{fp}\\vatACARS\\vatACARS.log");
-            
-            logger.Log("Starting...");
-            Start();
+            string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
 
-            return;
+            // Create directories only if they don't exist
+            Directory.CreateDirectory(dataPath);
+            Directory.CreateDirectory(Path.Combine(dataPath, "audio"));
+            Directory.CreateDirectory(Path.Combine(dataPath, "data"));
+            if (File.Exists($"{dataPath}\\vatACARS.log")) File.Delete($"{dataPath}\\vatACARS.log");
+
+            logger.Log("Starting...");
+            _ = Start();
         }
 
-        private async void Start()
+        private async Task Start()
         {
             try
             {
@@ -79,7 +80,8 @@ namespace vatACARS
 
 
                 logger.Log("Started successfully.");
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Log($"Error in Start: {e.Message}");
             }
@@ -87,30 +89,38 @@ namespace vatACARS
 
         private void SetupWindowMenu_Click(object sender, EventArgs e)
         {
-            MMI.InvokeOnGUI(delegate () { DoShowSetupWindow(); });
+            MMI.InvokeOnGUI(() => DoShowSetupWindow());
         }
 
         private static void DoShowSetupWindow()
         {
             if (setupWindow == null || setupWindow.IsDisposed)
+            {
                 setupWindow = new SetupWindow();
+            }
             else if (setupWindow.Visible)
+            {
                 return;
+            }
 
             setupWindow.Show(Form.ActiveForm);
         }
 
         private void DispatchWindowMenu_Click(object sender, EventArgs e)
         {
-            MMI.InvokeOnGUI(delegate () { DoShowDispatchWindow(); });
+            MMI.InvokeOnGUI(() => DoShowDispatchWindow());
         }
 
         private static void DoShowDispatchWindow()
         {
             if (dispatchWindow == null || dispatchWindow.IsDisposed)
+            {
                 dispatchWindow = new DispatchWindow();
+            }
             else if (dispatchWindow.Visible)
+            {
                 return;
+            }
 
             dispatchWindow.Show(Form.ActiveForm);
         }
@@ -198,10 +208,11 @@ namespace vatACARS
 
         private void PDCLabelClick(CustomLabelItemMouseClickEventArgs e)
         {
+            // Should grab the actual TelexMessage we received to respond properly
             DispatchWindow.SelectedMessage = new TelexMessage()
             {
                 State = 0,
-                Station = e.Track.GetFDR().Callsign,
+                Station = e.Track.GetFDR(true).Callsign,
                 Content = "REQUEST PREDEP CLEARANCE",
                 TimeReceived = DateTime.UtcNow
             };
@@ -272,6 +283,7 @@ namespace vatACARS
             try
             {
                 FDR fdr = track.GetFDR(true);
+                if(!GetFDRs.Contains(fdr) || fdr == null) return null;
 
                 TelexMessage[] telexMessages = getAllTelexMessages();
                 TelexMessage downlink = telexMessages.FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);

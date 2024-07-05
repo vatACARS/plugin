@@ -73,103 +73,123 @@ namespace vatACARS
 
         private async void btn_connect_Click(object sender, EventArgs e)
         {
-            if (connected)
+            try
             {
-                HoppiesInterface.StopListening();
-                VatACARSInterface.StopListening();
-
-                foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
-                btn_connect.Text = "Connect";
-            }
-
-            btn_checkStationCode_Click(null, null);
-
-            if (!Network.IsConnected)
-            {
-                lbl_statusMessage.Text = "Please connect to VATSIM first.";
-                return;
-            }
-
-            if(!Network.IsValidATC)
-            {
-                lbl_statusMessage.Text = "Please connect as a non-observer role.";
-                return;
-            }
-
-            foreach (Control ctl in Controls)
-            {
-                if (ctl is TextLabel)
+                if (connected)
                 {
-                    ctl.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-                    ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                    HoppiesInterface.StopListening();
+                    VatACARSInterface.StopListening();
+
+                    foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
+                    btn_connect.Text = "Connect";
+                    lbl_statusMessage.Text = "Disconnected from vatACARS.";
+                    connected = false;
+                    return;
                 }
 
-                if (ctl is GenericButton || ctl is TextField)
+                btn_checkStationCode_Click(null, null);
+
+                if (!Network.IsConnected)
                 {
-                    ctl.Enabled = false;
-                    btn_auralAlertVolumeTest.Enabled = true;
-                    tbx_messageTimeout.Enabled = true;
+                    lbl_statusMessage.Text = "Please connect to VATSIM first.";
+                    return;
                 }
+
+                if (!Network.IsValidATC)
+                {
+                    lbl_statusMessage.Text = "Please connect as a non-observer role.";
+                    return;
+                }
+
+                foreach (Control ctl in Controls)
+                {
+                    if (ctl is TextLabel)
+                    {
+                        ctl.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                        ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                    }
+
+                    if (ctl is GenericButton || ctl is TextField)
+                    {
+                        ctl.Enabled = false;
+                    }
+                }
+
+                btn_auralAlertVolumeTest.Enabled = true;
+                tbx_messageTimeout.Enabled = true;
+
+                Application.DoEvents();
+
+                // Check if any information is missing
+                bool checksFailed = false;
+                if (!Network.Me.ATIS.Any((string atisLine) => new Regex(@"PDC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
+                {
+                    lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                    lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                    tbx_stationCode.Text = "Try again.";
+                    checksFailed = true;
+                }
+
+                if (tbx_vatACARSToken.Text.Length != 0 && (!tbx_vatACARSToken.Text.StartsWith("vAcV1-") && tbx_vatACARSToken.Text.Length != 32))
+                {
+                    lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                    lbl_statusMessage.Text = "Your vatACARS token appears invalid.";
+                    checksFailed = true;
+                }
+
+                if (Properties.Settings.Default.enableHoppies && tbx_hoppiesLogonCode.Text.Length < 10)
+                {
+                    lbl_hoppiesLogonCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                    lbl_statusMessage.Text = "Your hoppies code appears invalid.";
+                    checksFailed = true;
+                }
+
+                if (!Properties.Settings.Default.enableHoppies)
+                {
+                    lbl_statusMessage.Text = "Hoppies must be enabled for now.";
+                    checksFailed = true;
+                }
+
+                if (checksFailed)
+                {
+                    foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
+                    return;
+                }
+
+                string LogonResponse = await client.PostStringTaskAsync("/atsu/logon", new FormUrlEncodedContent(new Dictionary<string, string>
+                {
+                    {"station", tbx_stationCode.Text},
+                    {"token", tbx_vatACARSToken.Text},
+                    {"sectors", JsonConvert.SerializeObject(MMI.SectorsControlled.Where(sector => !MMI.SectorsControlled.SelectMany(s => s.SubSectors).Contains(sector)).ToList().Select(sector => new { name = sector.Name, callsign = sector.Callsign, frequency = sector.Frequency }).ToArray()) },
+                    {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition.DefaultCenter.Latitude, longitude = MMI.PrimePosition.DefaultCenter.Longitude })}
+                }));
+
+                APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
+
+                if (ResponseDecoded.Success == false) checksFailed = true;
+                lbl_statusMessage.Text = ResponseDecoded.Message;
+
+                if (checksFailed)
+                {
+                    foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
+                    return;
+                }
+
+                Application.DoEvents();
+
+                ClientInformation.LogonCode = Properties.Settings.Default.hoppiesLogonCode;
+                ClientInformation.Callsign = tbx_stationCode.Text;
+                HoppiesInterface.StartListening();
+                VatACARSInterface.StartListening();
+
+                connected = true;
+                btn_connect.Text = "Disconnect";
+                btn_connect.Enabled = true;
             }
-
-            Application.DoEvents();
-
-            // Check if any information is missing
-            bool checksFailed = false;
-            if (!Network.Me.ATIS.Any((string atisLine) => new Regex(@"PDC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
+            catch (Exception ex)
             {
-                lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                tbx_stationCode.Text = "Try again.";
-                checksFailed = true;
+                lbl_statusMessage.Text = ex.ToString();
             }
-
-            if (tbx_vatACARSToken.Text.Length != 0 && (!tbx_vatACARSToken.Text.StartsWith("vAcV1-") && tbx_vatACARSToken.Text.Length != 32))
-            {
-                lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                checksFailed = true;
-            }
-
-            if (Properties.Settings.Default.enableHoppies && tbx_hoppiesLogonCode.Text.Length < 15)
-            {
-                lbl_hoppiesLogonCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                checksFailed = true;
-            }
-            if (checksFailed)
-            {
-                foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
-                return;
-            }
-
-            string LogonResponse = await client.PostStringTaskAsync("/atsu/logon", new FormUrlEncodedContent(new Dictionary<string, string>
-            {
-                {"station", tbx_stationCode.Text},
-                {"token", tbx_vatACARSToken.Text},
-                {"sectors", JsonConvert.SerializeObject(MMI.SectorsControlled.Where(sector => !MMI.SectorsControlled.SelectMany(s => s.SubSectors).Contains(sector)).ToList().Select(sector => new { name = sector.Name, callsign = sector.Callsign, frequency = sector.Frequency }).ToArray()) },
-                {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition.DefaultCenter.Latitude, longitude = MMI.PrimePosition.DefaultCenter.Longitude })}
-            }));
-
-            APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
-
-            if (ResponseDecoded.Success == false) checksFailed = true;
-            lbl_statusMessage.Text = ResponseDecoded.Message;
-
-            if (checksFailed)
-            {
-                foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
-                return;
-            }
-
-            Application.DoEvents();
-
-            ClientInformation.LogonCode = Properties.Settings.Default.hoppiesLogonCode;
-            ClientInformation.Callsign = tbx_stationCode.Text;
-            HoppiesInterface.StartListening();
-            VatACARSInterface.StartListening();
-
-            connected = true;
-            btn_connect.Text = "Disconnect";
-            btn_connect.Enabled = true;
         }
 
         private void btn_enableHoppies_MouseUp(object sender, MouseEventArgs e)

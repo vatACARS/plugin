@@ -136,10 +136,10 @@ namespace vatACARS.Util
             string[] msgSplit;
             if (msg.PacketData != null)
             {
-                msgSplit = msg.PacketData.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                msgSplit = msg.PacketData.Split(new string[] { "\n" }, StringSplitOptions.None);
             }
             else msgSplit = new string[] { "(no message data)" };
-            logger.Log($"Constructed message: {msg.Callsign} -> {msg.Recipient} ({msg.MessageType}): {string.Join(" | ", msgSplit)}");
+            logger.Log($"Constructed message: {msg.Callsign} -> {msg.Recipient} ({msg.MessageType}): {string.Join("\\", msgSplit)}");
 
             return msg.MakeCPDLCMessageRequest();
         }
