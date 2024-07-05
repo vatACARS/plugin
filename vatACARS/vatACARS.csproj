@@ -32,9 +32,33 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,8 +73,126 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Components\DispatchWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\DispatchWindow.Designer.cs">
+      <DependentUpon>DispatchWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\EditorWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\EditorWindow.Designer.cs">
+      <DependentUpon>EditorWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\HandoffSelector.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\HandoffSelector.Designer.cs">
+      <DependentUpon>HandoffSelector.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\LogonConsentWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\LogonConsentWindow.Designer.cs">
+      <DependentUpon>LogonConsentWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\PDCWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\PDCWindow.Designer.cs">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\QuickFillWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\QuickFillWindow.Designer.cs">
+      <DependentUpon>QuickFillWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SetupWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\SetupWindow.Designer.cs">
+      <DependentUpon>SetupWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\UpdateNotification.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\UpdateNotification.Designer.cs">
+      <DependentUpon>UpdateNotification.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Lib\JSONReader.cs" />
+    <Compile Include="Lib\Tranceiver.cs" />
+    <Compile Include="Lib\UpdateClient.cs" />
+    <Compile Include="Lib\XMLReader.cs" />
+    <Compile Include="Lib\VersionChecker.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Util\AudioInterface.cs" />
+    <Compile Include="Util\ExtendedUI.cs" />
+    <Compile Include="Util\HoppiesInterface.cs" />
+    <Compile Include="Util\HttpClient.cs" />
+    <Compile Include="Util\JSONInterface.cs" />
+    <Compile Include="Util\LabelsXMLPatcher.cs" />
+    <Compile Include="Util\Logger.cs" />
+    <Compile Include="Util\Types.cs" />
+    <Compile Include="Util\VatACARSInterface.cs" />
+    <Compile Include="Util\XMLInterface.cs" />
+    <Compile Include="vatACARS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Components\DispatchWindow.resx">
+      <DependentUpon>DispatchWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\EditorWindow.resx">
+      <DependentUpon>EditorWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\HandoffSelector.resx">
+      <DependentUpon>HandoffSelector.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\LogonConsentWindow.resx">
+      <DependentUpon>LogonConsentWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\PDCWindow.resx">
+      <DependentUpon>PDCWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\QuickFillWindow.resx">
+      <DependentUpon>QuickFillWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\SetupWindow.resx">
+      <DependentUpon>SetupWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\DeferIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TXIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\RXIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
