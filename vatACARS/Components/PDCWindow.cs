@@ -14,6 +14,8 @@ namespace vatACARS.Components
     {
         private IMessageData selectedMsg;
         private static Logger logger = new Logger("PDCWindow");
+        private ErrorHandler errorHandler = ErrorHandler.GetInstance();
+
         private FDR networkPilotFDR;
         private Dictionary<string, string> PDCElements = new Dictionary<string, string>();
 
@@ -44,7 +46,7 @@ namespace vatACARS.Components
             }
             catch (Exception ex)
             {
-                logger.Log($"Error: {ex.ToString()}");
+                errorHandler.AddError(ex.ToString());
             }
         }
 
@@ -92,7 +94,7 @@ namespace vatACARS.Components
             }
             catch (Exception ex)
             {
-                logger.Log($"Error: {ex.ToString()}");
+                errorHandler.AddError(ex.ToString());
                 Close();
             }
         }
