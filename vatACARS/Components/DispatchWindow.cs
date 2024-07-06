@@ -27,6 +27,9 @@ namespace vatACARS.Components
         private static HandoffSelector HandoffSelector;
         private static PDCWindow PDCWindow;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DispatchWindow()
         {
             InitializeComponent();
@@ -46,14 +49,6 @@ namespace vatACARS.Components
                     else scr_messages.Value += scr_messages.Change;
                 }
             };
-
-            addTelexMessage(new TelexMessage()
-            {
-                State = 0,
-                Station = "AFR1738",
-                Content = "REQUEST PREDEP CLEARANCE",
-                TimeReceived = DateTime.UtcNow
-            });
 
             UpdateMessages();
         }
