@@ -99,7 +99,6 @@ namespace vatACARS.Components
             lvw_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             lvw_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             lbl_response.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_response.Font = new Font(MMI.eurofont_winsml.FontFamily, 12F, FontStyle.Bold);
 
             btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
             btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
@@ -207,95 +206,104 @@ namespace vatACARS.Components
 
         private void lvw_messages_SelectedIndexChanged(object sender, EventArgs e) { }
 
+        private void HandleResponse(UplinkEntry selected)
+        {
+            var placeholders = placeholderParse.Matches(selected.Element);
+
+            response[responseIndex] = new ResponseItem()
+            {
+                Entry = selected,
+                Placeholders = null
+            };
+
+            if (placeholders.Count > 0)
+            {
+                response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
+                Graphics graphics = lbl_response.CreateGraphics();
+                StringFormat format = new StringFormat
+                {
+                    LineAlignment = StringAlignment.Center,
+                    Alignment = StringAlignment.Near
+                };
+
+                for (int i = 0; i < placeholders.Count; i++)
+                {
+                    CharacterRange[] ranges = { new CharacterRange(placeholders[i].Index, placeholders[i].Length) };
+                    format.SetMeasurableCharacterRanges(ranges);
+
+                    Region region = graphics.MeasureCharacterRanges(response[responseIndex].Entry.Element, lbl_response.Font, lbl_response.Bounds, format)[0];
+                    Rectangle bounds = Rectangle.Round(region.GetBounds(graphics));
+
+                    response[responseIndex].Placeholders[i] = new ResponseItemPlaceholderData()
+                    {
+                        Placeholder = placeholders[i].Value,
+                        UserValue = "",
+                        TopLeftLoc = new Point(bounds.X - 4, bounds.Y - 2),
+                        Size = new Size(bounds.Width + 4, bounds.Height + 2)
+                    };
+                }
+            }
+            else
+            {
+                response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
+            }
+
+            lbl_response.Text = selected.Element;
+            lbl_response.Refresh();
+        }
+
         private void lvw_messageSelector_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvw_messageSelector.SelectedItems.Count > 0)
             {
                 UplinkEntry selected = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Clone();
-                var placeholders = placeholderParse.Matches(selected.Element);
-
-                
-                response[responseIndex] = new ResponseItem()
-                {
-                    Entry = selected,
-                    Placeholders = null
-                };
-
-                if (placeholders.Count > 0)
-                {
-                    response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
-                    Graphics graphics = lbl_response.CreateGraphics();
-                    StringFormat format = new StringFormat();
-                    format.LineAlignment = StringAlignment.Center;
-                    format.Alignment = StringAlignment.Near;
-
-                    for (int i = 0; i < placeholders.Count; i++)
-                    {
-                        CharacterRange[] ranges = { new CharacterRange(placeholders[i].Index, placeholders[i].Length) };
-                        format.SetMeasurableCharacterRanges(ranges);
-
-                        Region region = graphics.MeasureCharacterRanges(response[responseIndex].Entry.Element, lbl_response.Font, lbl_response.Bounds, format)[0];
-                        Rectangle bounds = Rectangle.Round(region.GetBounds(graphics));
-
-                        response[responseIndex].Placeholders[i] = new ResponseItemPlaceholderData()
-                        {
-                            Placeholder = placeholders[i].Value,
-                            UserValue = "",
-                            TopLeftLoc = new Point(bounds.X - 4, bounds.Y - 2),
-                            Size = new Size(bounds.Width + 4, bounds.Height + 2)
-                        };
-                    }
-                } else response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
-
-                lbl_response.Text = selected.Element;
-                lbl_response.Refresh();
+                HandleResponse(selected);
             }
 
             lvw_messageSelector.SelectedItems.Clear();
         }
 
+
         private void btn_standby_Click(object sender, EventArgs e)
         {
             var standby = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Clone();
-            lbl_response.Text = standby.Element;
-            response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Entry = standby };
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(standby);
         }
 
         private void btn_defer_Click(object sender, EventArgs e)
         {
             var defer = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Clone();
-            lbl_response.Text = defer.Element;
-            response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Entry = defer };
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(defer);
         }
 
         private void btn_tfc_Click(object sender, EventArgs e)
         {
-            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
             var tfc = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Clone();
-            lbl_response.Text = tfc.Element;
-            response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Entry = unable };
-            response[1] = new ResponseItem() { Entry = tfc };
-            responseIndex = 1;
+            responseIndex = 1; 
             btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(tfc);
+
+            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(unable);
         }
 
         private void btn_air_Click(object sender, EventArgs e)
         {
-            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
             var air = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "167").ToList().FirstOrDefault().Clone();
-            lbl_response.Text = air.Element;
-            response = new ResponseItem[5];
-            response[0] = new ResponseItem() { Entry = unable };
-            response[1] = new ResponseItem() { Entry = air };
             responseIndex = 1;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(air);
+
+            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(unable);
         }
 
         private void btn_editor_Click(object sender, EventArgs e)
