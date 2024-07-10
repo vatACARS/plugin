@@ -35,7 +35,6 @@ namespace vatACARS.Components
             this.scr_quickfill = new VATSYSControls.ScrollBar();
             this.btn_confirm = new vatsys.GenericButton();
             this.tbx_freetext = new vatsys.TextField();
-            this.label1 = new System.Windows.Forms.Label();
             this.insetPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -109,21 +108,11 @@ namespace vatACARS.Components
             this.tbx_freetext.TextChanged += new System.EventHandler(this.tbx_freetext_TextChanged);
             this.tbx_freetext.KeyUp += new System.Windows.Forms.KeyEventHandler(this.tbx_freetext_KeyUp);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(248, 205);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(56, 17);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "label1";
-            // 
             // QuickFillWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(509, 237);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.tbx_freetext);
             this.Controls.Add(this.btn_confirm);
             this.Controls.Add(this.insetPanel1);
@@ -150,6 +139,5 @@ namespace vatACARS.Components
         private VATSYSControls.ScrollBar scr_quickfill;
         private vatsys.GenericButton btn_confirm;
         private vatsys.TextField tbx_freetext;
-        private System.Windows.Forms.Label label1;
     }
 }
