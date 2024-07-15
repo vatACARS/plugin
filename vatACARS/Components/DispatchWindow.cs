@@ -27,6 +27,9 @@ namespace vatACARS.Components
         private static HandoffSelector HandoffSelector;
         private static PDCWindow PDCWindow;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public DispatchWindow()
         {
             InitializeComponent();

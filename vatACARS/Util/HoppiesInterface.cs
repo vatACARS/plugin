@@ -20,6 +20,7 @@ namespace vatACARS.Util
         private static bool discardedFirstRequest = false;
         private static Random random = new Random();
         private static Logger logger = new Logger("Hoppies");
+        private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
         private static HttpClient client = new HttpClient();
         private static readonly Regex hoppieParse = new Regex(@"{(.*?)}");
 
@@ -60,12 +61,13 @@ namespace vatACARS.Util
             if (rawMessages.StartsWith("ERROR"))
             {
                 logger.Log($"Hoppies error: {rawMessages}");
+                errorHandler.AddError(rawMessages);
                 //connected = false;
-                AudioInterface.playSound("error");
                 return;
             }
 
-            if(!discardedFirstRequest)
+
+            if (!discardedFirstRequest)
             {
                 discardedFirstRequest = true;
                 return;
@@ -152,7 +154,7 @@ namespace vatACARS.Util
                 return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
             } catch (Exception e)
             {
-                logger.Log($"Oops: {e.ToString()}");
+                errorHandler.AddError(e.ToString());
                 return "ERROR";
             }
         }
