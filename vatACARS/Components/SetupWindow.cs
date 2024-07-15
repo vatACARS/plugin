@@ -37,6 +37,7 @@ namespace vatACARS
 
             sld_auralAlertVolume.ForeColor = Colours.GetColour(Colours.Identities.ListSeparator);
             sld_auralAlertVolume.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            sld_auralAlertVolume.Font = MMI.eurofont_winsml;
         }
 
 
