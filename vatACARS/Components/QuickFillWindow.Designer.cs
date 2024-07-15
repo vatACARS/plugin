@@ -1,4 +1,5 @@
-﻿using vatsys;
+﻿using System.Windows.Forms;
+using vatsys;
 
 namespace vatACARS.Components
 {
@@ -74,7 +75,7 @@ namespace vatACARS.Components
             this.scr_quickfill.Change = 1;
             this.scr_quickfill.Location = new System.Drawing.Point(4, 170);
             this.scr_quickfill.Name = "scr_quickfill";
-            this.scr_quickfill.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
+            this.scr_quickfill.Orientation = ScrollOrientation.HorizontalScroll;
             this.scr_quickfill.PreferredHeight = 10;
             this.scr_quickfill.Size = new System.Drawing.Size(501, 20);
             this.scr_quickfill.TabIndex = 9;
