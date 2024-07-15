@@ -96,13 +96,6 @@ namespace vatACARS.Helpers
         public static async void setMessageState(this IMessageData message, int state)
         {
             message.State = state;
-            try
-            {
-                MessageUpdated.Invoke(null, message); // TODO: Fix this
-            } catch (Exception ex)
-            {
-                logger.Log($"Oops: {ex.ToString()}");
-            }
 
             if (state == 3)
             {
