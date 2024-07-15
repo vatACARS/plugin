@@ -7,6 +7,9 @@ using vatACARS.Util;
 using System.Collections.Generic;
 using static vatsys.Colours;
 using System.Web.Configuration;
+using static vatsys.FDP2;
+using System.Linq;
+using static vatACARS.Helpers.Tranceiver;
 
 namespace vatACARS.Components
 {
@@ -19,6 +22,8 @@ namespace vatACARS.Components
         public event QuickFillChangedHandler QuickFillDataChanged;
         private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
         private List<Label> quickFillItems = new List<Label>();
+        private FDR networkPilotFDR;
+        private IMessageData selectedMsg;
         private string identifier;
 
         public class QuickFillData : EventArgs
@@ -26,26 +31,34 @@ namespace vatACARS.Components
             public string Setting { get; set; }
         }
 
-        public QuickFillWindow(string identifier, string placeholder = "")
+        public QuickFillWindow(string identifier, IMessageData selectedMsg, string placeholder = "")
         {
             InitializeComponent();
             StyleComponent();
+            this.selectedMsg = selectedMsg;
             this.identifier = identifier;
             SelectedLabel = new Label();
             FreeText = "";
             OnDataChanged(placeholder.ToUpper());
             tbx_freetext.Text = placeholder;
 
-            try
+            if (identifier == "POSITION")
             {
-                foreach (string item in JSONReader.quickFillItems.data[identifier])
+                LoadAddRoute();
+            } 
+            else {
+                try
                 {
-                    AddQuickFillItem(item);
+                    foreach (string item in JSONReader.quickFillItems.data[identifier])
+                    {
+                        AddQuickFillItem(item);
+                    }
+                    UpdateScrollbar();
                 }
-                UpdateScrollbar();
-            } catch (Exception ex)
-            {
-                logger.Log(ex.ToString());
+                catch (Exception ex)
+                {
+                    logger.Log(ex.ToString());
+                }
             }
             
             logger.Log("Opened & populated.");
@@ -62,6 +75,35 @@ namespace vatACARS.Components
             scr_quickfill.PreferredHeight = 1;
             scr_quickfill.ActualHeight = 1;
             scr_quickfill.Enabled = false;
+        }
+
+        private void LoadAddRoute()
+        {
+            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
+            {
+                errorHandler.AddError("Pilot has invalid or No Route.");
+            }
+            else
+            {
+                string route = networkPilotFDR.Route;
+                string[] routeSegments = route.Split(' ');
+
+                var filteredRouteSegments = routeSegments
+                    .Where(segment =>
+                        !segment.Contains(networkPilotFDR.DepAirport) &&
+                        !segment.Contains(networkPilotFDR.SID.Name) &&
+                        !System.Text.RegularExpressions.Regex.IsMatch(segment, @"^[A-Za-z]+\d+$") &&
+                        !segment.Equals("DCT", StringComparison.OrdinalIgnoreCase))
+                    .Select(segment =>
+                        segment.Contains("/") ? segment.Split('/')[0] : segment) 
+                    .ToArray();
+
+                foreach (string segment in filteredRouteSegments)
+                {
+                    AddQuickFillItem(segment);
+                }
+            }
         }
 
         private void AddQuickFillItem(string label)
