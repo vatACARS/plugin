@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
@@ -88,16 +89,28 @@ namespace vatACARS.Util
                     string type = rawMessage[0].Split(' ')[1];
 
                     for (int i = 0; i < rawMessage.Length; i++)
-                        {
                     {
                         if (i > 0 && rawMessage[i].Length > 2)
+                        {
                             if (rawMessage[1].StartsWith("/DATA2/"))
                             {
                                 CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
                                 logger.Log($"CPDLC: {station} | (M:{parsedMessage.MessageId} / R:{(parsedMessage.ReplyMessageId != -1 ? parsedMessage.ReplyMessageId.ToString() : "X")}) [{parsedMessage.ResponseType}] {parsedMessage.Content}");
                                 CPDLCMessages.Add(parsedMessage);
                                 break;
-                            } else
+                            }
+                            else if (rawMessage[1].StartsWith("/DATA1/"))
+                            {
+                                logger.Log($"ADS-C: {station} ");
+                                telexMessages.Add(new TelexMessage()
+                                {
+                                    State = 3,
+                                    Station = station,
+                                    TimeReceived = DateTime.UtcNow,
+                                    Content = parseADSCMessage(rawMessage[1])
+                                });
+                            }
+                            else
                             {
                                 logger.Log($"TELEX: {station} | {rawMessage[1]}");
                                 telexMessages.Add(new TelexMessage()
@@ -181,12 +194,27 @@ namespace vatACARS.Util
                 };
             } catch (FormatException ex)
             {
-                // Somebody forged a CPDLCMessage format that was invalid
+                // CPDLCMessage format was invalid
                 logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
                 msg = new CPDLCMessage();
             }
 
             return msg;
+        }
+
+        private static string parseADSCMessage(string rawMessage)
+        {
+            string[] lines = rawMessage.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                sb.Append(lines[i].Trim());
+                if (i < lines.Length) sb.Append(" ");
+            }
+
+            string content = sb.ToString();
+            return content;
         }
     }
 
