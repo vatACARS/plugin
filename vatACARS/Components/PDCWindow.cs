@@ -50,51 +50,48 @@ namespace vatACARS.Components
 
         private void InitPlaceholders()
         {
-            try
+            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
             {
-                networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
-                if (!GetFDRs.Contains(networkPilotFDR))
-                {
-                    Close();
-                    return;
-                }
-
-                if (new[] { "Callsign", "AircraftType", "DesAirport", "SID", "DepartureRunway", "Route", "CFLString", "AssignedSSRCode" }.Select(p => networkPilotFDR.GetType().GetProperty(p).GetValue(networkPilotFDR)).Any(v => v == null))
-                {
-                    Close();
-                    return;
-                }
-
-                Text = $"PDC {networkPilotFDR.Callsign}";
-
-                string route = networkPilotFDR.Route;
-                string[] routeSegments = route.Split(' ');
-                if (routeSegments[0].Contains(networkPilotFDR.DepAirport) || routeSegments[0].Contains(networkPilotFDR.SID.Name)) route = route.Substring(route.IndexOf(' ') + 1);
-
-                PDCElements = new Dictionary<string, string>()
-                {
-                    { "PDC", $"PDC {DateTime.UtcNow.ToString("ddHHmm")}" },
-                    { "MetaInfo", $"{networkPilotFDR.Callsign} {networkPilotFDR.AircraftType} {networkPilotFDR.DepAirport} {networkPilotFDR.ETD.ToString("HHmm")}" },
-                    { "DestRoute", $"CLRD TO {networkPilotFDR.DesAirport} VIA" },
-                    { "SIDRwy", $"{networkPilotFDR.SID.Name} DEP RWY {networkPilotFDR.DepartureRunway.Name}" },
-                    { "Route", $"ROUTE: {CutStringAndAppendT(route)}" },
-                    { "InitAlt", $"CLIMB VIA SID TO: {(networkPilotFDR.CFLString != null && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL")}{networkPilotFDR.CFLString.PadLeft(3, '0')}" },
-                    { "SqwkDeps", $"SQUAWK {Convert.ToString(networkPilotFDR.AssignedSSRCode, 8).PadLeft(4, '0')}" }
-                };
-
-                lbl_pdcHeader.Text = PDCElements["PDC"];
-                lbl_metaInfo.Text = PDCElements["MetaInfo"];
-                lbl_destRoute.Text = PDCElements["DestRoute"];
-                lbl_sidRwy.Text = PDCElements["SIDRwy"];
-                lbl_route.Text = PDCElements["Route"];
-                lbl_initAlt.Text = PDCElements["InitAlt"];
-                lbl_sqwkDeps.Text = PDCElements["SqwkDeps"];
-            }
-            catch (Exception ex)
-            {
-                logger.Log($"Error: {ex.ToString()}");
                 Close();
+                return;
             }
+
+            var propertiesToCheck = new[] { "Callsign", "AircraftType", "DesAirport", "SID", "DepartureRunway", "Route", "CFLString", "AssignedSSRCode" };
+            foreach (var property in propertiesToCheck)
+            {
+                var propInfo = networkPilotFDR.GetType().GetProperty(property);
+                if (propInfo == null || propInfo.GetValue(networkPilotFDR) == null)
+                {
+                    Close();
+                    return;
+                }
+            }
+
+            Text = $"PDC {networkPilotFDR.Callsign}";
+
+            string route = networkPilotFDR.Route;
+            string[] routeSegments = route.Split(' ');
+            if (routeSegments[0].Contains(networkPilotFDR.DepAirport) || routeSegments[0].Contains(networkPilotFDR.SID.Name)) route = route.Substring(route.IndexOf(' ') + 1);
+
+            PDCElements = new Dictionary<string, string>()
+            {
+                { "PDC", $"PDC {DateTime.UtcNow.ToString("ddHHmm")}" },
+                { "MetaInfo", $"{networkPilotFDR.Callsign} {networkPilotFDR.AircraftType} {networkPilotFDR.DepAirport} {networkPilotFDR.ETD.ToString("HHmm")}" },
+                { "DestRoute", $"CLRD TO {networkPilotFDR.DesAirport} VIA" },
+                { "SIDRwy", $"{networkPilotFDR.SID.Name} DEP RWY {networkPilotFDR.DepartureRunway.Name}" },
+                { "Route", $"ROUTE: {CutStringAndAppendT(route)}" },
+                { "InitAlt", $"CLIMB VIA SID TO: {(networkPilotFDR.CFLString != null && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL")}{networkPilotFDR.CFLString.PadLeft(3, '0')}" },
+                { "SqwkDeps", $"SQUAWK {Convert.ToString(networkPilotFDR.AssignedSSRCode, 8).PadLeft(4, '0')}" }
+            };
+
+            lbl_pdcHeader.Text = PDCElements["PDC"];
+            lbl_metaInfo.Text = PDCElements["MetaInfo"];
+            lbl_destRoute.Text = PDCElements["DestRoute"];
+            lbl_sidRwy.Text = PDCElements["SIDRwy"];
+            lbl_route.Text = PDCElements["Route"];
+            lbl_initAlt.Text = PDCElements["InitAlt"];
+            lbl_sqwkDeps.Text = PDCElements["SqwkDeps"];
         }
 
         private string CutStringAndAppendT(string input, int maxLength = 36)
