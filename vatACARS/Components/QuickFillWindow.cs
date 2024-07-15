@@ -71,7 +71,6 @@ namespace vatACARS.Components
 
             scr_quickfill.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_quickfill.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-            scr_quickfill.Orientation = ScrollOrientation.HorizontalScroll;
             scr_quickfill.PreferredHeight = 1;
             scr_quickfill.ActualHeight = 1;
             scr_quickfill.Enabled = false;
@@ -93,7 +92,7 @@ namespace vatACARS.Components
                     .Where(segment =>
                         !segment.Contains(networkPilotFDR.DepAirport) &&
                         !segment.Contains(networkPilotFDR.SID.Name) &&
-                        !System.Text.RegularExpressions.Regex.IsMatch(segment, @"^[A-Za-z]+\d+$") &&
+                        !System.Text.RegularExpressions.Regex.IsMatch(segment, @"^[A-Z]{1,2}\d{2,3}$") &&
                         !segment.Equals("DCT", StringComparison.OrdinalIgnoreCase))
                     .Select(segment =>
                         segment.Contains("/") ? segment.Split('/')[0] : segment) 
