@@ -249,33 +249,26 @@ namespace vatACARS
         public CustomColour SelectASDTrackColour(Track track)
         {
             // Something in this is broken.
-            return null;
             
-            try
-            {
-                if (track == null) return null;
-                if (track.Type != Track.TrackTypes.TRACK_TYPE_RADAR) return null;
-                FDR fdr = ((RDP.RadarTrack)track.SourceData).CoupledFDR;
-                if (fdr == null) return null;
-                if(fdr.ControllingSector == null || fdr.HandoffSector == null) return null;
+            if (track == null) return null;
+            if (track.Type != Track.TrackTypes.TRACK_TYPE_RADAR) return null;
+            FDR fdr = ((RDP.RadarTrack)track.SourceData).CoupledFDR;
+            if (fdr == null) return null;
+            if(fdr.ControllingSector == null || fdr.HandoffSector == null) return null;
 
-                if (!MMI.IsMySectorConcerned(fdr)) return null; // something here is fucked
+            if (!MMI.IsMySectorConcerned(fdr)) return null; // something here is fucked
 
-                Station[] stations = getAllStations();
-                Station cStation = stations.FirstOrDefault(station => station.Callsign == fdr.Callsign);
-                if (cStation == null) return null;
+            Station[] stations = getAllStations();
+            Station cStation = stations.FirstOrDefault(station => station.Callsign == fdr.Callsign);
+            if (cStation == null) return null;
 
-                CPDLCMessage[] CPDLCMessages = getAllCPDLCMessages();
-                TelexMessage[] telexMessages = getAllTelexMessages();
-                IMessageData downlink = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).FirstOrDefault(message => message.State == 0 && message.Station == cStation.Callsign);
-                if (downlink == null) return null;
+            CPDLCMessage[] CPDLCMessages = getAllCPDLCMessages();
+            TelexMessage[] telexMessages = getAllTelexMessages();
+            IMessageData downlink = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).FirstOrDefault(message => message.State == 0 && message.Station == cStation.Callsign);
+            if (downlink == null) return null;
 
-                // We have an active downlink from this aircraft
-                return new CustomColour(41, 178, 144);
-            } catch(Exception e)
-            {
-                return null;
-            }
+            // We have an active downlink from this aircraft
+            return new CustomColour(41, 178, 144);
         }
 
         public CustomColour SelectGroundTrackColour(Track track)
