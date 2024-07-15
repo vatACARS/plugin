@@ -47,14 +47,6 @@ namespace vatACARS.Components
                 }
             };
 
-            addTelexMessage(new TelexMessage()
-            {
-                State = 0,
-                Station = "AFR1738",
-                Content = "REQUEST PREDEP CLEARANCE",
-                TimeReceived = DateTime.UtcNow
-            });
-
             UpdateMessages();
         }
 
@@ -395,63 +387,81 @@ namespace vatACARS.Components
 
         private void lvw_messages_MouseUp(object sender, MouseEventArgs e)
         {
-            lvw_messages.SelectedItems.Clear();
-            ACARSListViewItem selected = null;
-            foreach(ACARSListViewItem item in lvw_messages.Items)
+            try
             {
-                if(item.Bounds.Contains(e.Location))
+                lvw_messages.SelectedItems.Clear();
+                ACARSListViewItem selected = null;
+                foreach (ACARSListViewItem item in lvw_messages.Items)
                 {
-                    item.Selected = true;
-                    selected = item;
-                    break;
-                }
-            }
-
-            if(selected != null)
-            {
-                var msg = (IMessageData)selected.Tag;
-
-                if (e.Button == MouseButtons.Left)
-                {
-                    if(msg.State == 0 || msg.State == 1)
+                    if (item.Bounds.Contains(e.Location))
                     {
-                        SelectedMessage = msg;
-                        if(msg is CPDLCMessage)
-                        {
-                            var m = (CPDLCMessage)msg;
-                            if(m.Content.StartsWith("REQUEST LOGON"))
-                            {
-                                if (LogonConsentWindow == null || LogonConsentWindow.IsDisposed)
-                                    LogonConsentWindow = new LogonConsentWindow();
-                                else if (LogonConsentWindow.Visible)
-                                    return;
-
-                                LogonConsentWindow.Show(ActiveForm);
-                                return;
-                            }
-                        }
-                        else if (msg is TelexMessage)
-                        {
-                            var m = (TelexMessage)msg;
-                            if (Regex.IsMatch(m.Content, @"\b(?:REQ|REQUEST)\s+(?:(?:PRE?DEPARTURE|PREDEP)?\s+CLEARANCE)\b"))
-                            {
-                                if (PDCWindow.Visible) return;
-                                if (!PDCWindow.IsDisposed) PDCWindow.Dispose();
-                                PDCWindow = new PDCWindow();
-                                PDCWindow.Show(ActiveForm);
-                                return;
-                            }
-                        }
-                        EditorWindow window = new EditorWindow();
-                        window.Show(ActiveForm);
+                        item.Selected = true;
+                        selected = item;
+                        break;
                     }
-                    lvw_messages.Invalidate();
-                } else if(e.Button == MouseButtons.Right)
-                {
-                    bool isOpen = selected.ContextMenu.Open;
-                    foreach (ACARSListViewItem item in lvw_messages.Items) item.ContextMenu.Show(false);
-                    selected.ContextMenu.Show(!isOpen);
                 }
+
+                if (selected != null)
+                {
+                    var msg = (IMessageData)selected.Tag;
+
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        if (msg.State == 0 || msg.State == 1)
+                        {
+                            SelectedMessage = msg;
+                            if (msg is CPDLCMessage)
+                            {
+                                var m = (CPDLCMessage)msg;
+                                if (m.Content.StartsWith("REQUEST LOGON"))
+                                {
+                                    if (LogonConsentWindow == null || LogonConsentWindow.IsDisposed)
+                                        LogonConsentWindow = new LogonConsentWindow();
+                                    else if (LogonConsentWindow.Visible)
+                                        return;
+
+                                    LogonConsentWindow.Show(ActiveForm);
+                                    return;
+                                }
+                            }
+                            else if (msg is TelexMessage)
+                            {
+                                var m = (TelexMessage)msg;
+                                if (Regex.IsMatch(m.Content, @"\b(?:REQ|REQUEST)\s+(?:(?:PRE?DEPARTURE|PREDEP)?\s+CLEARANCE)\b"))
+                                {
+                                    if (PDCWindow != null)
+                                    {
+                                        if (PDCWindow.Visible) return;
+                                        PDCWindow.Close();
+                                    }
+                                    SelectedMessage = msg;
+                                    PDCWindow = new PDCWindow();
+                                    if (!PDCWindow.IsDisposed)
+                                    {
+                                        PDCWindow.Show(ActiveForm);
+                                    } else
+                                    {
+                                        EditorWindow window2 = new EditorWindow();
+                                        window2.Show(ActiveForm);
+                                    }
+                                    return;
+                                }
+                            }
+                            EditorWindow window = new EditorWindow();
+                            window.Show(ActiveForm);
+                        }
+                        lvw_messages.Invalidate();
+                    }
+                    else if (e.Button == MouseButtons.Right)
+                    {
+                        bool isOpen = selected.ContextMenu.Open;
+                        foreach (ACARSListViewItem item in lvw_messages.Items) item.ContextMenu.Show(false);
+                        selected.ContextMenu.Show(!isOpen);
+                    }
+                }
+            } catch (Exception ex)
+            {
+                logger.Log($"Something went wrong:\n{ex.ToString()}");
             }
         }
 
