@@ -23,7 +23,7 @@ namespace vatACARS.Util
         private static Logger logger = new Logger("Hoppies");
         private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
         private static HttpClient client = new HttpClient();
-        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}");
+        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}", RegexOptions.Singleline);
 
         public static void StartListening()
         {
@@ -53,6 +53,7 @@ namespace vatACARS.Util
         {
             SetRandomInterval();
             var rawMessages = await PollMessages();
+            logger.Log($"Received raw messages:\n{rawMessages}");
             if (rawMessages == "OK")
             {
                 logger.Log("No new messages.");
@@ -101,13 +102,14 @@ namespace vatACARS.Util
                             }
                             else if (rawMessage[1].StartsWith("/DATA1/"))
                             {
-                                logger.Log($"ADS-C: {station} ");
+                                string mContent = parseADSCMessage(rawMessage[1]);
+                                logger.Log($"ADS-C: {station} | {mContent}");
                                 telexMessages.Add(new TelexMessage()
                                 {
                                     State = 3,
                                     Station = station,
                                     TimeReceived = DateTime.UtcNow,
-                                    Content = parseADSCMessage(rawMessage[1])
+                                    Content = mContent
                                 });
                             }
                             else
