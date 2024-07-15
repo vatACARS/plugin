@@ -55,6 +55,7 @@ namespace vatACARS.Util
             if (rawMessages == "OK")
             {
                 logger.Log("No new messages.");
+                if(!discardedFirstRequest) discardedFirstRequest = true;
                 return;
             }
 
