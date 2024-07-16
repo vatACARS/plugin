@@ -136,7 +136,7 @@ namespace vatACARS.Util
         private static async Task<string> PollMessages()
         {
             logger.Log("Polling for new messages...");
-            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null));
+            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null), false);
             logger.Log("Polling cycle completed.");
 
             return pollResponse.ToUpper().Trim();
@@ -162,9 +162,9 @@ namespace vatACARS.Util
             return msg.MakeCPDLCMessageRequest();
         }
 
-        public static async Task<string> SendMessage(FormUrlEncodedContent request)
+        public static async Task<string> SendMessage(FormUrlEncodedContent request, bool incrementSentMessages = true)
         {
-            if(!request.ToString().Contains("poll")) SentMessages++;
+            if(incrementSentMessages) SentMessages++;
             try
             {
                 return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
