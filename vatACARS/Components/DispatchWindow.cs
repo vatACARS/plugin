@@ -66,6 +66,7 @@ namespace vatACARS.Components
             il.Images.Add(Properties.Resources.RXIcon);
             il.Images.Add(Properties.Resources.DeferIcon);
             il.Images.Add(Properties.Resources.TXIcon);
+            il.Images.Add(Properties.Resources.ADSCIcon);
 
             lvw_messages.SmallImageList = il;
         }
@@ -184,13 +185,13 @@ namespace vatACARS.Components
         {
             try
             {
-                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State, lvw_messages);
+                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 4 ? -1 : message.State, lvw_messages);
                 item.SubItems.Add($"{message.Station}: {message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
                 item.Group = lvw_messages.Groups[message.State];
-                if (message.State == 0)
-                { // DOWNLINK
+                if (message.State == 0 || message.State == 3)
+                { // DOWNLINK OR DOWNLINKRESPNOTREQUIRED
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
@@ -240,6 +241,20 @@ namespace vatACARS.Components
                         UpdateMessages();
                     };
                 }
+
+                if (message.State == 3)
+                {
+                    GenericButton viewBtn = item.ContextMenu.CreateButton();
+                    viewBtn.Text = "View";
+
+                    viewBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        SelectedMessage = message;
+                        EditorWindow window = new EditorWindow();
+                        window.Show(ActiveForm);
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -251,14 +266,14 @@ namespace vatACARS.Components
         {
             try
             {
-                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 3 ? -1 : message.State, lvw_messages);
+                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 4 ? -1 : message.State, lvw_messages);
 
                 item.SubItems.Add($"{message.Station.PadRight(7)}: {(message.Response != "" ? $"[{message.Response}] " : "")}{message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
                 item.Group = lvw_messages.Groups[message.State];
-                if (message.State == 0)
-                { // DOWNLINK
+                if (message.State == 0 || message.State == 3)
+                { // DOWNLINK OR DOWNLINKRESPNOTREQUIRED
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
@@ -279,7 +294,7 @@ namespace vatACARS.Components
                 }
                 lvw_messages.Items.Add(item);
 
-                if(message.State < 3)
+                if(message.State < 4)
                 {
                     GenericButton finishBtn = item.ContextMenu.CreateButton();
                     finishBtn.Text = "Close";
@@ -307,6 +322,20 @@ namespace vatACARS.Components
                         message.Content = "STANDBY";
                         message.setMessageState(1);
                         UpdateMessages();
+                    };
+                }
+
+                if (message.State == 3)
+                {
+                    GenericButton viewBtn = item.ContextMenu.CreateButton();
+                    viewBtn.Text = "View";
+
+                    viewBtn.Click += delegate
+                    {
+                        item.ContextMenu.Show(false);
+                        SelectedMessage = message;
+                        EditorWindow window = new EditorWindow();
+                        window.Show(ActiveForm);
                     };
                 }
             }
@@ -410,7 +439,7 @@ namespace vatACARS.Components
 
                     if (e.Button == MouseButtons.Left)
                     {
-                        if (msg.State == 0 || msg.State == 1)
+                        if (msg.State == 0 || msg.State == 1 || msg.State == 3)
                         {
                             SelectedMessage = msg;
                             if (msg is CPDLCMessage)
