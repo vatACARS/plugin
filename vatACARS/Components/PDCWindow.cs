@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Windows.Forms;
@@ -26,6 +27,7 @@ namespace vatACARS.Components
 
             StyleComponent();
             InitPlaceholders();
+            LoadDepFreq();
         }
 
         private void StyleComponent()
@@ -40,6 +42,14 @@ namespace vatACARS.Components
                         ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
                     }
                 }
+                lbl_pdcHeader.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                lbl_pdcHeader.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                lbl_metaInfo.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                lbl_metaInfo.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+
+                dd_freq.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                dd_freq.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                dd_freq.FocusColor = Color.Cyan;
 
                 btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
                 btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
@@ -116,7 +126,7 @@ namespace vatACARS.Components
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}\nDEP FREQ: {tbx_depfreq.Text}{(tbx_freetext.Text != "" ? $"\n{tbx_freetext.Text.ToUpperInvariant()}" : "")}";
+            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}\nDEP FREQ: {dd_freq.Text}{(tbx_freetext.Text != "" ? $"\n{tbx_freetext.Text.ToUpperInvariant()}" : "")}";
             FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
             _ = HoppiesInterface.SendMessage(req);
 
@@ -139,6 +149,50 @@ namespace vatACARS.Components
 
             selectedMsg.setMessageState(3);
             Close();
+        }
+
+        private void LoadDepFreq()
+        {
+            List<string> freqs = new List<string>();
+
+            foreach (VSCSFrequency vscsFrequency in (IEnumerable<VSCSFrequency>)Audio.VSCSFrequencies)
+            {
+                if (vscsFrequency.Transmit)
+                {
+                    try
+                    {
+                        freqs.Add(vscsFrequency.Name + " " + Conversions.FrequencyToString(vscsFrequency.Frequency));
+                    }
+                    catch
+                    {
+                    }
+                }
+
+            }
+
+            foreach (NetworkATC networkAtc in Network.GetOnlineATCs.Where<NetworkATC>((Func<NetworkATC, bool>)(a => a.IsRealATC && a.Frequencies != null)))
+            {
+                foreach (int frequency in networkAtc.Frequencies)
+                {
+                    if (frequency != 99998)
+                    {
+                        freqs.Add(networkAtc.Callsign + " " + Conversions.FSDFrequencyToString(frequency));
+                    }
+                    else
+                        break;
+                }
+            }
+
+            foreach (string freq in freqs)
+            {
+                dd_freq.Items.Add(freq);
+            }
+
+        }
+
+        private void dd_freq_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

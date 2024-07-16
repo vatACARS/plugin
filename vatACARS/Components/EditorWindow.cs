@@ -617,20 +617,20 @@ namespace vatACARS.Components
                     ResponseItemPlaceholderData item = response[responseIndex].Placeholders[i];
                     if (new Rectangle(item.TopLeftLoc, item.Size).Contains(e.Location))
                     {
-                    
-                            QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper(), item.UserValue);
-                            fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
-                            {
-                                item.UserValue = data.Setting;
-                                lbl_response.Refresh();
-                            };
+                        QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper(), selectedMsg, item.UserValue);
+                        fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
+                        {
+                            item.UserValue = data.Setting;
+                            lbl_response.Refresh();
+                        };
 
-                            fillWindow.ShowDialog(ActiveForm);
-                    
+                        fillWindow.ShowDialog(ActiveForm);
+
                         break;
                     }
                 }
             }
+
             catch (Exception ex)
             {
                 logger.Log($"Oops: {ex.ToString()}");
