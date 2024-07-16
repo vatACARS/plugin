@@ -72,13 +72,13 @@ namespace vatACARS.Helpers
                         logger.Log($"Found message: '{originalMessage.Content}' - ID: {originalMessage.MessageId}");
                         SentCPDLCMessages.Remove(sentCPDLCMessage);
                         originalMessage.Response = message.Content;
-                        if(message.Content != "STANDBY") originalMessage.setMessageState(3); // Done
+                        if(message.Content != "STANDBY") originalMessage.setMessageState(4); // Done
                     }
                 }
                 else
                 {
                     CPDLCMessages.Add(message);
-                    if(message.ResponseType == "N") message.setMessageState(3);
+                    if(message.ResponseType == "N") message.setMessageState(3); // ResponseNotReqd
                 }
             } catch (Exception ex)
             {
@@ -152,8 +152,8 @@ namespace vatACARS.Helpers
              * 0 = Downlink
              * 1 = Stby/Defer
              * 2 = Uplink
-             * 3 = Finished
-             * 4 = DownlinkRespNotReqd
+             * 3 = DownlinkRespNotReqd
+             * 4 = Finished
              */
             public int State { get; set; }
             public DateTime TimeReceived { get; set; }
@@ -178,7 +178,8 @@ namespace vatACARS.Helpers
              * 0 = Downlink
              * 1 = Stby/Defer
              * 2 = Uplink
-             * 3 = Finished
+             * 3 = DownlinkRespNotReqd
+             * 4 = Finished
              */
             public int State { get; set; }
             public DateTime TimeReceived { get; set; }
