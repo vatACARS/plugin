@@ -63,6 +63,16 @@ namespace vatACARS.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
+        internal static System.Drawing.Icon ADSCIcon {
+            get {
+                object obj = ResourceManager.GetObject("ADSCIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
         internal static System.Drawing.Icon DeferIcon {
             get {
                 object obj = ResourceManager.GetObject("DeferIcon", resourceCulture);
