@@ -16,16 +16,25 @@ namespace vatACARS.Util
         public List<ErrorInfo> Errors { get; private set; }
         private ErrorWindow errorWindow;
         private SynchronizationContext uiContext;
-        private ErrorHandler()
+
+        private ErrorHandler(SynchronizationContext context)
         {
             Errors = new List<ErrorInfo>();
-            uiContext = SynchronizationContext.Current;
+            uiContext = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public static void Initialize(SynchronizationContext context)
+        {
+            if (instance == null)
+            {
+                instance = new ErrorHandler(context);
+            }
         }
         public static ErrorHandler GetInstance()
         {
             if (instance == null)
             {
-                instance = new ErrorHandler();
+                throw new InvalidOperationException("ErrorHandler not initialized.");
             }
             return instance;
         }
