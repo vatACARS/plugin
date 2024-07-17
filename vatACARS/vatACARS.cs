@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using vatACARS.Components;
@@ -76,6 +77,8 @@ namespace vatACARS
                 XMLReader.MakeUplinks();
                 JSONReader.MakeQuickFillItems();
                 LabelsXMLPatcher.Patch();
+
+                ErrorHandler.Initialize(SynchronizationContext.Current); // Init error handler on ui thread
 
                 _ = Task.Run(() => CrashChecker.CheckForCrashes());
 
