@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
@@ -22,7 +23,7 @@ namespace vatACARS.Util
         private static Logger logger = new Logger("Hoppies");
         private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
         private static HttpClient client = new HttpClient();
-        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}");
+        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}", RegexOptions.Singleline);
 
         public static void StartListening()
         {
@@ -52,9 +53,11 @@ namespace vatACARS.Util
         {
             SetRandomInterval();
             var rawMessages = await PollMessages();
+            logger.Log($"Received raw messages:\n{rawMessages}");
             if (rawMessages == "OK")
             {
                 logger.Log("No new messages.");
+                if(!discardedFirstRequest) discardedFirstRequest = true;
                 return;
             }
 
@@ -87,16 +90,29 @@ namespace vatACARS.Util
                     string type = rawMessage[0].Split(' ')[1];
 
                     for (int i = 0; i < rawMessage.Length; i++)
-                        {
                     {
                         if (i > 0 && rawMessage[i].Length > 2)
+                        {
                             if (rawMessage[1].StartsWith("/DATA2/"))
                             {
                                 CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
                                 logger.Log($"CPDLC: {station} | (M:{parsedMessage.MessageId} / R:{(parsedMessage.ReplyMessageId != -1 ? parsedMessage.ReplyMessageId.ToString() : "X")}) [{parsedMessage.ResponseType}] {parsedMessage.Content}");
                                 CPDLCMessages.Add(parsedMessage);
                                 break;
-                            } else
+                            }
+                            else if (rawMessage[1].StartsWith("/DATA1/"))
+                            {
+                                string mContent = parseADSCMessage(rawMessage[1]);
+                                logger.Log($"ADS-C: {station} | {mContent}");
+                                telexMessages.Add(new TelexMessage()
+                                {
+                                    State = 3,
+                                    Station = station,
+                                    TimeReceived = DateTime.UtcNow,
+                                    Content = mContent
+                                });
+                            }
+                            else
                             {
                                 logger.Log($"TELEX: {station} | {rawMessage[1]}");
                                 telexMessages.Add(new TelexMessage()
@@ -120,7 +136,7 @@ namespace vatACARS.Util
         private static async Task<string> PollMessages()
         {
             logger.Log("Polling for new messages...");
-            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null));
+            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null), false);
             logger.Log("Polling cycle completed.");
 
             return pollResponse.ToUpper().Trim();
@@ -146,9 +162,9 @@ namespace vatACARS.Util
             return msg.MakeCPDLCMessageRequest();
         }
 
-        public static async Task<string> SendMessage(FormUrlEncodedContent request)
+        public static async Task<string> SendMessage(FormUrlEncodedContent request, bool incrementSentMessages = true)
         {
-            if(!request.ToString().Contains("poll")) SentMessages++;
+            if(incrementSentMessages) SentMessages++;
             try
             {
                 return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
@@ -180,12 +196,27 @@ namespace vatACARS.Util
                 };
             } catch (FormatException ex)
             {
-                // Somebody forged a CPDLCMessage format that was invalid
+                // CPDLCMessage format was invalid
                 logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
                 msg = new CPDLCMessage();
             }
 
             return msg;
+        }
+
+        private static string parseADSCMessage(string rawMessage)
+        {
+            string[] lines = rawMessage.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                sb.Append(lines[i].Trim());
+                if (i < lines.Length) sb.Append(" ");
+            }
+
+            string content = sb.ToString();
+            return content;
         }
     }
 

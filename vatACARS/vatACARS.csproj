@@ -142,6 +142,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Util\CrashChecker.cs" />
     <Compile Include="Util\ErrorHandler.cs" />
     <Compile Include="Util\AudioInterface.cs" />
     <Compile Include="Util\ExtendedUI.cs" />
@@ -203,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\RXIcon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\adsc.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -73,11 +73,11 @@ namespace vatACARS
                 logger.Log("Starting version checker...");
                 VersionChecker.StartListening();
 
-
                 XMLReader.MakeUplinks();
                 JSONReader.MakeQuickFillItems();
                 LabelsXMLPatcher.Patch();
 
+                _ = Task.Run(() => CrashChecker.CheckForCrashes());
 
                 logger.Log("Started successfully.");
             }
@@ -168,10 +168,11 @@ namespace vatACARS
                             Text = "@ HANDOVER",
                             ForeColourIdentity = Colours.Identities.Warning,
                             Border = BorderFlags.Bottom,
-                            BorderColourIdentity = Colours.Identities.Warning
+                            BorderColourIdentity = Colours.Identities.Warning,
+                            OnMouseClick = HandoffLabelClick
                         };
 
-                        if (radarTrack == null) return null;
+                        /*if (radarTrack == null) return null;
                         int level = radarTrack == null ? flightDataRecord.PRL / 100 : radarTrack.CorrectedAltitude / 100;
                         if (level < 245)
                         {
@@ -181,7 +182,7 @@ namespace vatACARS
                                 ForeColourIdentity = Colours.Identities.Warning,
                                 OnMouseClick = HandoffLabelClick
                             };
-                        }
+                        }*/
 
                         if (combinedDownlink != null) return new CustomLabelItem()
                         {

@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
 using System.Threading;
 using vatACARS.Components;
 
@@ -52,17 +56,22 @@ namespace vatACARS.Util
         {
             uiContext.Post(state =>
             {
-                if (errorWindow == null || errorWindow.IsDisposed)
-                {
-                    errorWindow = new ErrorWindow(this);
-                    errorWindow.FormClosed += (s, e) => errorWindow = null;
-                    errorWindow.Show();
-                }
-                else
-                {
-                    errorWindow.UpdateErrors();
-                }
+                DoShowErrorWindow();
             }, null);
+        }
+
+        private void DoShowErrorWindow()
+        {
+            if (errorWindow == null || errorWindow.IsDisposed)
+            {
+                errorWindow = new ErrorWindow(this);
+                errorWindow.FormClosed += (s, e) => errorWindow = null;
+                errorWindow.Show();
+            }
+            else
+            {
+                errorWindow.UpdateErrors();
+            }
         }
 
         private void UpdateErrorWindow()

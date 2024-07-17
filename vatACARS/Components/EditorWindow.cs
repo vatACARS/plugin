@@ -44,22 +44,45 @@ namespace vatACARS.Components
             InitializeComponent();
             StyleComponent();
             selectedMsg = DispatchWindow.SelectedMessage;
-            
-            if(selectedMsg is TelexMessage)
+
+            if (selectedMsg is TelexMessage)
             {
                 var msg = (TelexMessage)selectedMsg;
 
+                btn_suspend.Enabled = false;
+                btn_restore.Enabled = false;
+                btn_escape.Enabled = false;
+
                 this.Text = $"Replying to {msg.Station}";
+                string[] msgSplit = CutString(msg.Content);
                 ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
-                lvMsg.SubItems.Add($"{msg.Content}");
+                lvMsg.SubItems.Add($"{msgSplit[0]}");
                 lvMsg.Font = MMI.eurofont_winsml;
 
                 lvw_messages.Items.Add(lvMsg);
+
+                foreach (string msgPart in msgSplit.Skip(1))
+                {
+                    ListViewItem lvMsgPart = new ListViewItem("");
+                    lvMsgPart.SubItems.Add($"{msgPart}");
+                    lvMsgPart.Font = MMI.eurofont_winsml;
+                    lvw_messages.Items.Add(lvMsgPart);
+                }
 
                 if (msg.Content == "(no message received)")
                 {
                     this.Text = $"Sending to {msg.Station}";
                     btn_editor_Click(null, null);
+                    return;
+                }
+
+                if (msg.State == 3)
+                {
+                    Text = $"Viewing Message from {msg.Station}";
+                    foreach(Control ctl in Controls)
+                    {
+                        if(ctl is Button) ctl.Enabled = false;
+                    }
                     return;
                 }
 
@@ -612,6 +635,36 @@ namespace vatACARS.Components
             {
                 logger.Log($"Oops: {ex.ToString()}");
             }
+        }
+
+        private string[] CutString(string input, int maxLength = 58)
+        {
+            if (input.Length <= maxLength) return new string[] { input };
+
+            string[] words = input.Split(' ');
+            List<string> segments = new List<string>();
+            string currentSegment = string.Empty;
+
+            foreach (string word in words)
+            {
+                if ((currentSegment + " " + word).Trim().Length > maxLength)
+                {
+                    segments.Add(currentSegment.Trim());
+                    currentSegment = word;
+                }
+                else
+                {
+                    if (currentSegment.Length > 0) currentSegment += " ";
+                    currentSegment += word;
+                }
+            }
+
+            if (currentSegment.Length > 0)
+            {
+                segments.Add(currentSegment.Trim());
+            }
+
+            return segments.ToArray();
         }
     }
 
