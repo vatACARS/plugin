@@ -10,11 +10,19 @@ namespace vatACARS.Util
     {
         internal class ACARSListViewItem : ListViewItem, IDisposable
         {
-            public ContextMenuProp ContextMenu { get; private set; }
             private bool disposed = false;
-            public ACARSListViewItem(string text, int imageIndex, ListViewEx parentContainer) : base(new string[] { text }, imageIndex) {
+
+            public ACARSListViewItem(string text, int imageIndex, ListViewEx parentContainer) : base(new string[] { text }, imageIndex)
+            {
                 ContextMenu = new ContextMenuProp(parentContainer, this);
             }
+
+            ~ACARSListViewItem()
+            {
+                Dispose(false);
+            }
+
+            public ContextMenuProp ContextMenu { get; private set; }
 
             // Implement IDisposable.
             public void Dispose()
@@ -30,23 +38,18 @@ namespace vatACARS.Util
                 disposed = true;
             }
 
-            ~ACARSListViewItem()
-            {
-                Dispose(false);
-            }
-
             internal class ContextMenuProp : IDisposable
             {
-                public bool Open { get; private set; } = false;
-                public List<GenericButton> MenuButtons { get; set; } = new List<GenericButton>();
-                private ListViewEx ParentContainer { get; set; }
-                private ACARSListViewItem ACARSListViewItem { get; set; }
-
                 public ContextMenuProp(ListViewEx parentContainer, ACARSListViewItem parent)
                 {
                     ParentContainer = parentContainer;
                     ACARSListViewItem = parent;
                 }
+
+                public List<GenericButton> MenuButtons { get; set; } = new List<GenericButton>();
+                public bool Open { get; private set; } = false;
+                private ACARSListViewItem ACARSListViewItem { get; set; }
+                private ListViewEx ParentContainer { get; set; }
 
                 public GenericButton CreateButton()
                 {
@@ -59,6 +62,16 @@ namespace vatACARS.Util
                     ParentContainer.Controls.Add(btn);
 
                     return btn;
+                }
+
+                public void Dispose()
+                {
+                    foreach (var button in MenuButtons)
+                    {
+                        ParentContainer.Controls.Remove(button);
+                        button.Dispose();
+                    }
+                    MenuButtons.Clear();
                 }
 
                 public void Show(bool enable)
@@ -75,16 +88,6 @@ namespace vatACARS.Util
                         btn.Visible = enable;
                     }
                     Open = enable;
-                }
-
-                public void Dispose()
-                {
-                    foreach (var button in MenuButtons)
-                    {
-                        ParentContainer.Controls.Remove(button);
-                        button.Dispose();
-                    }
-                    MenuButtons.Clear();
                 }
             }
         }

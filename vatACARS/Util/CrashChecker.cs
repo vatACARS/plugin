@@ -11,27 +11,7 @@ namespace vatACARS.Util
     {
         private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
 
-        private static HashSet<string> LoadProcessedEventIds()
-        {
-            string eventIdsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS", "crashEvents.map");
-            HashSet<string> processedEventIds = new HashSet<string>();
-
-            if (File.Exists(eventIdsFilePath))
-            {
-                string[] lines = File.ReadAllLines(eventIdsFilePath);
-                foreach (string line in lines) processedEventIds.Add(line);
-            }
-
-            return processedEventIds;
-        }
-
-        private static void SaveProcessedEventIds(List<string> newEventIds)
-        {
-            string eventIdsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS", "crashEvents.map");
-            using (StreamWriter writer = new StreamWriter(eventIdsFilePath, true)) foreach (string eventId in newEventIds) writer.WriteLine(eventId);
-        }
-
-        public async static void CheckForCrashes()
+        public static async void CheckForCrashes()
         {
             try
             {
@@ -77,6 +57,26 @@ namespace vatACARS.Util
             {
                 errorHandler.AddError("An error occurred while checking for crashes: " + ex.Message);
             }
+        }
+
+        private static HashSet<string> LoadProcessedEventIds()
+        {
+            string eventIdsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS", "crashEvents.map");
+            HashSet<string> processedEventIds = new HashSet<string>();
+
+            if (File.Exists(eventIdsFilePath))
+            {
+                string[] lines = File.ReadAllLines(eventIdsFilePath);
+                foreach (string line in lines) processedEventIds.Add(line);
+            }
+
+            return processedEventIds;
+        }
+
+        private static void SaveProcessedEventIds(List<string> newEventIds)
+        {
+            string eventIdsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS", "crashEvents.map");
+            using (StreamWriter writer = new StreamWriter(eventIdsFilePath, true)) foreach (string eventId in newEventIds) writer.WriteLine(eventId);
         }
     }
 }

@@ -15,12 +15,12 @@ namespace vatACARS.Util
 {
     public static class VatACARSInterface
     {
-        private static Timer timer;
-        private static Logger logger = new Logger("vatACARSServer");
         private static HttpClient client = new HttpClient();
+        private static Logger logger = new Logger("vatACARSServer");
+        private static Timer timer;
         public static StationInformation[] stationsOnline { get; private set; }
 
-        public async static void StartListening()
+        public static async void StartListening()
         {
             logger.Log("Service started.");
             timer = new Timer();
@@ -44,7 +44,7 @@ namespace vatACARS.Util
 
         private static async void HeartbeatTimer(object sender, ElapsedEventArgs e)
         {
-            if(!Network.IsConnected || !Network.IsValidATC)
+            if (!Network.IsConnected || !Network.IsValidATC)
             {
                 AudioInterface.playSound("error");
                 StopListening();
@@ -63,7 +63,8 @@ namespace vatACARS.Util
             }));
 
             APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
-            if(!ResponseDecoded.Success) {
+            if (!ResponseDecoded.Success)
+            {
                 logger.Log($"Heartbeat failed: {ResponseDecoded.Message}");
                 AudioInterface.playSound("error");
             }

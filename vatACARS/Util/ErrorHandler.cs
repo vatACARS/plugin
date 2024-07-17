@@ -1,9 +1,5 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
 using System.Threading;
 using vatACARS.Components;
 
@@ -12,9 +8,8 @@ namespace vatACARS.Util
     public class ErrorHandler
     {
         private static ErrorHandler instance;
-        private Logger logger = new Logger("ErrorHandler");
-        public List<ErrorInfo> Errors { get; private set; }
         private ErrorWindow errorWindow;
+        private Logger logger = new Logger("ErrorHandler");
         private SynchronizationContext uiContext;
 
         private ErrorHandler(SynchronizationContext context)
@@ -23,13 +18,8 @@ namespace vatACARS.Util
             uiContext = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public static void Initialize(SynchronizationContext context)
-        {
-            if (instance == null)
-            {
-                instance = new ErrorHandler(context);
-            }
-        }
+        public List<ErrorInfo> Errors { get; private set; }
+
         public static ErrorHandler GetInstance()
         {
             if (instance == null)
@@ -37,6 +27,14 @@ namespace vatACARS.Util
                 throw new InvalidOperationException("ErrorHandler not initialized.");
             }
             return instance;
+        }
+
+        public static void Initialize(SynchronizationContext context)
+        {
+            if (instance == null)
+            {
+                instance = new ErrorHandler(context);
+            }
         }
 
         public void AddError(string message)
@@ -61,14 +59,6 @@ namespace vatACARS.Util
             UpdateErrorWindow();
         }
 
-        private void ShowErrorWindow()
-        {
-            uiContext.Post(state =>
-            {
-                DoShowErrorWindow();
-            }, null);
-        }
-
         private void DoShowErrorWindow()
         {
             if (errorWindow == null || errorWindow.IsDisposed)
@@ -81,6 +71,14 @@ namespace vatACARS.Util
             {
                 errorWindow.UpdateErrors();
             }
+        }
+
+        private void ShowErrorWindow()
+        {
+            uiContext.Post(state =>
+            {
+                DoShowErrorWindow();
+            }, null);
         }
 
         private void UpdateErrorWindow()

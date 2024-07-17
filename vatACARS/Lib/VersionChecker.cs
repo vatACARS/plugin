@@ -16,9 +16,9 @@ namespace vatACARS.Helpers
 {
     public static class VersionChecker
     {
-        private static Timer timer;
-        private static Logger logger = new Logger("VersionChecker");
         public static VersionInfo updateInfo;
+        private static Logger logger = new Logger("VersionChecker");
+        private static Timer timer;
 
         public static void StartListening()
         {
@@ -29,11 +29,6 @@ namespace vatACARS.Helpers
             timer.Interval = 1.8e06;
             timer.Enabled = true;
 
-            _ = CheckLatestVersion();
-        }
-
-        private static void CheckTimer(object sender, ElapsedEventArgs e)
-        {
             _ = CheckLatestVersion();
         }
 
@@ -61,13 +56,17 @@ namespace vatACARS.Helpers
             }
             logger.Log("Finished.");
         }
+
+        private static void CheckTimer(object sender, ElapsedEventArgs e)
+        {
+            _ = CheckLatestVersion();
+        }
     }
 
     public class VersionInfo
     {
-        public Version version { get; set; }
         public List<string> Changes { get; set; }
         public DateTime ReleaseDateTime { get; set; }
-
+        public Version version { get; set; }
     }
 }

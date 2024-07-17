@@ -12,18 +12,51 @@ using System.Threading.Tasks;
 using System.Timers;
 using static vatACARS.Helpers.Tranceiver;
 
-
 namespace vatACARS.Util
 {
     public static class HoppiesInterface
     {
-        private static Timer timer;
-        private static bool discardedFirstRequest = false;
-        private static Random random = new Random();
-        private static Logger logger = new Logger("Hoppies");
-        private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
-        private static HttpClient client = new HttpClient();
         private static readonly Regex hoppieParse = new Regex(@"{(.*?)}", RegexOptions.Singleline);
+        private static HttpClient client = new HttpClient();
+        private static bool discardedFirstRequest = false;
+        private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
+        private static Logger logger = new Logger("Hoppies");
+        private static Random random = new Random();
+        private static Timer timer;
+
+        public static FormUrlEncodedContent ConstructMessage(string Recipient, string MessageType, string PacketData)
+        {
+            CPDLCMessageRequest msg = new CPDLCMessageRequest();
+            msg.LogonCode = ClientInformation.LogonCode;
+            msg.Callsign = ClientInformation.Callsign;
+            msg.Recipient = Recipient;
+            msg.MessageType = MessageType;
+            msg.PacketData = PacketData;
+
+            string[] msgSplit;
+            if (msg.PacketData != null)
+            {
+                msgSplit = msg.PacketData.Split(new string[] { "\n" }, StringSplitOptions.None);
+            }
+            else msgSplit = new string[] { "(no message data)" };
+            logger.Log($"Constructed message: {msg.Callsign} -> {msg.Recipient} ({msg.MessageType}): {string.Join("\\", msgSplit)}");
+
+            return msg.MakeCPDLCMessageRequest();
+        }
+
+        public static async Task<string> SendMessage(FormUrlEncodedContent request, bool incrementSentMessages = true)
+        {
+            if (incrementSentMessages) SentMessages++;
+            try
+            {
+                return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
+            }
+            catch (Exception e)
+            {
+                errorHandler.AddError(e.ToString());
+                return "ERROR";
+            }
+        }
 
         public static void StartListening()
         {
@@ -42,11 +75,58 @@ namespace vatACARS.Util
             timer.Dispose();
         }
 
-        // Set a random interval between 45 and 75 seconds for polling requests as per Hoppies guidelines
-        private static void SetRandomInterval()
+        private static string parseADSCMessage(string rawMessage)
         {
-            int intervalMilliseconds = random.Next(45000, 75001); // 45 to 75 seconds
-            timer.Interval = intervalMilliseconds;
+            string[] lines = rawMessage.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                sb.Append(lines[i].Trim());
+                if (i < lines.Length) sb.Append(" ");
+            }
+
+            string content = sb.ToString();
+            return content;
+        }
+
+        private static CPDLCMessage parseCPDLCMessage(string rawMessage, string station)
+        {
+            string dataPortion = rawMessage.Substring(rawMessage.IndexOf('/') + 1);
+            string[] fields = dataPortion.Split('/');
+
+            CPDLCMessage msg;
+
+            try
+            {
+                msg = new CPDLCMessage()
+                {
+                    State = 0,
+                    TimeReceived = DateTime.UtcNow,
+                    Station = station,
+                    MessageId = fields[1] != "" ? int.Parse(fields[1]) : -1,
+                    ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,
+                    ResponseType = fields[3],
+                    Content = fields[4]
+                };
+            }
+            catch (FormatException ex)
+            {
+                // CPDLCMessage format was invalid
+                logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
+                msg = new CPDLCMessage();
+            }
+
+            return msg;
+        }
+
+        private static async Task<string> PollMessages()
+        {
+            logger.Log("Polling for new messages...");
+            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null), false);
+            logger.Log("Polling cycle completed.");
+
+            return pollResponse.ToUpper().Trim();
         }
 
         private static async void PollTimer(object sender, ElapsedEventArgs e)
@@ -57,7 +137,7 @@ namespace vatACARS.Util
             if (rawMessages == "OK")
             {
                 logger.Log("No new messages.");
-                if(!discardedFirstRequest) discardedFirstRequest = true;
+                if (!discardedFirstRequest) discardedFirstRequest = true;
                 return;
             }
 
@@ -68,7 +148,6 @@ namespace vatACARS.Util
                 //connected = false;
                 return;
             }
-
 
             if (!discardedFirstRequest)
             {
@@ -133,102 +212,31 @@ namespace vatACARS.Util
             foreach (var message in CPDLCMessages) addCPDLCMessage(message);
         }
 
-        private static async Task<string> PollMessages()
+        // Set a random interval between 45 and 75 seconds for polling requests as per Hoppies guidelines
+        private static void SetRandomInterval()
         {
-            logger.Log("Polling for new messages...");
-            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null), false);
-            logger.Log("Polling cycle completed.");
-
-            return pollResponse.ToUpper().Trim();
+            int intervalMilliseconds = random.Next(45000, 75001); // 45 to 75 seconds
+            timer.Interval = intervalMilliseconds;
         }
+    }
 
-        public static FormUrlEncodedContent ConstructMessage(string Recipient, string MessageType, string PacketData)
-        {
-            CPDLCMessageRequest msg = new CPDLCMessageRequest();
-            msg.LogonCode = ClientInformation.LogonCode;
-            msg.Callsign = ClientInformation.Callsign;
-            msg.Recipient = Recipient;
-            msg.MessageType = MessageType;
-            msg.PacketData = PacketData;
-
-            string[] msgSplit;
-            if (msg.PacketData != null)
-            {
-                msgSplit = msg.PacketData.Split(new string[] { "\n" }, StringSplitOptions.None);
-            }
-            else msgSplit = new string[] { "(no message data)" };
-            logger.Log($"Constructed message: {msg.Callsign} -> {msg.Recipient} ({msg.MessageType}): {string.Join("\\", msgSplit)}");
-
-            return msg.MakeCPDLCMessageRequest();
-        }
-
-        public static async Task<string> SendMessage(FormUrlEncodedContent request, bool incrementSentMessages = true)
-        {
-            if(incrementSentMessages) SentMessages++;
-            try
-            {
-                return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
-            } catch (Exception e)
-            {
-                errorHandler.AddError(e.ToString());
-                return "ERROR";
-            }
-        }
-
-        private static CPDLCMessage parseCPDLCMessage(string rawMessage, string station)
-        {
-            string dataPortion = rawMessage.Substring(rawMessage.IndexOf('/') + 1);
-            string[] fields = dataPortion.Split('/');
-
-            CPDLCMessage msg;
-
-            try
-            {
-                msg = new CPDLCMessage()
-                {
-                    State = 0,
-                    TimeReceived = DateTime.UtcNow,
-                    Station = station,
-                    MessageId = fields[1] != "" ? int.Parse(fields[1]) : -1,
-                    ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,
-                    ResponseType = fields[3],
-                    Content = fields[4]
-                };
-            } catch (FormatException ex)
-            {
-                // CPDLCMessage format was invalid
-                logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
-                msg = new CPDLCMessage();
-            }
-
-            return msg;
-        }
-
-        private static string parseADSCMessage(string rawMessage)
-        {
-            string[] lines = rawMessage.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 1; i < lines.Length; i++)
-            {
-                sb.Append(lines[i].Trim());
-                if (i < lines.Length) sb.Append(" ");
-            }
-
-            string content = sb.ToString();
-            return content;
-        }
+    public class CPDLCMessageReponse
+    {
+        public string MessageType;
+        public string PacketData;
+        public string Station;
     }
 
     public class CPDLCMessageRequest
     {
-        public string LogonCode;
         public string Callsign;
-        public string Recipient;
+        public string LogonCode;
         public string MessageType;
         public string PacketData;
+        public string Recipient;
 
-        public FormUrlEncodedContent MakeCPDLCMessageRequest() {
+        public FormUrlEncodedContent MakeCPDLCMessageRequest()
+        {
             Dictionary<string, string> MessageData = new Dictionary<string, string> {
                 {"logon", LogonCode},
                 {"from", Callsign},
@@ -239,12 +247,5 @@ namespace vatACARS.Util
 
             return new FormUrlEncodedContent(MessageData);
         }
-    }
-
-    public class CPDLCMessageReponse
-    {
-        public string Station;
-        public string MessageType;
-        public string PacketData;
     }
 }

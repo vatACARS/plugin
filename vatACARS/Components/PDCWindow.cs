@@ -13,12 +13,11 @@ namespace vatACARS.Components
 {
     public partial class PDCWindow : BaseForm
     {
-        private IMessageData selectedMsg;
         private static Logger logger = new Logger("PDCWindow");
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
-
         private FDR networkPilotFDR;
         private Dictionary<string, string> PDCElements = new Dictionary<string, string>();
+        private IMessageData selectedMsg;
 
         public PDCWindow()
         {
@@ -30,34 +29,53 @@ namespace vatACARS.Components
             LoadDepFreq();
         }
 
-        private void StyleComponent()
+        private void btn_send_Click(object sender, EventArgs e)
         {
-            try
-            {
-                foreach (Control ctl in Controls)
-                {
-                    if (ctl is TextLabel)
-                    {
-                        ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-                        ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-                    }
-                }
-                lbl_pdcHeader.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-                lbl_pdcHeader.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-                lbl_metaInfo.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-                lbl_metaInfo.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}\nDEP FREQ: {dd_freq.Text}{(tbx_freetext.Text != "" ? $"\n{tbx_freetext.Text.ToUpperInvariant()}" : "")}";
+            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
+            _ = HoppiesInterface.SendMessage(req);
 
-                dd_freq.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-                dd_freq.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-                dd_freq.FocusColor = Color.Cyan;
-
-                btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-                btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            }
-            catch (Exception ex)
+            addSentCPDLCMessage(new SentCPDLCMessage()
             {
-                errorHandler.AddError(ex.ToString());
+                Station = selectedMsg.Station,
+                MessageId = SentMessages,
+                ReplyMessageId = SentMessages
+            });
+
+            addCPDLCMessage(new CPDLCMessage()
+            {
+                State = 2,
+                Station = selectedMsg.Station,
+                Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
+                TimeReceived = DateTime.UtcNow,
+                MessageId = SentMessages,
+                ReplyMessageId = -1
+            });
+
+            selectedMsg.setMessageState(3);
+            Close();
+        }
+
+        private string CutStringAndAppendT(string input, int maxLength = 36)
+        {
+            if (input.Length <= maxLength) return input;
+
+            string[] segments = input.Split(' ');
+            string result = string.Empty;
+            foreach (string segment in segments)
+            {
+                if ((result + " " + segment).Trim().Length > maxLength) break;
+                if (result.Length > 0) result += " ";
+                result += segment;
             }
+            result = result.Trim();
+            if (result.Length <= maxLength) result += " T";
+
+            return result;
+        }
+
+        private void dd_freq_SelectedIndexChanged(object sender, EventArgs e)
+        {
         }
 
         private void InitPlaceholders()
@@ -106,51 +124,6 @@ namespace vatACARS.Components
             lbl_sqwkDeps.Text = PDCElements["SqwkDeps"];
         }
 
-        private string CutStringAndAppendT(string input, int maxLength = 36)
-        {
-            if (input.Length <= maxLength) return input;
-
-            string[] segments = input.Split(' ');
-            string result = string.Empty;
-            foreach (string segment in segments)
-            {
-                if ((result + " " + segment).Trim().Length > maxLength) break;
-                if (result.Length > 0) result += " ";
-                result += segment;
-            }
-            result = result.Trim();
-            if (result.Length <= maxLength) result += " T";
-
-            return result;
-        }
-
-        private void btn_send_Click(object sender, EventArgs e)
-        {
-            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}\nDEP FREQ: {dd_freq.Text}{(tbx_freetext.Text != "" ? $"\n{tbx_freetext.Text.ToUpperInvariant()}" : "")}";
-            FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
-            _ = HoppiesInterface.SendMessage(req);
-
-            addSentCPDLCMessage(new SentCPDLCMessage()
-            {
-                Station = selectedMsg.Station,
-                MessageId = SentMessages,
-                ReplyMessageId = SentMessages
-            });
-
-            addCPDLCMessage(new CPDLCMessage()
-            {
-                State = 2,
-                Station = selectedMsg.Station,
-                Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
-                TimeReceived = DateTime.UtcNow,
-                MessageId = SentMessages,
-                ReplyMessageId = -1
-            });
-
-            selectedMsg.setMessageState(3);
-            Close();
-        }
-
         private void LoadDepFreq()
         {
             List<string> freqs = new List<string>();
@@ -167,7 +140,6 @@ namespace vatACARS.Components
                     {
                     }
                 }
-
             }
 
             foreach (NetworkATC networkAtc in Network.GetOnlineATCs.Where<NetworkATC>((Func<NetworkATC, bool>)(a => a.IsRealATC && a.Frequencies != null)))
@@ -187,12 +159,36 @@ namespace vatACARS.Components
             {
                 dd_freq.Items.Add(freq);
             }
-
         }
 
-        private void dd_freq_SelectedIndexChanged(object sender, EventArgs e)
+        private void StyleComponent()
         {
+            try
+            {
+                foreach (Control ctl in Controls)
+                {
+                    if (ctl is TextLabel)
+                    {
+                        ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                        ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                    }
+                }
+                lbl_pdcHeader.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                lbl_pdcHeader.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                lbl_metaInfo.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                lbl_metaInfo.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
 
+                dd_freq.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                dd_freq.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                dd_freq.FocusColor = Color.Cyan;
+
+                btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+                btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            }
+            catch (Exception ex)
+            {
+                errorHandler.AddError(ex.ToString());
+            }
         }
     }
 }

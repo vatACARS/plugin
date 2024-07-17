@@ -16,19 +16,19 @@ namespace vatACARS.Components
 {
     public partial class DispatchWindow : BaseForm
     {
-        private static Logger logger = new Logger("DispatchWindow");
-        private List<TelexMessage> telexMessages = new List<TelexMessage>();
-        private List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
-        private List<Station> stations = new List<Station>();
-        private static ImageList il;
         public static IMessageData SelectedMessage;
         public static Station SelectedStation;
-        private static LogonConsentWindow LogonConsentWindow;
         private static HandoffSelector HandoffSelector;
+        private static ImageList il;
+        private static Logger logger = new Logger("DispatchWindow");
+        private static LogonConsentWindow LogonConsentWindow;
         private static PDCWindow PDCWindow;
+        private List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
+        private List<Station> stations = new List<Station>();
+        private List<TelexMessage> telexMessages = new List<TelexMessage>();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public DispatchWindow()
         {
@@ -51,134 +51,6 @@ namespace vatACARS.Components
             };
 
             UpdateMessages();
-        }
-
-        private void StyleComponent()
-        {
-            lbl_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_connections.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-
-            lvw_messages.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            scr_messages.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            scr_messages.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-
-            il = new ImageList();
-            il.Images.Add(Properties.Resources.RXIcon);
-            il.Images.Add(Properties.Resources.DeferIcon);
-            il.Images.Add(Properties.Resources.TXIcon);
-            il.Images.Add(Properties.Resources.ADSCIcon);
-
-            lvw_messages.SmallImageList = il;
-        }
-
-        private void PollTimer(object sender, ElapsedEventArgs e)
-        {
-            UpdateMessages();
-        }
-
-        private void UpdateTelexList(object sender, TelexMessage message)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => UpdateTelexList(sender, message)));
-                return;
-            }
-            UpdateMessages();
-        }
-
-        private void UpdateCPDLCList(object sender, CPDLCMessage message)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => UpdateCPDLCList(sender, message)));
-                return;
-            }
-            UpdateMessages();
-        }
-
-        private void UpdateStationsList(object sender, Station station)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => UpdateStationsList(sender, station)));
-                return;
-            }
-            UpdateMessages();
-        }
-
-        private void UpdateList(object sender, IMessageData message)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(new Action(() => UpdateList(sender, message)));
-                return;
-            }
-            UpdateMessages();
-        }
-
-        private void UpdateMessages()
-        {
-            try
-            {
-                telexMessages = getAllTelexMessages().ToList();
-                CPDLCMessages = getAllCPDLCMessages().ToList();
-                stations = getAllStations().ToList();
-
-                var messages = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList();
-                var stationList = stations.ToList();
-
-                lvw_messages.BeginInvoke(new Action(() =>
-                {
-                    foreach(ACARSListViewItem item in lvw_messages.Items)
-                    {
-                        item.Dispose();
-                    }
-                    lvw_messages.Items.Clear();
-                    foreach (var message in messages)
-                    {
-                        if (message is CPDLCMessage)
-                        {
-                            AddMessage((CPDLCMessage)message);
-                        }
-                        else
-                        {
-                            AddMessage((TelexMessage)message);
-                        }
-                    }
-                    lvw_messages.Refresh();
-
-                    ListViewItem ph = lvw_messages.Items.Add("");
-                    int tileHeight = lvw_messages.GetItemRect(ph.Index).Height;
-                    lvw_messages.Items.Remove(ph);
-                    if (messages.Count > 6)
-                    {
-                        scr_messages.PreferredHeight = messages.Count * tileHeight;
-                        scr_messages.ActualHeight = lvw_messages.Height;
-                        scr_messages.Enabled = true;
-                        scr_messages.Change = tileHeight;
-                    }
-                    else
-                    {
-                        scr_messages.PreferredHeight = 1;
-                        scr_messages.ActualHeight = 1;
-                        scr_messages.Enabled = false;
-                    }
-                }));
-
-                tbl_connected.BeginInvoke(new Action(() =>
-                {
-                    tbl_connected.Controls.Clear();
-                    foreach (var station in stationList)
-                    {
-                        AddStation(station);
-                    }
-                    tbl_connected.Refresh();
-                }));
-            }
-            catch (Exception ex)
-            {
-                logger.Log($"Something went wrong:\n{ex.ToString()}");
-            }
         }
 
         public void AddMessage(TelexMessage message)
@@ -294,7 +166,7 @@ namespace vatACARS.Components
                 }
                 lvw_messages.Items.Add(item);
 
-                if(message.State < 4)
+                if (message.State < 4)
                 {
                     GenericButton finishBtn = item.ContextMenu.CreateButton();
                     finishBtn.Text = "Close";
@@ -359,7 +231,7 @@ namespace vatACARS.Components
 
             callsignLabel.MouseDown += (sender, e) =>
             {
-                if(e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left)
                 {
                     SelectedMessage = new CPDLCMessage()
                     {
@@ -371,10 +243,11 @@ namespace vatACARS.Components
 
                     EditorWindow window = new EditorWindow();
                     window.Show(ActiveForm);
-                } else
+                }
+                else
                 {
                     SelectedStation = station;
-                    if(HandoffSelector != null)
+                    if (HandoffSelector != null)
                     {
                         HandoffSelector.Close();
                         HandoffSelector.Dispose();
@@ -395,7 +268,7 @@ namespace vatACARS.Components
             SolidBrush fg = new SolidBrush(item.ForeColor);
             e.Graphics.FillRectangle(bg, item.Bounds);
             int n = 0;
-            foreach(ListViewItem.ListViewSubItem subItem in item.SubItems)
+            foreach (ListViewItem.ListViewSubItem subItem in item.SubItems)
             {
                 StringFormat format = new StringFormat();
                 format.LineAlignment = StringAlignment.Center;
@@ -471,7 +344,8 @@ namespace vatACARS.Components
                                     if (!PDCWindow.IsDisposed)
                                     {
                                         PDCWindow.Show(ActiveForm);
-                                    } else
+                                    }
+                                    else
                                     {
                                         EditorWindow window2 = new EditorWindow();
                                         window2.Show(ActiveForm);
@@ -491,20 +365,148 @@ namespace vatACARS.Components
                         selected.ContextMenu.Show(!isOpen);
                     }
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.Log($"Something went wrong:\n{ex.ToString()}");
             }
         }
 
-        private void tbl_connected_MouseDown(object sender, MouseEventArgs e)
+        private void PollTimer(object sender, ElapsedEventArgs e)
         {
-            
+            UpdateMessages();
         }
 
         private void scr_messages_Scroll(object sender, EventArgs e)
         {
             lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
+        }
+
+        private void StyleComponent()
+        {
+            lbl_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_connections.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+
+            lvw_messages.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            scr_messages.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            scr_messages.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
+
+            il = new ImageList();
+            il.Images.Add(Properties.Resources.RXIcon);
+            il.Images.Add(Properties.Resources.DeferIcon);
+            il.Images.Add(Properties.Resources.TXIcon);
+            il.Images.Add(Properties.Resources.ADSCIcon);
+
+            lvw_messages.SmallImageList = il;
+        }
+
+        private void tbl_connected_MouseDown(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void UpdateCPDLCList(object sender, CPDLCMessage message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateCPDLCList(sender, message)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateList(object sender, IMessageData message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateList(sender, message)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateMessages()
+        {
+            try
+            {
+                telexMessages = getAllTelexMessages().ToList();
+                CPDLCMessages = getAllCPDLCMessages().ToList();
+                stations = getAllStations().ToList();
+
+                var messages = telexMessages.Cast<IMessageData>().Concat(CPDLCMessages.Cast<IMessageData>()).OrderBy(item => item.State).ThenBy(item => item.TimeReceived).ToList();
+                var stationList = stations.ToList();
+
+                lvw_messages.BeginInvoke(new Action(() =>
+                {
+                    foreach (ACARSListViewItem item in lvw_messages.Items)
+                    {
+                        item.Dispose();
+                    }
+                    lvw_messages.Items.Clear();
+                    foreach (var message in messages)
+                    {
+                        if (message is CPDLCMessage)
+                        {
+                            AddMessage((CPDLCMessage)message);
+                        }
+                        else
+                        {
+                            AddMessage((TelexMessage)message);
+                        }
+                    }
+                    lvw_messages.Refresh();
+
+                    ListViewItem ph = lvw_messages.Items.Add("");
+                    int tileHeight = lvw_messages.GetItemRect(ph.Index).Height;
+                    lvw_messages.Items.Remove(ph);
+                    if (messages.Count > 6)
+                    {
+                        scr_messages.PreferredHeight = messages.Count * tileHeight;
+                        scr_messages.ActualHeight = lvw_messages.Height;
+                        scr_messages.Enabled = true;
+                        scr_messages.Change = tileHeight;
+                    }
+                    else
+                    {
+                        scr_messages.PreferredHeight = 1;
+                        scr_messages.ActualHeight = 1;
+                        scr_messages.Enabled = false;
+                    }
+                }));
+
+                tbl_connected.BeginInvoke(new Action(() =>
+                {
+                    tbl_connected.Controls.Clear();
+                    foreach (var station in stationList)
+                    {
+                        AddStation(station);
+                    }
+                    tbl_connected.Refresh();
+                }));
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"Something went wrong:\n{ex.ToString()}");
+            }
+        }
+
+        private void UpdateStationsList(object sender, Station station)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateStationsList(sender, station)));
+                return;
+            }
+            UpdateMessages();
+        }
+
+        private void UpdateTelexList(object sender, TelexMessage message)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => UpdateTelexList(sender, message)));
+                return;
+            }
+            UpdateMessages();
         }
     }
 }

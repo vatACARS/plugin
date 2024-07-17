@@ -14,7 +14,7 @@ namespace vatACARS.Util
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.Load( hardcodedFilePath );
+                doc.Load(hardcodedFilePath);
 
                 XmlNode normalLabel = doc.SelectSingleNode("//Label[@Type='Normal']");
                 if (normalLabel != null)
@@ -45,7 +45,8 @@ namespace vatACARS.Util
 
                 doc.Save(hardcodedFilePath);
                 logger.Log("Patch complete!");
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.Log($"Oops: {e}");
             }
