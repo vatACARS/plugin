@@ -13,37 +13,31 @@ namespace vatACARS.Helpers
 {
     public static class Tranceiver
     {
-        public static int SentMessages = 1;
         public static bool connected = false;
-        private static Logger logger = new Logger("Tranceiver");
-        private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
-        private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
-        private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
-        private static List<Station> Stations = new List<Station>();
+        public static int SentMessages = 1;
         private static List<string> ClosingMessages = new List<string>() { "WILCO", "UNABLE", "ROGER", "STANDBY", "AFFIRM", "NEGATIVE" };
+        private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
+        private static Logger logger = new Logger("Tranceiver");
+        private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
+        private static List<Station> Stations = new List<Station>();
+        private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
 
-        public static event EventHandler<TelexMessage> TelexMessageReceived;
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
-        public static event EventHandler<Station> StationAdded;
-        public static event EventHandler<Station> StationRemoved;
+
         public static event EventHandler<IMessageData> MessageUpdated;
 
-        public static TelexMessage[] getAllTelexMessages()
-        {
-            return TelexMessages.ToArray();
-        }
+        public static event EventHandler<Station> StationAdded;
 
-        public static void addTelexMessage(TelexMessage message)
-        {
-            logger.Log("TelexMessage successfully received.");
-            AudioInterface.playSound("incomingMessage");
-            TelexMessages.Add(message);
-            TelexMessageReceived?.Invoke(null, message);
-        }
+        public static event EventHandler<Station> StationRemoved;
 
-        public static CPDLCMessage[] getAllCPDLCMessages()
+        public static event EventHandler<TelexMessage> TelexMessageReceived;
+
+        public interface IMessageData
         {
-            return CPDLCMessages.ToArray();
+            string Content { get; set; }
+            int State { get; set; }
+            string Station { get; set; }
+            DateTime TimeReceived { get; set; }
         }
 
         public static void addCPDLCMessage(CPDLCMessage message)
@@ -72,15 +66,16 @@ namespace vatACARS.Helpers
                         logger.Log($"Found message: '{originalMessage.Content}' - ID: {originalMessage.MessageId}");
                         SentCPDLCMessages.Remove(sentCPDLCMessage);
                         originalMessage.Response = message.Content;
-                        if(message.Content != "STANDBY") originalMessage.setMessageState(4); // Done
+                        if (message.Content != "STANDBY") originalMessage.setMessageState(4); // Done
                     }
                 }
                 else
                 {
                     CPDLCMessages.Add(message);
-                    if(message.ResponseType == "N") message.setMessageState(3); // ResponseNotReqd
+                    if (message.ResponseType == "N") message.setMessageState(3); // ResponseNotReqd
                 }
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 logger.Log($"Oops: {ex.ToString()}");
             }
@@ -91,6 +86,41 @@ namespace vatACARS.Helpers
         public static void addSentCPDLCMessage(SentCPDLCMessage message)
         {
             SentCPDLCMessages.Add(message);
+        }
+
+        public static void addStation(Station station)
+        {
+            Stations.Add(station);
+            StationAdded?.Invoke(null, station);
+        }
+
+        public static void addTelexMessage(TelexMessage message)
+        {
+            logger.Log("TelexMessage successfully received.");
+            AudioInterface.playSound("incomingMessage");
+            TelexMessages.Add(message);
+            TelexMessageReceived?.Invoke(null, message);
+        }
+
+        public static CPDLCMessage[] getAllCPDLCMessages()
+        {
+            return CPDLCMessages.ToArray();
+        }
+
+        public static Station[] getAllStations()
+        {
+            return Stations.ToArray();
+        }
+
+        public static TelexMessage[] getAllTelexMessages()
+        {
+            return TelexMessages.ToArray();
+        }
+
+        public static void removeStation(this Station station)
+        {
+            Stations.Remove(station);
+            StationRemoved?.Invoke(null, station);
         }
 
         public static async void setMessageState(this IMessageData message, int state)
@@ -112,38 +142,10 @@ namespace vatACARS.Helpers
             if (message is TelexMessage) TelexMessages.Remove((TelexMessage)message);
         }
 
-        public static void removeStation(this Station station)
-        {
-            Stations.Remove(station);
-            StationRemoved?.Invoke(null, station);
-        }
-
-
-        public static Station[] getAllStations()
-        {
-            return Stations.ToArray();
-        }
-
-        public static void addStation(Station station)
-        {
-            Stations.Add(station);
-            StationAdded?.Invoke(null, station);
-        }
-
-
         public static class ClientInformation
         {
-            public static string LogonCode = ""; // Hoppies logon code
             public static string Callsign = "";
-
-        }
-
-        public interface IMessageData
-        {
-            int State { get; set; }
-            DateTime TimeReceived { get; set; }
-            string Station { get; set; }
-            string Content { get; set; }
+            public static string LogonCode = ""; // Hoppies logon code
         }
 
         public class CPDLCMessage : IMessageData
@@ -155,21 +157,31 @@ namespace vatACARS.Helpers
              * 3 = DownlinkRespNotReqd
              * 4 = Finished
              */
-            public int State { get; set; }
-            public DateTime TimeReceived { get; set; }
-            public string Station { get; set; }
             public int MessageId;
             public int ReplyMessageId;
             public string ResponseType;
             public string Content { get; set; }
             public string Response { get; set; } = "";
+            public int State { get; set; }
+            public string Station { get; set; }
+            public DateTime TimeReceived { get; set; }
         }
 
         public class SentCPDLCMessage
         {
-            public string Station;
             public int MessageId;
             public int ReplyMessageId;
+            public string Station;
+        }
+
+        public class Station
+        {
+            /* Provider:
+             * 0 = Hoppies
+             * 1 = vatACARS
+             */
+            public string Callsign;
+            public int Provider;
         }
 
         public class TelexMessage : IMessageData
@@ -181,20 +193,10 @@ namespace vatACARS.Helpers
              * 3 = DownlinkRespNotReqd
              * 4 = Finished
              */
-            public int State { get; set; }
-            public DateTime TimeReceived { get; set; }
-            public string Station { get; set; }
             public string Content { get; set; }
-        }
-
-        public class Station
-        {
-            /* Provider:
-             * 0 = Hoppies
-             * 1 = vatACARS
-             */
-            public int Provider;
-            public string Callsign;
+            public int State { get; set; }
+            public string Station { get; set; }
+            public DateTime TimeReceived { get; set; }
         }
     }
 }

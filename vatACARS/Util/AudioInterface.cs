@@ -6,11 +6,8 @@ namespace vatACARS.Util
 {
     public static class AudioInterface
     {
-        private static SoundPlayer SoundPlayer = new SoundPlayer();
         private static string dirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\vatACARS\\audio";
-
-        [DllImport("winmm.dll", EntryPoint = "waveOutSetVolume")]
-        private static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
+        private static SoundPlayer SoundPlayer = new SoundPlayer();
 
         public static void playSound(string sound)
         {
@@ -30,5 +27,8 @@ namespace vatACARS.Util
             uint newVolume = (uint)((volume & 0x0000ffff) | (volume << 16));
             waveOutSetVolume(IntPtr.Zero, newVolume);
         }
+
+        [DllImport("winmm.dll", EntryPoint = "waveOutSetVolume")]
+        private static extern int waveOutSetVolume(IntPtr hwo, uint dwVolume);
     }
 }

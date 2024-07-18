@@ -16,11 +16,6 @@ namespace vatACARS.Components
 {
     public partial class EditorWindow : BaseForm
     {
-        private static Logger logger = new Logger("EditorWindow");
-        private static ResponseItem[] response = new ResponseItem[5];
-        private static int responseIndex = 0;
-        private static readonly Regex placeholderParse = new Regex(@"\((.*?)\)");
-        private IMessageData selectedMsg;
         private static readonly Dictionary<string, List<string>> keywordGroupMapping = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
             { "14", new List<string> { "EMERG", "EMERGENCY", "MAYDAY", "PAN PAN" } } ,
@@ -38,6 +33,12 @@ namespace vatACARS.Components
             { "11", new List<string> { "M", "K", "SPEED" } },
             { "9", new List<string> { "WX", "WEATHER", } }
         };
+
+        private static readonly Regex placeholderParse = new Regex(@"\((.*?)\)");
+        private static Logger logger = new Logger("EditorWindow");
+        private static ResponseItem[] response = new ResponseItem[5];
+        private static int responseIndex = 0;
+        private IMessageData selectedMsg;
 
         public EditorWindow()
         {
@@ -79,15 +80,16 @@ namespace vatACARS.Components
                 if (msg.State == 3)
                 {
                     Text = $"Viewing Message from {msg.Station}";
-                    foreach(Control ctl in Controls)
+                    foreach (Control ctl in Controls)
                     {
-                        if(ctl is Button) ctl.Enabled = false;
+                        if (ctl is Button) ctl.Enabled = false;
                     }
                     return;
                 }
 
                 ShowGroupBasedOnMessageContent(msg.Content);
-            } else if(selectedMsg is CPDLCMessage)
+            }
+            else if (selectedMsg is CPDLCMessage)
             {
                 var msg = (CPDLCMessage)selectedMsg;
 
@@ -101,7 +103,7 @@ namespace vatACARS.Components
                 ShowGroupBasedOnMessageContent(msg.Content);
             }
 
-            response = new ResponseItem[5]; 
+            response = new ResponseItem[5];
             responseIndex = 0;
 
             lvw_messages.MouseWheel += (object sender, MouseEventArgs e) =>
@@ -113,207 +115,43 @@ namespace vatACARS.Components
             lbl_response.Invalidate();
         }
 
-        private void StyleComponent()
+        public void lbl_response_Paint(object sender, PaintEventArgs e)
         {
-            lbl_receivedMsgs.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            if (response[responseIndex] == null || response[responseIndex].Placeholders == null) return;
 
-            lvw_messages.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            lvw_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lvw_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            lvw_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            lbl_response.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            SolidBrush highlight = new SolidBrush(Colours.GetColour(Colours.Identities.CPDLCDownlink));
+            SolidBrush highlightText = new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground));
 
-            btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            btn_standby.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_defer.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_tfc.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_air.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-            btn_standby.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            btn_defer.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            btn_tfc.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            btn_air.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            StringFormat format = new StringFormat();
+            format.LineAlignment = StringAlignment.Center;
+            format.Alignment = StringAlignment.Near;
 
-            DelayLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-            ToEditLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-            UnableLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            e.Graphics.FillRectangle(new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground)), lbl_response.ClientRectangle);
+            e.Graphics.DrawString(lbl_response.Text, lbl_response.Font, new SolidBrush(Colours.GetColour(Colours.Identities.InteractiveText)), lbl_response.ClientRectangle, format);
 
-            scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-        }
-
-        private void ShowGroupBasedOnMessageContent(string content)
-        {
-            foreach (var entry in keywordGroupMapping)
+            foreach (ResponseItemPlaceholderData item in response[responseIndex].Placeholders)
             {
-                foreach (var keyword in entry.Value)
+                e.Graphics.FillRectangle(highlight, new Rectangle(item.TopLeftLoc, item.Size));
+                format.Alignment = StringAlignment.Center;
+
+                if (item.UserValue != "")
                 {
-                    if (content.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                    SizeF strSpace = e.Graphics.MeasureString(item.UserValue, lbl_response.Font);
+                    if (strSpace.Width > (float)item.Size.Width)
                     {
-                        if (entry.Key == "11")
-                        {
-                            if (keyword.Equals("M", StringComparison.OrdinalIgnoreCase))
-                            {
-                                if (Regex.IsMatch(content, @"M\s*\d+", RegexOptions.IgnoreCase))
-                                {
-                                    ShowGroup(entry.Key);
-                                    return;
-                                }
-                            }
-                            else if (keyword.Equals("K", StringComparison.OrdinalIgnoreCase))
-                            {
-                                if (Regex.IsMatch(content, @"\d+\s*K", RegexOptions.IgnoreCase))
-                                {
-                                    ShowGroup(entry.Key);
-                                    return;
-                                }
-                            }
-                            else
-                            {
-                                ShowGroup(entry.Key);
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            ShowGroup(entry.Key);
-                            return;
-                        }
+                        int place = (int)Math.Floor((float)item.Size.Width / (strSpace.Width / (float)item.UserValue.Length) - 1);
+                        if (place > 0) e.Graphics.DrawString(item.UserValue.Substring(0, place) + "*", lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
+                    }
+                    else
+                    {
+                        e.Graphics.DrawString(item.UserValue, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
                     }
                 }
-            }
-            ShowGroup("1");
-        }
-
-        private void ShowGroup(string group_id)
-        {
-            lvw_messageSelector.Items.Clear();
-            List<UplinkEntry> filteredUplinks = XMLReader.uplinks.Entries.Where(entry => entry.Group == group_id).ToList();
-
-            int visibleCount = 0;
-            int startIndex = lvw_messageSelector.TopItem != null ? lvw_messageSelector.TopItem.Index : 0;
-            for (int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
-            {
-                ListViewItem item = lvw_messageSelector.Items[i];
-                Rectangle itemRect = lvw_messageSelector.GetItemRect(i);
-                if (lvw_messageSelector.ClientRectangle.IntersectsWith(itemRect)) visibleCount++;
-            }
-
-            int tileHeight = lvw_messageSelector.TileSize.Height;
-            if(filteredUplinks.Count > 0)
-            {
-                scr_messageSelector.PreferredHeight = (filteredUplinks.Count * tileHeight) / 10;
-                scr_messageSelector.ActualHeight = ((filteredUplinks.Count * tileHeight) / 10) - (filteredUplinks.Count - 8);
-                scr_messageSelector.Enabled = true;
-            } else
-            {
-                // Disable the scrollbar
-                scr_messageSelector.PreferredHeight = 1;
-                scr_messageSelector.ActualHeight = 1;
-                scr_messageSelector.Enabled = false;
-            }
-
-            for (int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
-            {
-                ListViewItem item = lvw_messageSelector.Items[i];
-                Rectangle itemRect = lvw_messageSelector.GetItemRect(i);
-                if (lvw_messageSelector.ClientRectangle.IntersectsWith(itemRect)) visibleCount++;
-            }
-
-            scr_messageSelector.Value = 0;
-            foreach (var uplink in filteredUplinks)
-            {
-                lvw_messageSelector.Items.Add(uplink.Element);
-            }
-        }
-
-        private void lvw_messages_SelectedIndexChanged(object sender, EventArgs e) { }
-
-        private void HandleResponse(UplinkEntry selected)
-        {
-            var placeholders = placeholderParse.Matches(selected.Element);
-
-            response[responseIndex] = new ResponseItem()
-            {
-                Entry = selected,
-                Placeholders = null
-            };
-
-            if (placeholders.Count > 0)
-            {
-                response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
-                Graphics graphics = lbl_response.CreateGraphics();
-                StringFormat format = new StringFormat
+                else
                 {
-                    LineAlignment = StringAlignment.Center,
-                    Alignment = StringAlignment.Near
-                };
-
-                for (int i = 0; i < placeholders.Count; i++)
-                {
-                    CharacterRange[] ranges = { new CharacterRange(placeholders[i].Index, placeholders[i].Length) };
-                    format.SetMeasurableCharacterRanges(ranges);
-
-                    Region region = graphics.MeasureCharacterRanges(response[responseIndex].Entry.Element, lbl_response.Font, lbl_response.Bounds, format)[0];
-                    Rectangle bounds = Rectangle.Round(region.GetBounds(graphics));
-
-                    response[responseIndex].Placeholders[i] = new ResponseItemPlaceholderData()
-                    {
-                        Placeholder = placeholders[i].Value,
-                        UserValue = "",
-                        TopLeftLoc = new Point(bounds.X - 4, bounds.Y - 2),
-                        Size = new Size(bounds.Width + 4, bounds.Height + 2)
-                    };
+                    e.Graphics.DrawString(item.Placeholder, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
                 }
             }
-            else
-            {
-                response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
-            }
-
-            lbl_response.Text = selected.Element;
-            lbl_response.Refresh();
-        }
-
-        private void lvw_messageSelector_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lvw_messageSelector.SelectedItems.Count > 0)
-            {
-                UplinkEntry selected = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Clone();
-                HandleResponse(selected);
-            }
-
-            lvw_messageSelector.SelectedItems.Clear();
-        }
-
-
-        private void btn_standby_Click(object sender, EventArgs e)
-        {
-            var standby = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Clone();
-            responseIndex = 0;
-            btn_messageScroller.Text = (responseIndex + 1).ToString();
-            HandleResponse(standby);
-        }
-
-        private void btn_defer_Click(object sender, EventArgs e)
-        {
-            var defer = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Clone();
-            responseIndex = 0;
-            btn_messageScroller.Text = (responseIndex + 1).ToString();
-            HandleResponse(defer);
-        }
-
-        private void btn_tfc_Click(object sender, EventArgs e)
-        {
-            var tfc = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Clone();
-            responseIndex = 1; 
-            btn_messageScroller.Text = (responseIndex + 1).ToString();
-            HandleResponse(tfc);
-
-            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
-            responseIndex = 0;
-            btn_messageScroller.Text = (responseIndex + 1).ToString();
-            HandleResponse(unable);
         }
 
         private void btn_air_Click(object sender, EventArgs e)
@@ -329,6 +167,44 @@ namespace vatACARS.Components
             HandleResponse(unable);
         }
 
+        private void btn_category_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                GenericButton clicked = (GenericButton)sender;
+                switch (clicked.Text)
+                {
+                    case "LEVEL": ShowGroup("1"); break;
+                    case "ROUTE": ShowGroup("2"); break;
+                    case "TRANSFR": ShowGroup("3"); break;
+                    case "CROSS": ShowGroup("4"); break;
+                    case "ENQ/TXT": ShowGroup("5"); break;
+                    case "SURV": ShowGroup("6"); break;
+                    case "EXPECT": ShowGroup("7"); break;
+                    case "BLK/CND": ShowGroup("8"); break;
+                    case "WX/OFF": ShowGroup("9"); break;
+                    case "COMM": ShowGroup("10"); break;
+                    case "SPEED": ShowGroup("11"); break;
+                    case "CFM/RPT": ShowGroup("12"); break;
+                    case "MISC": ShowGroup("13"); break;
+                    case "EMERG": ShowGroup("14"); break;
+                    default: ShowGroup("1"); break;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"Something went wrong!\n{ex.ToString()}");
+            }
+        }
+
+        private void btn_defer_Click(object sender, EventArgs e)
+        {
+            var defer = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "2").ToList().FirstOrDefault().Clone();
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(defer);
+        }
+
         private void btn_editor_Click(object sender, EventArgs e)
         {
             lbl_response.Text = "";
@@ -341,28 +217,28 @@ namespace vatACARS.Components
 
         private void btn_messageScroller_MouseDown(object sender, MouseEventArgs e)
         {
-                if (e.Button == MouseButtons.Left && responseIndex < 4)
-                {
-                    responseIndex++;
-                    btn_messageScroller.Text = (responseIndex + 1).ToString();
-                }
-                else if (e.Button == MouseButtons.Right && responseIndex > 0)
-                {
-                    responseIndex--;
-                    btn_messageScroller.Text = (responseIndex + 1).ToString();
-                }
+            if (e.Button == MouseButtons.Left && responseIndex < 4)
+            {
+                responseIndex++;
+                btn_messageScroller.Text = (responseIndex + 1).ToString();
+            }
+            else if (e.Button == MouseButtons.Right && responseIndex > 0)
+            {
+                responseIndex--;
+                btn_messageScroller.Text = (responseIndex + 1).ToString();
+            }
 
-                if (response[responseIndex] == null)
-                {
-                    response[responseIndex] = new ResponseItem();
-                }
+            if (response[responseIndex] == null)
+            {
+                response[responseIndex] = new ResponseItem();
+            }
 
-                if (response[responseIndex].Entry == null)
-                {
-                    response[responseIndex].Entry = new UplinkEntry();
-                }
+            if (response[responseIndex].Entry == null)
+            {
+                response[responseIndex].Entry = new UplinkEntry();
+            }
 
-                lbl_response.Text = response[responseIndex].Entry.Element ?? string.Empty;
+            lbl_response.Text = response[responseIndex].Entry.Element ?? string.Empty;
         }
 
         private void btn_send_Click(object sender, EventArgs e)
@@ -372,7 +248,6 @@ namespace vatACARS.Components
                 // TODO: replace placeholder content
                 foreach (ResponseItem item in response.Where(obj => obj != null && obj.Entry.Element != ""))
                 {
-
                     if (item.Placeholders != null)
                     {
                         foreach (ResponseItemPlaceholderData placeholder in item.Placeholders)
@@ -472,127 +347,104 @@ namespace vatACARS.Components
             }
         }
 
-        private void scr_messageSelector_Scroll(object sender, EventArgs e)
+        private void btn_standby_Click(object sender, EventArgs e)
         {
-            lvw_messageSelector.SetScrollPosVert(scr_messageSelector.PercentageValue);
+            var standby = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "1").ToList().FirstOrDefault().Clone();
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(standby);
         }
 
-        private void btn_suspend_Click(object sender, EventArgs e) { }
+        private void btn_suspend_Click(object sender, EventArgs e)
+        { }
 
-        private void btn_category_Click(object sender, EventArgs e) {
-            try
-            {
-                GenericButton clicked = (GenericButton)sender;
-                switch (clicked.Text)
-                {
-                    case "LEVEL": ShowGroup("1"); break;
-                    case "ROUTE": ShowGroup("2"); break;
-                    case "TRANSFR": ShowGroup("3"); break;
-                    case "CROSS": ShowGroup("4"); break;
-                    case "ENQ/TXT": ShowGroup("5"); break;
-                    case "SURV": ShowGroup("6"); break;
-                    case "EXPECT": ShowGroup("7"); break;
-                    case "BLK/CND": ShowGroup("8"); break;
-                    case "WX/OFF": ShowGroup("9"); break;
-                    case "COMM": ShowGroup("10"); break;
-                    case "SPEED": ShowGroup("11"); break;
-                    case "CFM/RPT": ShowGroup("12"); break;
-                    case "MISC": ShowGroup("13"); break;
-                    case "EMERG": ShowGroup("14"); break;
-                    default: ShowGroup("1"); break;
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.Log($"Something went wrong!\n{ex.ToString()}");
-            }
+        private void btn_tfc_Click(object sender, EventArgs e)
+        {
+            var tfc = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "166").ToList().FirstOrDefault().Clone();
+            responseIndex = 1;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(tfc);
+
+            var unable = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == "0").ToList().FirstOrDefault().Clone();
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            HandleResponse(unable);
         }
 
-        private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
+        private string[] CutString(string input, int maxLength = 58)
         {
-            Font font = MMI.eurofont_winsml;
-            SolidBrush bg = new SolidBrush(e.Item.BackColor);
-            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
-            e.Graphics.FillRectangle(bg, e.Bounds);
-            int n = 0;
-            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
+            if (input.Length <= maxLength) return new string[] { input };
+
+            string[] words = input.Split(' ');
+            List<string> segments = new List<string>();
+            string currentSegment = string.Empty;
+
+            foreach (string word in words)
             {
-                StringFormat format = new StringFormat();
-                format.LineAlignment = StringAlignment.Center;
-                format.Alignment = StringAlignment.Near;
-                int offset = lvw_messages.ClientSize.Width - n;
-                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
-                if (strSpace.Width > (float)offset)
+                if ((currentSegment + " " + word).Trim().Length > maxLength)
                 {
-                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
-                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
-                }
-                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
-                n++;
-            }
-        }
-
-        private void lvw_messageSelector_DrawItem(object sender, DrawListViewItemEventArgs e)
-        {
-            Font font = MMI.eurofont_winsml;
-            SolidBrush bg = new SolidBrush(e.Item.BackColor);
-            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
-            e.Graphics.FillRectangle(bg, e.Bounds);
-            int n = 0;
-            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
-            {
-                StringFormat format = new StringFormat();
-                format.LineAlignment = StringAlignment.Center;
-                format.Alignment = StringAlignment.Near;
-                int offset = lvw_messageSelector.ClientSize.Width - n;
-                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
-                if (strSpace.Width > (float)offset)
-                {
-                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
-                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
-                }
-                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
-                n++;
-            }
-        }
-
-        public void lbl_response_Paint(object sender, PaintEventArgs e)
-        {
-            if (response[responseIndex] == null || response[responseIndex].Placeholders == null) return;
-
-            SolidBrush highlight = new SolidBrush(Colours.GetColour(Colours.Identities.CPDLCDownlink));
-            SolidBrush highlightText = new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground));
-
-            StringFormat format = new StringFormat();
-            format.LineAlignment = StringAlignment.Center;
-            format.Alignment = StringAlignment.Near;
-
-            e.Graphics.FillRectangle(new SolidBrush(Colours.GetColour(Colours.Identities.WindowBackground)), lbl_response.ClientRectangle);
-            e.Graphics.DrawString(lbl_response.Text, lbl_response.Font, new SolidBrush(Colours.GetColour(Colours.Identities.InteractiveText)), lbl_response.ClientRectangle, format);
-
-            foreach (ResponseItemPlaceholderData item in response[responseIndex].Placeholders)
-            {
-                e.Graphics.FillRectangle(highlight, new Rectangle(item.TopLeftLoc, item.Size));
-                format.Alignment = StringAlignment.Center;
-
-                if (item.UserValue != "")
-                {
-                    SizeF strSpace = e.Graphics.MeasureString(item.UserValue, lbl_response.Font);
-                    if (strSpace.Width > (float)item.Size.Width)
-                    {
-                        int place = (int)Math.Floor((float)item.Size.Width / (strSpace.Width / (float)item.UserValue.Length) - 1);
-                        if (place > 0) e.Graphics.DrawString(item.UserValue.Substring(0, place) + "*", lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
-                    }
-                    else
-                    {
-                        e.Graphics.DrawString(item.UserValue, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
-                    }
+                    segments.Add(currentSegment.Trim());
+                    currentSegment = word;
                 }
                 else
                 {
-                    e.Graphics.DrawString(item.Placeholder, lbl_response.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
+                    if (currentSegment.Length > 0) currentSegment += " ";
+                    currentSegment += word;
                 }
             }
+
+            if (currentSegment.Length > 0)
+            {
+                segments.Add(currentSegment.Trim());
+            }
+
+            return segments.ToArray();
+        }
+
+        private void HandleResponse(UplinkEntry selected)
+        {
+            var placeholders = placeholderParse.Matches(selected.Element);
+
+            response[responseIndex] = new ResponseItem()
+            {
+                Entry = selected,
+                Placeholders = null
+            };
+
+            if (placeholders.Count > 0)
+            {
+                response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
+                Graphics graphics = lbl_response.CreateGraphics();
+                StringFormat format = new StringFormat
+                {
+                    LineAlignment = StringAlignment.Center,
+                    Alignment = StringAlignment.Near
+                };
+
+                for (int i = 0; i < placeholders.Count; i++)
+                {
+                    CharacterRange[] ranges = { new CharacterRange(placeholders[i].Index, placeholders[i].Length) };
+                    format.SetMeasurableCharacterRanges(ranges);
+
+                    Region region = graphics.MeasureCharacterRanges(response[responseIndex].Entry.Element, lbl_response.Font, lbl_response.Bounds, format)[0];
+                    Rectangle bounds = Rectangle.Round(region.GetBounds(graphics));
+
+                    response[responseIndex].Placeholders[i] = new ResponseItemPlaceholderData()
+                    {
+                        Placeholder = placeholders[i].Value,
+                        UserValue = "",
+                        TopLeftLoc = new Point(bounds.X - 4, bounds.Y - 2),
+                        Size = new Size(bounds.Width + 4, bounds.Height + 2)
+                    };
+                }
+            }
+            else
+            {
+                response[responseIndex].Placeholders = new ResponseItemPlaceholderData[placeholders.Count];
+            }
+
+            lbl_response.Text = selected.Element;
+            lbl_response.Refresh();
         }
 
         private void lbl_response_MouseDown(object sender, MouseEventArgs e)
@@ -630,55 +482,206 @@ namespace vatACARS.Components
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 logger.Log($"Oops: {ex.ToString()}");
             }
         }
 
-        private string[] CutString(string input, int maxLength = 58)
+        private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
-            if (input.Length <= maxLength) return new string[] { input };
-
-            string[] words = input.Split(' ');
-            List<string> segments = new List<string>();
-            string currentSegment = string.Empty;
-
-            foreach (string word in words)
+            Font font = MMI.eurofont_winsml;
+            SolidBrush bg = new SolidBrush(e.Item.BackColor);
+            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
+            e.Graphics.FillRectangle(bg, e.Bounds);
+            int n = 0;
+            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
             {
-                if ((currentSegment + " " + word).Trim().Length > maxLength)
+                StringFormat format = new StringFormat();
+                format.LineAlignment = StringAlignment.Center;
+                format.Alignment = StringAlignment.Near;
+                int offset = lvw_messages.ClientSize.Width - n;
+                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
+                if (strSpace.Width > (float)offset)
                 {
-                    segments.Add(currentSegment.Trim());
-                    currentSegment = word;
+                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
+                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
                 }
-                else
+                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
+                n++;
+            }
+        }
+
+        private void lvw_messages_SelectedIndexChanged(object sender, EventArgs e)
+        { }
+
+        private void lvw_messageSelector_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            Font font = MMI.eurofont_winsml;
+            SolidBrush bg = new SolidBrush(e.Item.BackColor);
+            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
+            e.Graphics.FillRectangle(bg, e.Bounds);
+            int n = 0;
+            foreach (ListViewItem.ListViewSubItem subItem in e.Item.SubItems)
+            {
+                StringFormat format = new StringFormat();
+                format.LineAlignment = StringAlignment.Center;
+                format.Alignment = StringAlignment.Near;
+                int offset = lvw_messageSelector.ClientSize.Width - n;
+                SizeF strSpace = e.Graphics.MeasureString(subItem.Text, font);
+                if (strSpace.Width > (float)offset)
                 {
-                    if (currentSegment.Length > 0) currentSegment += " ";
-                    currentSegment += word;
+                    int place = (int)Math.Floor((float)offset / (strSpace.Width / (float)subItem.Text.Length));
+                    if (place > 0) e.Graphics.DrawString(subItem.Text.Substring(0, place) + "...", font, fg, subItem.Bounds, format);
                 }
+                else e.Graphics.DrawString(subItem.Text, font, fg, subItem.Bounds, format);
+                n++;
+            }
+        }
+
+        private void lvw_messageSelector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvw_messageSelector.SelectedItems.Count > 0)
+            {
+                UplinkEntry selected = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Element == lvw_messageSelector.SelectedItems[0].Text).ToList().FirstOrDefault().Clone();
+                HandleResponse(selected);
             }
 
-            if (currentSegment.Length > 0)
+            lvw_messageSelector.SelectedItems.Clear();
+        }
+
+        private void scr_messageSelector_Scroll(object sender, EventArgs e)
+        {
+            lvw_messageSelector.SetScrollPosVert(scr_messageSelector.PercentageValue);
+        }
+
+        private void ShowGroup(string group_id)
+        {
+            lvw_messageSelector.Items.Clear();
+            List<UplinkEntry> filteredUplinks = XMLReader.uplinks.Entries.Where(entry => entry.Group == group_id).ToList();
+
+            int visibleCount = 0;
+            int startIndex = lvw_messageSelector.TopItem != null ? lvw_messageSelector.TopItem.Index : 0;
+            for (int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
             {
-                segments.Add(currentSegment.Trim());
+                ListViewItem item = lvw_messageSelector.Items[i];
+                Rectangle itemRect = lvw_messageSelector.GetItemRect(i);
+                if (lvw_messageSelector.ClientRectangle.IntersectsWith(itemRect)) visibleCount++;
             }
 
-            return segments.ToArray();
+            int tileHeight = lvw_messageSelector.TileSize.Height;
+            if (filteredUplinks.Count > 0)
+            {
+                scr_messageSelector.PreferredHeight = (filteredUplinks.Count * tileHeight) / 10;
+                scr_messageSelector.ActualHeight = ((filteredUplinks.Count * tileHeight) / 10) - (filteredUplinks.Count - 8);
+                scr_messageSelector.Enabled = true;
+            }
+            else
+            {
+                // Disable the scrollbar
+                scr_messageSelector.PreferredHeight = 1;
+                scr_messageSelector.ActualHeight = 1;
+                scr_messageSelector.Enabled = false;
+            }
+
+            for (int i = startIndex; i < lvw_messageSelector.Items.Count; i++)
+            {
+                ListViewItem item = lvw_messageSelector.Items[i];
+                Rectangle itemRect = lvw_messageSelector.GetItemRect(i);
+                if (lvw_messageSelector.ClientRectangle.IntersectsWith(itemRect)) visibleCount++;
+            }
+
+            scr_messageSelector.Value = 0;
+            foreach (var uplink in filteredUplinks)
+            {
+                lvw_messageSelector.Items.Add(uplink.Element);
+            }
+        }
+
+        private void ShowGroupBasedOnMessageContent(string content)
+        {
+            foreach (var entry in keywordGroupMapping)
+            {
+                foreach (var keyword in entry.Value)
+                {
+                    if (content.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        if (entry.Key == "11")
+                        {
+                            if (keyword.Equals("M", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Regex.IsMatch(content, @"M\s*\d+", RegexOptions.IgnoreCase))
+                                {
+                                    ShowGroup(entry.Key);
+                                    return;
+                                }
+                            }
+                            else if (keyword.Equals("K", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Regex.IsMatch(content, @"\d+\s*K", RegexOptions.IgnoreCase))
+                                {
+                                    ShowGroup(entry.Key);
+                                    return;
+                                }
+                            }
+                            else
+                            {
+                                ShowGroup(entry.Key);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            ShowGroup(entry.Key);
+                            return;
+                        }
+                    }
+                }
+            }
+            ShowGroup("1");
+        }
+
+        private void StyleComponent()
+        {
+            lbl_receivedMsgs.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+
+            lvw_messages.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lvw_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lvw_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lvw_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_response.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+
+            btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_standby.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_defer.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_tfc.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_air.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+            btn_standby.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_defer.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_tfc.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_air.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+
+            DelayLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            ToEditLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+            UnableLabel.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+
+            scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
         }
     }
 
-    class ResponseItem
+    internal class ResponseItem
     {
         public UplinkEntry Entry;
         public ResponseItemPlaceholderData[] Placeholders;
     }
 
-    class ResponseItemPlaceholderData
+    internal class ResponseItemPlaceholderData
     {
         public string Placeholder;
-        public string UserValue;
-        public Point TopLeftLoc;
         public Size Size;
+        public Point TopLeftLoc;
+        public string UserValue;
     }
 }

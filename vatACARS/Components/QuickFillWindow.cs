@@ -1,35 +1,29 @@
 ﻿using System;
-using vatsys;
-using vatACARS.Lib;
-using System.Windows.Forms;
-using System.Drawing;
-using vatACARS.Util;
 using System.Collections.Generic;
-using static vatsys.Colours;
-using System.Web.Configuration;
-using static vatsys.FDP2;
+using System.Drawing;
 using System.Linq;
+using System.Windows.Forms;
+using vatACARS.Lib;
+using vatACARS.Util;
+using vatsys;
 using static vatACARS.Helpers.Tranceiver;
+using static vatsys.FDP2;
 
 namespace vatACARS.Components
 {
     public partial class QuickFillWindow : BaseForm
     {
+        private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
+        private static string FreeText;
         private static Logger logger = new Logger("QuickFillWindow");
         private static Label SelectedLabel;
-        private static string FreeText;
-        public delegate void QuickFillChangedHandler(object sender, QuickFillData e);
-        public event QuickFillChangedHandler QuickFillDataChanged;
-        private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
-        private List<Label> quickFillItems = new List<Label>();
-        private FDR networkPilotFDR;
-        private IMessageData selectedMsg;
         private string identifier;
 
-        public class QuickFillData : EventArgs
-        {
-            public string Setting { get; set; }
-        }
+        private FDR networkPilotFDR;
+
+        private List<Label> quickFillItems = new List<Label>();
+
+        private IMessageData selectedMsg;
 
         public QuickFillWindow(string identifier, IMessageData selectedMsg, string placeholder = "")
         {
@@ -45,8 +39,9 @@ namespace vatACARS.Components
             if (identifier == "POSITION")
             {
                 LoadAddRoute();
-            } 
-            else {
+            }
+            else
+            {
                 try
                 {
                     foreach (string item in JSONReader.quickFillItems.data[identifier])
@@ -60,50 +55,13 @@ namespace vatACARS.Components
                     logger.Log(ex.ToString());
                 }
             }
-            
+
             logger.Log("Opened & populated.");
         }
 
-        private void StyleComponent()
-        {
-            tbx_freetext.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-            tbx_freetext.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+        public delegate void QuickFillChangedHandler(object sender, QuickFillData e);
 
-            scr_quickfill.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
-            scr_quickfill.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-            scr_quickfill.PreferredHeight = 1;
-            scr_quickfill.ActualHeight = 1;
-            scr_quickfill.Enabled = false;
-        }
-
-        private void LoadAddRoute()
-        {
-            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
-            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
-            {
-                errorHandler.AddError("Pilot has invalid or No Route.");
-            }
-            else
-            {
-                string route = networkPilotFDR.Route;
-                string[] routeSegments = route.Split(' ');
-
-                var filteredRouteSegments = routeSegments
-                    .Where(segment =>
-                        !segment.Contains(networkPilotFDR.DepAirport) &&
-                        !segment.Contains(networkPilotFDR.SID.Name) &&
-                        !System.Text.RegularExpressions.Regex.IsMatch(segment, @"^[A-Z]{1,2}\d{2,3}$") &&
-                        !segment.Equals("DCT", StringComparison.OrdinalIgnoreCase))
-                    .Select(segment =>
-                        segment.Contains("/") ? segment.Split('/')[0] : segment) 
-                    .ToArray();
-
-                foreach (string segment in filteredRouteSegments)
-                {
-                    AddQuickFillItem(segment);
-                }
-            }
-        }
+        public event QuickFillChangedHandler QuickFillDataChanged;
 
         private void AddQuickFillItem(string label)
         {
@@ -148,9 +106,81 @@ namespace vatACARS.Components
             }
         }
 
+        private void btn_confirm_Click(object sender, EventArgs e)
+        {
+            if (FreeText != "") OnDataChanged(FreeText.ToUpper());
+            if (SelectedLabel.Text != "") OnDataChanged(SelectedLabel.Text.ToUpper());
+            this.Close();
+        }
+
+        private void LoadAddRoute()
+        {
+            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
+            {
+                errorHandler.AddError("Pilot has invalid or No Route.");
+            }
+            else
+            {
+                string route = networkPilotFDR.Route;
+                string[] routeSegments = route.Split(' ');
+
+                var filteredRouteSegments = routeSegments
+                    .Where(segment =>
+                        !segment.Contains(networkPilotFDR.DepAirport) &&
+                        !segment.Contains(networkPilotFDR.SID.Name) &&
+                        !System.Text.RegularExpressions.Regex.IsMatch(segment, @"^[A-Z]{1,2}\d{2,3}$") &&
+                        !segment.Equals("DCT", StringComparison.OrdinalIgnoreCase))
+                    .Select(segment =>
+                        segment.Contains("/") ? segment.Split('/')[0] : segment)
+                    .ToArray();
+
+                foreach (string segment in filteredRouteSegments)
+                {
+                    AddQuickFillItem(segment);
+                }
+            }
+        }
+
         private void OnDataChanged(string newData)
         {
             QuickFillDataChanged?.Invoke(this, new QuickFillData { Setting = newData });
+        }
+
+        private void scr_quickfill_Scroll(object sender, EventArgs e)
+        {
+            float percentageValue = scr_quickfill.PercentageValue;
+            int totalItems = quickFillItems.Count;
+            int itemsPerColumn = 4;
+            int totalColumns = (int)Math.Ceiling((double)totalItems / itemsPerColumn);
+            tbl_quickFillSelector.SuspendLayout();
+            int startColumnIndex = (int)Math.Round(percentageValue * (totalColumns - 1));
+            tbl_quickFillSelector.Controls.Clear();
+            for (int columnIndex = startColumnIndex; columnIndex < totalColumns; columnIndex++)
+            {
+                for (int itemIndex = 0; itemIndex < itemsPerColumn; itemIndex++)
+                {
+                    int index = columnIndex * itemsPerColumn + itemIndex;
+                    if (index < totalItems)
+                    {
+                        Label itemLabel = quickFillItems[index];
+                        tbl_quickFillSelector.Controls.Add(itemLabel);
+                    }
+                }
+            }
+            tbl_quickFillSelector.ResumeLayout();
+        }
+
+        private void StyleComponent()
+        {
+            tbx_freetext.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            tbx_freetext.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+
+            scr_quickfill.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            scr_quickfill.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
+            scr_quickfill.PreferredHeight = 1;
+            scr_quickfill.ActualHeight = 1;
+            scr_quickfill.Enabled = false;
         }
 
         private void tbx_freetext_KeyUp(object sender, KeyEventArgs e)
@@ -158,13 +188,6 @@ namespace vatACARS.Components
             if (SelectedLabel.Text != "") SelectedLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
             FreeText = tbx_freetext.Text;
             if (((char)e.KeyCode) == (char)Keys.Enter) btn_confirm_Click(sender, null);
-        }
-
-        private void btn_confirm_Click(object sender, EventArgs e)
-        {
-            if (FreeText != "") OnDataChanged(FreeText.ToUpper());
-            if (SelectedLabel.Text != "") OnDataChanged(SelectedLabel.Text.ToUpper());
-            this.Close();
         }
 
         private void tbx_freetext_TextChanged(object sender, EventArgs e)
@@ -188,28 +211,9 @@ namespace vatACARS.Components
             scr_quickfill.Value = 0;
         }
 
-        private void scr_quickfill_Scroll(object sender, EventArgs e)
+        public class QuickFillData : EventArgs
         {
-            float percentageValue = scr_quickfill.PercentageValue;
-            int totalItems = quickFillItems.Count;
-            int itemsPerColumn = 4; 
-            int totalColumns = (int)Math.Ceiling((double)totalItems / itemsPerColumn);
-            tbl_quickFillSelector.SuspendLayout();
-            int startColumnIndex = (int)Math.Round(percentageValue * (totalColumns - 1));
-            tbl_quickFillSelector.Controls.Clear();
-            for (int columnIndex = startColumnIndex; columnIndex < totalColumns; columnIndex++)
-            {
-                for (int itemIndex = 0; itemIndex < itemsPerColumn; itemIndex++)
-                {
-                    int index = columnIndex * itemsPerColumn + itemIndex;
-                    if (index < totalItems)
-                    {
-                        Label itemLabel = quickFillItems[index];
-                        tbl_quickFillSelector.Controls.Add(itemLabel);
-                    }
-                }
-            }
-            tbl_quickFillSelector.ResumeLayout();
+            public string Setting { get; set; }
         }
     }
 }
