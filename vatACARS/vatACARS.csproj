@@ -91,6 +91,12 @@
     <Compile Include="Components\ErrorWindow.Designer.cs">
       <DependentUpon>ErrorWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\DebugWindow.cs">
+      <SubType>designer</SubType>
+    </Compile>
+    <Compile Include="Components\DebugWindow.Designer.cs">
+      <DependentUpon>DebugWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Components\HandoffSelector.cs">
       <SubType>designer</SubType>
     </Compile>
@@ -171,6 +177,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Components\ErrorWindow.resx">
       <DependentUpon>ErrorWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\DebugWindow.resx">
+      <DependentUpon>DebugWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Components\HandoffSelector.resx">
       <DependentUpon>HandoffSelector.cs</DependentUpon>
