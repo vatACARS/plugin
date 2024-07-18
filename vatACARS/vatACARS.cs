@@ -241,14 +241,14 @@ namespace vatACARS
 
         private void PDCLabelClick(CustomLabelItemMouseClickEventArgs e)
         {
-            // Should grab the actual TelexMessage we received to respond properly
-            DispatchWindow.SelectedMessage = new TelexMessage()
+            FDR fdr = e.Track.GetFDR();
+            if(fdr == null)
             {
-                State = 0,
-                Station = e.Track.GetFDR(true).Callsign,
-                Content = "REQUEST PREDEP CLEARANCE",
-                TimeReceived = DateTime.UtcNow
-            };
+                ErrorHandler.GetInstance().AddError($"Selected aircraft has not submitted a flight plan.");
+                return;
+            }
+            TelexMessage telexMessage = getAllTelexMessages().FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign && message.Content.StartsWith("REQUEST PREDEP"));
+            DispatchWindow.SelectedMessage = telexMessage;
 
             PDCWindow window = new PDCWindow();
             window.Show(Form.ActiveForm);
