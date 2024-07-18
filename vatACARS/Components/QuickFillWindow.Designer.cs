@@ -80,6 +80,7 @@ namespace vatACARS.Components
             this.scr_quickfill.Size = new System.Drawing.Size(501, 20);
             this.scr_quickfill.TabIndex = 9;
             this.scr_quickfill.Value = 0;
+            this.scr_quickfill.Scrolling += new System.EventHandler(this.scr_quickfill_Scroll);
             this.scr_quickfill.Scroll += new System.EventHandler(this.scr_quickfill_Scroll);
             // 
             // btn_confirm
