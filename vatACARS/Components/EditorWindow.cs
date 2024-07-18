@@ -208,6 +208,7 @@ namespace vatACARS.Components
         private void btn_editor_Click(object sender, EventArgs e)
         {
             lbl_response.Text = "";
+            lbl_response.Refresh();
             pnl_categories.Visible = true;
             response = new ResponseItem[5];
             responseIndex = 0;

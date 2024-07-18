@@ -122,23 +122,12 @@ namespace vatACARS.Components
             }
             else
             {
-                string route = networkPilotFDR.Route;
-                string[] routeSegments = route.Split(' ');
-
-                var filteredRouteSegments = routeSegments
-                    .Where(segment =>
-                        !segment.Contains(networkPilotFDR.DepAirport) &&
-                        !segment.Contains(networkPilotFDR.SID.Name) &&
-                        !System.Text.RegularExpressions.Regex.IsMatch(segment, @"^[A-Z]{1,2}\d{2,3}$") &&
-                        !segment.Equals("DCT", StringComparison.OrdinalIgnoreCase))
-                    .Select(segment =>
-                        segment.Contains("/") ? segment.Split('/')[0] : segment)
-                    .ToArray();
-
-                foreach (string segment in filteredRouteSegments)
+                foreach (FDP2.FDR.ExtractedRoute.Segment segment in networkPilotFDR.ParsedRoute.ToList())
                 {
-                    AddQuickFillItem(segment);
+                    if (segment.Type == FDP2.FDR.ExtractedRoute.Segment.SegmentTypes.WAYPOINT)
+                        AddQuickFillItem(segment.Intersection.Name);
                 }
+                UpdateScrollbar();
             }
         }
 

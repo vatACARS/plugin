@@ -50,6 +50,14 @@ namespace vatACARS.Components
                 }
             };
 
+            addTelexMessage(new TelexMessage()
+            {
+                State = 0,
+                Station = "QFA063",
+                Content = "REQUEST DIRECT IDK",
+                TimeReceived = DateTime.UtcNow
+            });
+
             UpdateMessages();
         }
 
