@@ -211,10 +211,16 @@ namespace vatACARS
 
         private void CPDLCLabelClick(CustomLabelItemMouseClickEventArgs e)
         {
+            FDR fdr = e.Track.GetFDR();
+            if (fdr == null)
+            {
+                ErrorHandler.GetInstance().AddError($"Selected aircraft has not submitted a flight plan.");
+                return;
+            }
             DispatchWindow.SelectedMessage = new CPDLCMessage()
             {
                 State = 0,
-                Station = e.Track.GetFDR().Callsign,
+                Station = fdr.Callsign,
                 Content = "(no message received)",
                 TimeReceived = DateTime.UtcNow
             };
