@@ -6,123 +6,23 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using static vatACARS.Helpers.Tranceiver;
 
-
 namespace vatACARS.Util
 {
     public static class HoppiesInterface
     {
-        private static Timer timer;
-        private static bool discardedFirstRequest = false;
-        private static Random random = new Random();
-        private static Logger logger = new Logger("Hoppies");
+        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}", RegexOptions.Singleline);
         private static HttpClient client = new HttpClient();
-        private static readonly Regex hoppieParse = new Regex(@"{(.*?)}");
-
-        public static void StartListening()
-        {
-            logger.Log("Service started.");
-            timer = new Timer();
-            timer.Elapsed += PollTimer;
-            timer.AutoReset = true; // Keep the timer running
-            timer.Interval = 50;
-            timer.Enabled = true;
-        }
-
-        public static void StopListening()
-        {
-            logger.Log("Service stopped.");
-            timer.Stop();
-            timer.Dispose();
-        }
-
-        // Set a random interval between 45 and 75 seconds for polling requests as per Hoppies guidelines
-        private static void SetRandomInterval()
-        {
-            int intervalMilliseconds = random.Next(45000, 75001); // 45 to 75 seconds
-            timer.Interval = intervalMilliseconds;
-        }
-
-        private static async void PollTimer(object sender, ElapsedEventArgs e)
-        {
-            SetRandomInterval();
-            var rawMessages = await PollMessages();
-            if (rawMessages == "OK")
-            {
-                logger.Log("No new messages.");
-                return;
-            }
-
-            if (rawMessages.StartsWith("ERROR"))
-            {
-                logger.Log($"Hoppies error: {rawMessages}");
-                //connected = false;
-                AudioInterface.playSound("error");
-                return;
-            }
-
-            if(!discardedFirstRequest)
-            {
-                discardedFirstRequest = true;
-                return;
-            }
-
-            var responses = hoppieParse.Matches(rawMessages);
-            List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
-            List<TelexMessage> telexMessages = new List<TelexMessage>();
-
-            logger.Log($"Received {responses.Count} messages.");
-            if (responses.Count > 0)
-            {
-                foreach (Match response in responses)
-                {
-                    string[] rawMessage = response.Groups[1].Value.Replace("}", "").Split('{');
-                    string station = rawMessage[0].Split(' ')[0];
-                    string type = rawMessage[0].Split(' ')[1];
-
-                    for (int i = 0; i < rawMessage.Length; i++)
-                        {
-                    {
-                        if (i > 0 && rawMessage[i].Length > 2)
-                            if (rawMessage[1].StartsWith("/DATA2/"))
-                            {
-                                CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
-                                logger.Log($"CPDLC: {station} | (M:{parsedMessage.MessageId} / R:{(parsedMessage.ReplyMessageId != -1 ? parsedMessage.ReplyMessageId.ToString() : "X")}) [{parsedMessage.ResponseType}] {parsedMessage.Content}");
-                                CPDLCMessages.Add(parsedMessage);
-                                break;
-                            } else
-                            {
-                                logger.Log($"TELEX: {station} | {rawMessage[1]}");
-                                telexMessages.Add(new TelexMessage()
-                                {
-                                    State = 0,
-                                    Station = station,
-                                    TimeReceived = DateTime.UtcNow,
-                                    Content = rawMessage[1]
-                                });
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            foreach (var message in telexMessages) addTelexMessage(message);
-            foreach (var message in CPDLCMessages) addCPDLCMessage(message);
-        }
-
-        private static async Task<string> PollMessages()
-        {
-            logger.Log("Polling for new messages...");
-            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null));
-            logger.Log("Polling cycle completed.");
-
-            return pollResponse.ToUpper().Trim();
-        }
+        private static bool discardedFirstRequest = false;
+        private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
+        private static Logger logger = new Logger("Hoppies");
+        private static Random random = new Random();
+        private static Timer timer;
 
         public static FormUrlEncodedContent ConstructMessage(string Recipient, string MessageType, string PacketData)
         {
@@ -144,17 +44,50 @@ namespace vatACARS.Util
             return msg.MakeCPDLCMessageRequest();
         }
 
-        public static async Task<string> SendMessage(FormUrlEncodedContent request)
+        public static async Task<string> SendMessage(FormUrlEncodedContent request, bool incrementSentMessages = true)
         {
-            if(!request.ToString().Contains("poll")) SentMessages++;
+            if (incrementSentMessages) SentMessages++;
             try
             {
                 return await client.PostStringTaskAsync("/acars/system/connect.html", request, "http://www.hoppie.nl");
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-                logger.Log($"Oops: {e.ToString()}");
+                errorHandler.AddError(e.ToString());
                 return "ERROR";
             }
+        }
+
+        public static void StartListening()
+        {
+            logger.Log("Service started.");
+            timer = new Timer();
+            timer.Elapsed += PollTimer;
+            timer.AutoReset = true; // Keep the timer running
+            timer.Interval = 50;
+            timer.Enabled = true;
+        }
+
+        public static void StopListening()
+        {
+            logger.Log("Service stopped.");
+            timer.Stop();
+            timer.Dispose();
+        }
+
+        private static string parseADSCMessage(string rawMessage)
+        {
+            string[] lines = rawMessage.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                sb.Append(lines[i].Trim());
+                if (i < lines.Length) sb.Append(" ");
+            }
+
+            string content = sb.ToString();
+            return content;
         }
 
         private static CPDLCMessage parseCPDLCMessage(string rawMessage, string station)
@@ -176,26 +109,134 @@ namespace vatACARS.Util
                     ResponseType = fields[3],
                     Content = fields[4]
                 };
-            } catch (FormatException ex)
+            }
+            catch (FormatException ex)
             {
-                // Somebody forged a CPDLCMessage format that was invalid
+                // CPDLCMessage format was invalid
                 logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
                 msg = new CPDLCMessage();
             }
 
             return msg;
         }
+
+        private static async Task<string> PollMessages()
+        {
+            logger.Log("Polling for new messages...");
+            var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null), false);
+            logger.Log("Polling cycle completed.");
+
+            return pollResponse.ToUpper().Trim();
+        }
+
+        private static async void PollTimer(object sender, ElapsedEventArgs e)
+        {
+            SetRandomInterval();
+            var rawMessages = await PollMessages();
+            logger.Log($"Received raw messages:\n{rawMessages}");
+            if (rawMessages == "OK")
+            {
+                logger.Log("No new messages.");
+                if (!discardedFirstRequest) discardedFirstRequest = true;
+                return;
+            }
+
+            if (rawMessages.StartsWith("ERROR"))
+            {
+                logger.Log($"Hoppies error: {rawMessages}");
+                errorHandler.AddError(rawMessages);
+                //connected = false;
+                return;
+            }
+
+            if (!discardedFirstRequest)
+            {
+                discardedFirstRequest = true;
+                return;
+            }
+
+            var responses = hoppieParse.Matches(rawMessages);
+            List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
+            List<TelexMessage> telexMessages = new List<TelexMessage>();
+
+            logger.Log($"Received {responses.Count} messages.");
+            if (responses.Count > 0)
+            {
+                foreach (Match response in responses)
+                {
+                    string[] rawMessage = response.Groups[1].Value.Replace("}", "").Split('{');
+                    string station = rawMessage[0].Split(' ')[0];
+                    string type = rawMessage[0].Split(' ')[1];
+
+                    for (int i = 0; i < rawMessage.Length; i++)
+                    {
+                        if (i > 0 && rawMessage[i].Length > 2)
+                        {
+                            if (rawMessage[1].StartsWith("/DATA2/"))
+                            {
+                                CPDLCMessage parsedMessage = parseCPDLCMessage(rawMessage[1], station);
+                                logger.Log($"CPDLC: {station} | (M:{parsedMessage.MessageId} / R:{(parsedMessage.ReplyMessageId != -1 ? parsedMessage.ReplyMessageId.ToString() : "X")}) [{parsedMessage.ResponseType}] {parsedMessage.Content}");
+                                CPDLCMessages.Add(parsedMessage);
+                                break;
+                            }
+                            else if (rawMessage[1].StartsWith("/DATA1/"))
+                            {
+                                string mContent = parseADSCMessage(rawMessage[1]);
+                                logger.Log($"ADS-C: {station} | {mContent}");
+                                telexMessages.Add(new TelexMessage()
+                                {
+                                    State = 3,
+                                    Station = station,
+                                    TimeReceived = DateTime.UtcNow,
+                                    Content = mContent
+                                });
+                            }
+                            else
+                            {
+                                logger.Log($"TELEX: {station} | {rawMessage[1]}");
+                                telexMessages.Add(new TelexMessage()
+                                {
+                                    State = 0,
+                                    Station = station,
+                                    TimeReceived = DateTime.UtcNow,
+                                    Content = rawMessage[1]
+                                });
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            foreach (var message in telexMessages) addTelexMessage(message);
+            foreach (var message in CPDLCMessages) addCPDLCMessage(message);
+        }
+
+        // Set a random interval between 45 and 75 seconds for polling requests as per Hoppies guidelines
+        private static void SetRandomInterval()
+        {
+            int intervalMilliseconds = random.Next(45000, 75001); // 45 to 75 seconds
+            timer.Interval = intervalMilliseconds;
+        }
+    }
+
+    public class CPDLCMessageReponse
+    {
+        public string MessageType;
+        public string PacketData;
+        public string Station;
     }
 
     public class CPDLCMessageRequest
     {
-        public string LogonCode;
         public string Callsign;
-        public string Recipient;
+        public string LogonCode;
         public string MessageType;
         public string PacketData;
+        public string Recipient;
 
-        public FormUrlEncodedContent MakeCPDLCMessageRequest() {
+        public FormUrlEncodedContent MakeCPDLCMessageRequest()
+        {
             Dictionary<string, string> MessageData = new Dictionary<string, string> {
                 {"logon", LogonCode},
                 {"from", Callsign},
@@ -206,12 +247,5 @@ namespace vatACARS.Util
 
             return new FormUrlEncodedContent(MessageData);
         }
-    }
-
-    public class CPDLCMessageReponse
-    {
-        public string Station;
-        public string MessageType;
-        public string PacketData;
     }
 }

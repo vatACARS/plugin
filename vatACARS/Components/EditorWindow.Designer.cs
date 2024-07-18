@@ -91,9 +91,9 @@
             // 
             // btn_escape
             // 
-            this.btn_escape.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_escape.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btn_escape.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_escape.Location = new System.Drawing.Point(10, 393);
+            this.btn_escape.Location = new System.Drawing.Point(10, 428);
             this.btn_escape.Name = "btn_escape";
             this.btn_escape.Size = new System.Drawing.Size(90, 28);
             this.btn_escape.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -107,7 +107,7 @@
             this.insetPanel2.Controls.Add(this.lvw_messages);
             this.insetPanel2.Location = new System.Drawing.Point(11, 12);
             this.insetPanel2.Name = "insetPanel2";
-            this.insetPanel2.Size = new System.Drawing.Size(565, 80);
+            this.insetPanel2.Size = new System.Drawing.Size(565, 112);
             this.insetPanel2.TabIndex = 3;
             // 
             // lvw_messages
@@ -125,7 +125,7 @@
             this.lvw_messages.OwnerDraw = true;
             this.lvw_messages.Scrollable = false;
             this.lvw_messages.ShowGroups = false;
-            this.lvw_messages.Size = new System.Drawing.Size(559, 74);
+            this.lvw_messages.Size = new System.Drawing.Size(559, 106);
             this.lvw_messages.TabIndex = 2;
             this.lvw_messages.TileSize = new System.Drawing.Size(550, 26);
             this.lvw_messages.UseCompatibleStateImageBehavior = false;
@@ -140,8 +140,9 @@
             // scr_messageSelector
             // 
             this.scr_messageSelector.ActualHeight = 8;
+            this.scr_messageSelector.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.scr_messageSelector.Change = 1;
-            this.scr_messageSelector.Location = new System.Drawing.Point(559, 170);
+            this.scr_messageSelector.Location = new System.Drawing.Point(559, 205);
             this.scr_messageSelector.Name = "scr_messageSelector";
             this.scr_messageSelector.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
             this.scr_messageSelector.PreferredHeight = 8;
@@ -179,14 +180,16 @@
             // 
             // insetPanel1
             // 
+            this.insetPanel1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.insetPanel1.Controls.Add(this.lvw_messageSelector);
-            this.insetPanel1.Location = new System.Drawing.Point(11, 171);
+            this.insetPanel1.Location = new System.Drawing.Point(11, 206);
             this.insetPanel1.Name = "insetPanel1";
             this.insetPanel1.Size = new System.Drawing.Size(546, 176);
             this.insetPanel1.TabIndex = 6;
             // 
             // pnl_categories
             // 
+            this.pnl_categories.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.pnl_categories.Controls.Add(this.btn_level);
             this.pnl_categories.Controls.Add(this.btn_expect);
             this.pnl_categories.Controls.Add(this.btn_surv);
@@ -201,7 +204,7 @@
             this.pnl_categories.Controls.Add(this.btn_blk);
             this.pnl_categories.Controls.Add(this.btn_cfm);
             this.pnl_categories.Controls.Add(this.btn_misc);
-            this.pnl_categories.Location = new System.Drawing.Point(0, 0);
+            this.pnl_categories.Location = new System.Drawing.Point(11, 130);
             this.pnl_categories.Name = "pnl_categories";
             this.pnl_categories.Size = new System.Drawing.Size(565, 69);
             this.pnl_categories.TabIndex = 34;
@@ -391,9 +394,9 @@
             // 
             // btn_suspend
             // 
-            this.btn_suspend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_suspend.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btn_suspend.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_suspend.Location = new System.Drawing.Point(202, 393);
+            this.btn_suspend.Location = new System.Drawing.Point(202, 428);
             this.btn_suspend.Name = "btn_suspend";
             this.btn_suspend.Size = new System.Drawing.Size(90, 28);
             this.btn_suspend.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -405,9 +408,9 @@
             // 
             // btn_restore
             // 
-            this.btn_restore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_restore.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btn_restore.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_restore.Location = new System.Drawing.Point(106, 393);
+            this.btn_restore.Location = new System.Drawing.Point(106, 428);
             this.btn_restore.Name = "btn_restore";
             this.btn_restore.Size = new System.Drawing.Size(90, 28);
             this.btn_restore.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -418,9 +421,9 @@
             // 
             // btn_send
             // 
-            this.btn_send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_send.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_send.Location = new System.Drawing.Point(466, 393);
+            this.btn_send.Location = new System.Drawing.Point(466, 428);
             this.btn_send.Name = "btn_send";
             this.btn_send.Size = new System.Drawing.Size(111, 28);
             this.btn_send.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -434,7 +437,7 @@
             // 
             this.insetPanel3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.insetPanel3.Controls.Add(this.lbl_response);
-            this.insetPanel3.Location = new System.Drawing.Point(47, 357);
+            this.insetPanel3.Location = new System.Drawing.Point(47, 392);
             this.insetPanel3.Name = "insetPanel3";
             this.insetPanel3.Size = new System.Drawing.Size(529, 31);
             this.insetPanel3.TabIndex = 7;
@@ -459,7 +462,7 @@
             // 
             this.btn_messageScroller.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.btn_messageScroller.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_messageScroller.Location = new System.Drawing.Point(10, 356);
+            this.btn_messageScroller.Location = new System.Drawing.Point(10, 391);
             this.btn_messageScroller.Name = "btn_messageScroller";
             this.btn_messageScroller.Size = new System.Drawing.Size(31, 31);
             this.btn_messageScroller.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -471,7 +474,6 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.pnl_categories);
             this.panel1.Controls.Add(this.UnableLabel);
             this.panel1.Controls.Add(this.ToEditLabel);
             this.panel1.Controls.Add(this.DelayLabel);
@@ -480,7 +482,7 @@
             this.panel1.Controls.Add(this.btn_defer);
             this.panel1.Controls.Add(this.btn_standby);
             this.panel1.Controls.Add(this.btn_editor);
-            this.panel1.Location = new System.Drawing.Point(11, 95);
+            this.panel1.Location = new System.Drawing.Point(11, 130);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(565, 69);
             this.panel1.TabIndex = 47;
@@ -598,8 +600,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 434);
+            this.ClientSize = new System.Drawing.Size(586, 469);
             this.ControlBox = false;
+            this.Controls.Add(this.pnl_categories);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btn_messageScroller);
             this.Controls.Add(this.insetPanel3);

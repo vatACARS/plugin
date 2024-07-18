@@ -9,8 +9,8 @@ namespace vatACARS.Components
 {
     public partial class LogonConsentWindow : BaseForm
     {
-        private CPDLCMessage selectedMsg;
         private static Logger logger = new Logger("LogonConsentWindow");
+        private CPDLCMessage selectedMsg;
 
         public LogonConsentWindow()
         {
@@ -18,11 +18,6 @@ namespace vatACARS.Components
             selectedMsg = (CPDLCMessage)DispatchWindow.SelectedMessage;
 
             StyleComponent();
-        }
-
-        private void StyleComponent()
-        {
-            lbl_callsign.Text = selectedMsg.Station;
         }
 
         private void btn_accept_Click(object sender, EventArgs e)
@@ -37,7 +32,9 @@ namespace vatACARS.Components
                 });
                 FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}/{selectedMsg.MessageId}/N/LOGON ACCEPTED");
                 _ = HoppiesInterface.SendMessage(req);
-            } catch(Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 logger.Log(ex.ToString());
             }
             Close();
@@ -50,11 +47,17 @@ namespace vatACARS.Components
                 selectedMsg.setMessageState(3);
                 FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}/{selectedMsg.MessageId}/N/SERVICE UNAVAILABLE");
                 _ = HoppiesInterface.SendMessage(req);
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 // womp womp
             }
             Close();
+        }
+
+        private void StyleComponent()
+        {
+            lbl_callsign.Text = selectedMsg.Station;
         }
     }
 }

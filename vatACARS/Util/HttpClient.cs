@@ -7,14 +7,55 @@ namespace vatACARS.Util
 {
     public static class HttpClientUtils
     {
-        private static Random random = new Random();
         private static string _baseUrl;
         private static Logger logger = new Logger("HttpClient");
+        private static Random random = new Random();
 
-        public static void SetBaseUrl(string baseUrl)
+        public static async Task DownloadFileTaskAsync(this HttpClient httpClient, string relativePath, string fileName, string baseUrlOverride = "")
         {
-            logger.Log($"baseUrl set to '{baseUrl}'");
-            _baseUrl = baseUrl;
+            if (httpClient == null)
+                throw new ArgumentNullException(nameof(httpClient));
+
+            if (string.IsNullOrWhiteSpace(_baseUrl) && !string.IsNullOrWhiteSpace(baseUrlOverride))
+                throw new InvalidOperationException("Base URL is not set");
+
+            if (relativePath == null)
+                throw new ArgumentNullException(nameof(relativePath));
+
+            if (string.IsNullOrWhiteSpace(fileName))
+                throw new ArgumentException("Invalid file name", nameof(fileName));
+
+            int id = random.Next(1000, 9999);
+            try
+            {
+                if (!string.IsNullOrEmpty(baseUrlOverride))
+                    logger.Log($"({id}) DOWNLOADFILE [baseUrlOverride] {baseUrlOverride}{relativePath}");
+                else
+                    logger.Log($"({id}) DOWNLOADFILE (baseUrl){relativePath}");
+
+                var fullUrl = new Uri(new Uri(!string.IsNullOrWhiteSpace(baseUrlOverride) ? baseUrlOverride : _baseUrl), relativePath);
+                using (var s = await httpClient.GetStreamAsync(fullUrl))
+                {
+                    using (var fs = new FileStream(fileName, FileMode.CreateNew))
+                    {
+                        logger.Log($"({id}) Writing to file...");
+                        await s.CopyToAsync(fs);
+                        logger.Log($"({id}) Download completed.");
+                    }
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                logger.Log($"({id}) HTTP request error: {ex.Message}");
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"File I/O error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                logger.Log($"({id}) An error occured: {ex.Message}");
+            }
         }
 
         public static async Task<string> GetStringTaskAsync(this HttpClient httpClient, string relativePath, string baseUrlOverride = "")
@@ -42,7 +83,8 @@ namespace vatACARS.Util
                 try
                 {
                     response.EnsureSuccessStatusCode();
-                } catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     logger.Log($"({id}) GET request failed: {ex.ToString()}");
                     return "";
@@ -114,51 +156,10 @@ namespace vatACARS.Util
             }
         }
 
-        public static async Task DownloadFileTaskAsync(this HttpClient httpClient, string relativePath, string fileName, string baseUrlOverride = "")
+        public static void SetBaseUrl(string baseUrl)
         {
-            if (httpClient == null)
-                throw new ArgumentNullException(nameof(httpClient));
-
-            if (string.IsNullOrWhiteSpace(_baseUrl) && !string.IsNullOrWhiteSpace(baseUrlOverride))
-                throw new InvalidOperationException("Base URL is not set");
-
-            if (relativePath == null)
-                throw new ArgumentNullException(nameof(relativePath));
-
-            if (string.IsNullOrWhiteSpace(fileName))
-                throw new ArgumentException("Invalid file name", nameof(fileName));
-
-            int id = random.Next(1000, 9999);
-            try
-            {
-                if (!string.IsNullOrEmpty(baseUrlOverride))
-                    logger.Log($"({id}) DOWNLOADFILE [baseUrlOverride] {baseUrlOverride}{relativePath}");
-                else
-                    logger.Log($"({id}) DOWNLOADFILE (baseUrl){relativePath}");
-
-                var fullUrl = new Uri(new Uri(!string.IsNullOrWhiteSpace(baseUrlOverride) ? baseUrlOverride : _baseUrl), relativePath);
-                using (var s = await httpClient.GetStreamAsync(fullUrl))
-                {
-                    using (var fs = new FileStream(fileName, FileMode.CreateNew))
-                    {
-                        logger.Log($"({id}) Writing to file...");
-                        await s.CopyToAsync(fs);
-                        logger.Log($"({id}) Download completed.");
-                    }
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                logger.Log($"({id}) HTTP request error: {ex.Message}");
-            }
-            catch (IOException ex)
-            {
-                Console.WriteLine($"File I/O error: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                logger.Log($"({id}) An error occured: {ex.Message}");
-            }
+            logger.Log($"baseUrl set to '{baseUrl}'");
+            _baseUrl = baseUrl;
         }
     }
 }

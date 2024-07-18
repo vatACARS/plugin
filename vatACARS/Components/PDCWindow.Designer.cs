@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PDCWindow));
             this.lbl_metaInfo = new vatsys.TextLabel();
             this.btn_send = new vatsys.GenericButton();
             this.lbl_destRoute = new vatsys.TextLabel();
@@ -37,10 +38,10 @@
             this.lbl_pdcHeader = new vatsys.TextLabel();
             this.lbl_route = new vatsys.TextLabel();
             this.lbl_depFreq = new vatsys.TextLabel();
-            this.tbx_depfreq = new vatsys.TextField();
             this.tbx_freetext = new vatsys.TextField();
             this.textLabel1 = new vatsys.TextLabel();
             this.insetPanel2 = new vatsys.InsetPanel();
+            this.dd_freq = new VATSYSControls.DropDownBox();
             this.insetPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -179,17 +180,6 @@
             this.lbl_depFreq.Text = "DEP FREQ:";
             this.lbl_depFreq.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbx_depfreq
-            // 
-            this.tbx_depfreq.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_depfreq.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_depfreq.Location = new System.Drawing.Point(110, 172);
-            this.tbx_depfreq.Name = "tbx_depfreq";
-            this.tbx_depfreq.NumericCharOnly = false;
-            this.tbx_depfreq.OctalOnly = false;
-            this.tbx_depfreq.Size = new System.Drawing.Size(100, 25);
-            this.tbx_depfreq.TabIndex = 97;
-            // 
             // tbx_freetext
             // 
             this.tbx_freetext.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -226,17 +216,30 @@
             this.insetPanel2.Size = new System.Drawing.Size(337, 45);
             this.insetPanel2.TabIndex = 101;
             // 
+            // dd_freq
+            // 
+            this.dd_freq.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_freq.FocusColor = System.Drawing.Color.Cyan;
+            this.dd_freq.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_freq.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_freq.Items")));
+            this.dd_freq.Location = new System.Drawing.Point(110, 172);
+            this.dd_freq.Name = "dd_freq";
+            this.dd_freq.SelectedIndex = -1;
+            this.dd_freq.Size = new System.Drawing.Size(162, 25);
+            this.dd_freq.TabIndex = 102;
+            this.dd_freq.SelectedIndexChanged += new System.EventHandler(this.dd_freq_SelectedIndexChanged);
+            // 
             // PDCWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(360, 280);
             this.ControlBox = false;
+            this.Controls.Add(this.dd_freq);
             this.Controls.Add(this.lbl_destRoute);
             this.Controls.Add(this.insetPanel2);
             this.Controls.Add(this.textLabel1);
             this.Controls.Add(this.tbx_freetext);
-            this.Controls.Add(this.tbx_depfreq);
             this.Controls.Add(this.lbl_depFreq);
             this.Controls.Add(this.lbl_route);
             this.Controls.Add(this.lbl_sqwkDeps);
@@ -268,9 +271,9 @@
         private vatsys.TextLabel lbl_pdcHeader;
         private vatsys.TextLabel lbl_route;
         private vatsys.TextLabel lbl_depFreq;
-        private vatsys.TextField tbx_depfreq;
         private vatsys.TextField tbx_freetext;
         private vatsys.TextLabel textLabel1;
         private vatsys.InsetPanel insetPanel2;
+        private VATSYSControls.DropDownBox dd_freq;
     }
 }

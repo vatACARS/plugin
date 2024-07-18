@@ -15,60 +15,107 @@ namespace vatACARS
     {
         private static HttpClient client = new HttpClient();
 
+        private static bool Hoppies = Properties.Settings.Default.enableHoppies;
+
         public SetupWindow()
         {
             InitializeComponent();
             StyleComponent();
         }
 
-        private void StyleComponent()
+        public static void SetHoppies(bool value)
         {
-            foreach (Control ctl in Controls)
+            Logger logger = new Logger("vatACARS");
+            if (Hoppies != value)
             {
-                if (ctl is TextLabel)
+                Hoppies = value;
+                if (Hoppies)
                 {
-                    ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-                    ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                    Properties.Settings.Default.enableHoppies = true;
+                    logger.Log("Hoppies ON.");
+                }
+                else
+                {
+                    Properties.Settings.Default.enableHoppies = false;
+                    logger.Log("Hoppies OFF.");
+                }
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public void tbx_messageTimeout_TextChanged(object sender, EventArgs e)
+        {
+            string newText = new string(tbx_messageTimeout.Text.Where(char.IsDigit).ToArray());
+
+            if (tbx_messageTimeout.Text != newText)
+            {
+                tbx_messageTimeout.Text = newText;
+                tbx_messageTimeout.SelectionStart = tbx_messageTimeout.Text.Length;
+            }
+
+            if (int.TryParse(newText, out int timeout))
+            {
+                Properties.Settings.Default.finishedMessageTimeout = timeout;
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        private void btn_auralAlertVolumeTest_MouseUp(object sender, MouseEventArgs e)
+        {
+            AudioInterface.playSound("incomingMessage");
+        }
+
+        private void btn_checkStationCode_Click(object sender, EventArgs e)
+        {
+            if (!Network.Me.ATIS.Any((string atisLine) => new Regex(@"PDC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
+            {
+                lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                tbx_stationCode.Text = "Try again.";
+            }
+            else
+            {
+                Match stationCode = Network.Me.ATIS.Select(atisLine => new
+                {
+                    Line = atisLine,
+                    Match = new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant()).Success
+                         ? new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant())
+                         : new Regex(@"CPDLC [A-Z]{4}").Match(atisLine.ToUpperInvariant())
+                }).FirstOrDefault(result => result.Match.Success)?.Match;
+                if (stationCode != null)
+                {
+                    lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                    lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                    tbx_stationCode.Text = stationCode.Value.Split(' ')[1].ToUpperInvariant();
+                    Properties.Settings.Default.stationCode = tbx_stationCode.Text;
+                    Properties.Settings.Default.Save();
+                }
+                else
+                {
+                    stationCode = Network.Me.ATIS.Select(atisLine => new
+                    {
+                        Line = atisLine,
+                        Match = new Regex(@"PDC [A-Z]{4}").Match(atisLine.ToUpperInvariant())
+                    }).FirstOrDefault(result => result.Match.Success)?.Match;
+
+                    if (stationCode != null)
+                    {
+                        lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                        lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
+                        tbx_stationCode.Text = stationCode.Value.Split(' ')[1].ToUpperInvariant();
+                        Properties.Settings.Default.stationCode = tbx_stationCode.Text;
+                        Properties.Settings.Default.Save();
+                    }
+                    else
+                    {
+                        lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                        lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
+                        tbx_stationCode.Text = "Try again.";
+                    }
                 }
             }
-
-            btn_connect.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
-            btn_connect.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
-
-            sld_auralAlertVolume.ForeColor = Colours.GetColour(Colours.Identities.ListSeparator);
-            sld_auralAlertVolume.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
-        }
-
-
-        private void SetupWindow_Shown(object sender, EventArgs e)
-        {
-            tbx_stationCode.Text = Properties.Settings.Default.stationCode;
-            tbx_vatACARSToken.Text = Properties.Settings.Default.vatACARSToken;
-            tbx_hoppiesLogonCode.Text = Properties.Settings.Default.hoppiesLogonCode;
-            tbx_messageTimeout.Text = Properties.Settings.Default.finishedMessageTimeout.ToString();
-            sld_auralAlertVolume.Value = Properties.Settings.Default.auralAlertVolume;
-
-            btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
-            btn_enableHoppies.Invalidate();
-            SetHoppies(Properties.Settings.Default.enableHoppies);
-            tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
-
-            if(connected)
-            {
-                foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = false;
-                btn_auralAlertVolumeTest.Enabled = true;
-                tbx_messageTimeout.Enabled = true;
-
-                btn_connect.Text = "Disconnect";
-                btn_connect.Enabled = true;
-                lbl_statusMessage.Text = $"Logged in as {tbx_stationCode.Text}";
-            }
-        }
-
-        private void tbx_hoppiesLogonCode_TextChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.hoppiesLogonCode = tbx_hoppiesLogonCode.Text;
-            Properties.Settings.Default.Save();
+            Invalidate();
+            Update();
         }
 
         private async void btn_connect_Click(object sender, EventArgs e)
@@ -202,26 +249,32 @@ namespace vatACARS
             Properties.Settings.Default.Save();
         }
 
-
-        private static bool Hoppies = Properties.Settings.Default.enableHoppies;
-
-        public static void SetHoppies(bool value)
+        private void btn_test_Click(object sender, EventArgs e)
         {
-            Logger logger = new Logger("vatACARS");
-            if (Hoppies != value)
+        }
+
+        private void SetupWindow_Shown(object sender, EventArgs e)
+        {
+            tbx_stationCode.Text = Properties.Settings.Default.stationCode;
+            tbx_vatACARSToken.Text = Properties.Settings.Default.vatACARSToken;
+            tbx_hoppiesLogonCode.Text = Properties.Settings.Default.hoppiesLogonCode;
+            tbx_messageTimeout.Text = Properties.Settings.Default.finishedMessageTimeout.ToString();
+            sld_auralAlertVolume.Value = Properties.Settings.Default.auralAlertVolume;
+
+            btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
+            btn_enableHoppies.Invalidate();
+            SetHoppies(Properties.Settings.Default.enableHoppies);
+            tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
+
+            if (connected)
             {
-                Hoppies = value;
-                if (Hoppies)
-                {
-                    Properties.Settings.Default.enableHoppies = true;
-                    logger.Log("Hoppies ON.");
-                }
-                else
-                {
-                    Properties.Settings.Default.enableHoppies = false;
-                    logger.Log("Hoppies OFF.");
-                }
-                Properties.Settings.Default.Save();
+                foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = false;
+                btn_auralAlertVolumeTest.Enabled = true;
+                tbx_messageTimeout.Enabled = true;
+
+                btn_connect.Text = "Disconnect";
+                btn_connect.Enabled = true;
+                lbl_statusMessage.Text = $"Logged in as {tbx_stationCode.Text}";
             }
         }
 
@@ -231,80 +284,29 @@ namespace vatACARS
             Properties.Settings.Default.Save();
         }
 
-        private void btn_test_Click(object sender, EventArgs e)
+        private void StyleComponent()
         {
-
-        }
-
-        private void btn_auralAlertVolumeTest_MouseUp(object sender, MouseEventArgs e)
-        {
-            AudioInterface.playSound("incomingMessage");
-        }
-
-        public void tbx_messageTimeout_TextChanged(object sender, EventArgs e)
-        {
-            string newText = new string(tbx_messageTimeout.Text.Where(char.IsDigit).ToArray());
-
-            if (tbx_messageTimeout.Text != newText)
+            foreach (Control ctl in Controls)
             {
-                tbx_messageTimeout.Text = newText;
-                tbx_messageTimeout.SelectionStart = tbx_messageTimeout.Text.Length;
-            }
-
-            if (int.TryParse(newText, out int timeout))
-            {
-                Properties.Settings.Default.finishedMessageTimeout = timeout;
-                Properties.Settings.Default.Save();
-            }
-        }
-
-        private void btn_checkStationCode_Click(object sender, EventArgs e)
-        {
-            if (!Network.Me.ATIS.Any((string atisLine) => new Regex(@"PDC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
-            {
-                lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                tbx_stationCode.Text = "Try again.";
-            } else
-            {
-                Match stationCode = Network.Me.ATIS.Select(atisLine => new {
-                Line = atisLine,
-                Match = new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant()).Success
-                         ? new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Match(atisLine.ToUpperInvariant())
-                         : new Regex(@"CPDLC [A-Z]{4}").Match(atisLine.ToUpperInvariant())
-                }).FirstOrDefault(result => result.Match.Success)?.Match;
-                if (stationCode != null)
+                if (ctl is TextLabel)
                 {
-                    lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-                    lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-                    tbx_stationCode.Text = stationCode.Value.Split(' ')[1].ToUpperInvariant();
-                    Properties.Settings.Default.stationCode = tbx_stationCode.Text;
-                    Properties.Settings.Default.Save();
-                } else
-                {
-                    stationCode = Network.Me.ATIS.Select(atisLine => new {
-                        Line = atisLine,
-                        Match = new Regex(@"PDC [A-Z]{4}").Match(atisLine.ToUpperInvariant())
-                    }).FirstOrDefault(result => result.Match.Success)?.Match;
-
-                    if (stationCode != null)
-                    {
-                        lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-                        lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.NonInteractiveText);
-                        tbx_stationCode.Text = stationCode.Value.Split(' ')[1].ToUpperInvariant();
-                        Properties.Settings.Default.stationCode = tbx_stationCode.Text;
-                        Properties.Settings.Default.Save();
-                    }
-                    else
-                    {
-                        lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                        lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
-                        tbx_stationCode.Text = "Try again.";
-                    }
+                    ctl.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                    ctl.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
                 }
             }
-            Invalidate();
-            Update();
+
+            btn_connect.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_connect.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+
+            sld_auralAlertVolume.ForeColor = Colours.GetColour(Colours.Identities.ListSeparator);
+            sld_auralAlertVolume.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            sld_auralAlertVolume.Font = MMI.eurofont_winsml;
+        }
+
+        private void tbx_hoppiesLogonCode_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.hoppiesLogonCode = tbx_hoppiesLogonCode.Text;
+            Properties.Settings.Default.Save();
         }
 
         private void tbx_vatAcarsToken_TextChanged(object sender, EventArgs e)

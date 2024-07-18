@@ -1,19 +1,19 @@
-﻿using System.Net.Http;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using vatACARS.Util;
-using Newtonsoft.Json;
-using System.IO;
-using System;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Collections.Generic;
 
 namespace vatACARS.Lib
 {
     public static class UpdateClient
     {
-        private static Logger logger = new Logger("UpdateClient");
         private static string dirPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\vatACARS";
+        private static Logger logger = new Logger("UpdateClient");
 
         public static async Task CheckDependencies()
         {
@@ -28,12 +28,14 @@ namespace vatACARS.Lib
                     return;
                 }
                 DependencyInfo[] dependencyList = JsonConvert.DeserializeObject<DependencyInfo[]>(dependencies);
-                foreach( DependencyInfo dependency in dependencyList )
+                foreach (DependencyInfo dependency in dependencyList)
                 {
-                    if (!File.Exists($"{dirPath}\\{dependency.subFolder}\\{dependency.fileName}")) {
+                    if (!File.Exists($"{dirPath}\\{dependency.subFolder}\\{dependency.fileName}"))
+                    {
                         logger.Log($"{dependency.subFolder}\\{dependency.fileName} does not exist locally, adding to update list...");
                         dependenciesRequired.Add(dependency);
-                    } else
+                    }
+                    else
                     {
                         using (var md5 = MD5.Create())
                         {
@@ -52,7 +54,7 @@ namespace vatACARS.Lib
             }
 
             logger.Log("Starting update...");
-            using(var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient())
             {
                 foreach (DependencyInfo dependency in dependenciesRequired)
                 {
@@ -68,8 +70,8 @@ namespace vatACARS.Lib
     public class DependencyInfo
     {
         public string fileName;
+        public string hash;
         public string location;
         public string subFolder;
-        public string hash;
     }
 }
