@@ -45,6 +45,7 @@
             this.tbx_vatACARSToken = new vatsys.TextField();
             this.btn_checkStationCode = new vatsys.GenericButton();
             this.lbl_statusMessage = new vatsys.TextLabel();
+            this.btn_debug = new vatsys.GenericButton();
             ((System.ComponentModel.ISupportInitialize)(this.sld_auralAlertVolume)).BeginInit();
             this.SuspendLayout();
             // 
@@ -278,11 +279,26 @@
             this.lbl_statusMessage.TabIndex = 31;
             this.lbl_statusMessage.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // btn_debug
+            // 
+            this.btn_debug.FlatAppearance.BorderSize = 0;
+            this.btn_debug.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_debug.Location = new System.Drawing.Point(-2, 350);
+            this.btn_debug.Name = "btn_debug";
+            this.btn_debug.Padding = new System.Windows.Forms.Padding(10);
+            this.btn_debug.Size = new System.Drawing.Size(5, 5);
+            this.btn_debug.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_debug.SubText = "";
+            this.btn_debug.TabIndex = 32;
+            this.btn_debug.UseVisualStyleBackColor = true;
+            this.btn_debug.Click += new System.EventHandler(this.btn_debug_Click);
+            // 
             // SetupWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 354);
+            this.Controls.Add(this.btn_debug);
             this.Controls.Add(this.lbl_statusMessage);
             this.Controls.Add(this.btn_checkStationCode);
             this.Controls.Add(this.tbx_vatACARSToken);
@@ -336,5 +352,6 @@
         private vatsys.TextField tbx_vatACARSToken;
         private vatsys.GenericButton btn_checkStationCode;
         private vatsys.TextLabel lbl_statusMessage;
+        private vatsys.GenericButton btn_debug;
     }
 }
