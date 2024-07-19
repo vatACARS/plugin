@@ -21,7 +21,6 @@ namespace vatACARS.Components
         private static Label SelectedLabel;
         private string identifier;
 
-
         private List<Label> quickFillItems = new List<Label>();
 
         private IMessageData selectedMsg;
@@ -40,6 +39,10 @@ namespace vatACARS.Components
             if (identifier == "POSITION")
             {
                 LoadAddRoute();
+            }
+            if (identifier == "LEVEL")
+            {
+                LoadLevel();
             }
             else
             {
@@ -139,6 +142,44 @@ namespace vatACARS.Components
             }
         }
 
+        private void LoadLevel()
+        {
+            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
+            {
+                try
+                {
+                    foreach (string item in JSONReader.quickFillItems.data[identifier])
+                    {
+                        AddQuickFillItem(item);
+                    }
+                    UpdateScrollbar();
+                }
+                catch (Exception ex)
+                {
+                    logger.Log(ex.ToString());
+                }
+            }
+            else
+            {
+                string levelPrefix = (networkPilotFDR.CFLString != null && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL");
+                int levelValue = int.Parse(networkPilotFDR.CFLString);
+
+                foreach (string item in JSONReader.quickFillItems.data[identifier])
+                {
+                    if (item.StartsWith(levelPrefix))
+                    {
+                        int itemValue = int.Parse(item.Substring(levelPrefix.Length));
+                        if (Math.Abs(levelValue - itemValue) <= 100)
+                        {
+                            AddQuickFillItem(item);
+                        }
+                    }
+                }
+                UpdateScrollbar();
+            }
+        }
+
         private void OnDataChanged(string newData)
         {
             QuickFillDataChanged?.Invoke(this, new QuickFillData { Setting = newData });
@@ -198,7 +239,7 @@ namespace vatACARS.Components
 
         private void UpdateScrollbar()
         {
-            if (quickFillItems.Count > 1)
+            if (quickFillItems.Count > 32)
             {
                 scr_quickfill.PreferredHeight = quickFillItems.Count * 63;
                 scr_quickfill.ActualHeight = (quickFillItems.Count * 63) / 10;
