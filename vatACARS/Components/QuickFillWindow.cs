@@ -19,7 +19,6 @@ namespace vatACARS.Components
         private static Label SelectedLabel;
         private string identifier;
 
-        private FDR networkPilotFDR;
 
         private List<Label> quickFillItems = new List<Label>();
 

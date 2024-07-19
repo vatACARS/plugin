@@ -42,6 +42,8 @@
             this.textLabel1 = new vatsys.TextLabel();
             this.insetPanel2 = new vatsys.InsetPanel();
             this.dd_freq = new VATSYSControls.DropDownBox();
+            this.lbl_readback = new vatsys.TextLabel();
+            this.dd_freq2 = new VATSYSControls.DropDownBox();
             this.insetPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,7 +67,7 @@
             this.btn_send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_send.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btn_send.Location = new System.Drawing.Point(258, 240);
+            this.btn_send.Location = new System.Drawing.Point(258, 312);
             this.btn_send.Name = "btn_send";
             this.btn_send.Size = new System.Drawing.Size(90, 28);
             this.btn_send.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -128,7 +130,7 @@
             this.lbl_sqwkDeps.HasBorder = false;
             this.lbl_sqwkDeps.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_sqwkDeps.InteractiveText = true;
-            this.lbl_sqwkDeps.Location = new System.Drawing.Point(12, 151);
+            this.lbl_sqwkDeps.Location = new System.Drawing.Point(9, 179);
             this.lbl_sqwkDeps.Name = "lbl_sqwkDeps";
             this.lbl_sqwkDeps.Size = new System.Drawing.Size(337, 18);
             this.lbl_sqwkDeps.TabIndex = 92;
@@ -173,7 +175,7 @@
             this.lbl_depFreq.HasBorder = false;
             this.lbl_depFreq.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_depFreq.InteractiveText = true;
-            this.lbl_depFreq.Location = new System.Drawing.Point(12, 172);
+            this.lbl_depFreq.Location = new System.Drawing.Point(12, 151);
             this.lbl_depFreq.Name = "lbl_depFreq";
             this.lbl_depFreq.Size = new System.Drawing.Size(91, 18);
             this.lbl_depFreq.TabIndex = 96;
@@ -199,7 +201,7 @@
             this.textLabel1.HasBorder = false;
             this.textLabel1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.textLabel1.InteractiveText = true;
-            this.textLabel1.Location = new System.Drawing.Point(12, 200);
+            this.textLabel1.Location = new System.Drawing.Point(9, 202);
             this.textLabel1.Name = "textLabel1";
             this.textLabel1.Size = new System.Drawing.Size(91, 18);
             this.textLabel1.TabIndex = 99;
@@ -222,19 +224,48 @@
             this.dd_freq.FocusColor = System.Drawing.Color.Cyan;
             this.dd_freq.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.dd_freq.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_freq.Items")));
-            this.dd_freq.Location = new System.Drawing.Point(110, 172);
+            this.dd_freq.Location = new System.Drawing.Point(109, 151);
             this.dd_freq.Name = "dd_freq";
             this.dd_freq.SelectedIndex = -1;
             this.dd_freq.Size = new System.Drawing.Size(162, 25);
             this.dd_freq.TabIndex = 102;
             this.dd_freq.SelectedIndexChanged += new System.EventHandler(this.dd_freq_SelectedIndexChanged);
             // 
+            // lbl_readback
+            // 
+            this.lbl_readback.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_readback.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_readback.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_readback.HasBorder = false;
+            this.lbl_readback.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_readback.InteractiveText = true;
+            this.lbl_readback.Location = new System.Drawing.Point(7, 228);
+            this.lbl_readback.Name = "lbl_readback";
+            this.lbl_readback.Size = new System.Drawing.Size(342, 38);
+            this.lbl_readback.TabIndex = 103;
+            this.lbl_readback.Text = "ONLY READBACK SID, SQUAWK CODE, AND BAY NO. ON:";
+            this.lbl_readback.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // dd_freq2
+            // 
+            this.dd_freq2.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_freq2.FocusColor = System.Drawing.Color.Cyan;
+            this.dd_freq2.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_freq2.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_freq2.Items")));
+            this.dd_freq2.Location = new System.Drawing.Point(109, 250);
+            this.dd_freq2.Name = "dd_freq2";
+            this.dd_freq2.SelectedIndex = -1;
+            this.dd_freq2.Size = new System.Drawing.Size(162, 25);
+            this.dd_freq2.TabIndex = 104;
+            // 
             // PDCWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(360, 280);
+            this.ClientSize = new System.Drawing.Size(360, 352);
             this.ControlBox = false;
+            this.Controls.Add(this.dd_freq2);
+            this.Controls.Add(this.lbl_readback);
             this.Controls.Add(this.dd_freq);
             this.Controls.Add(this.lbl_destRoute);
             this.Controls.Add(this.insetPanel2);
@@ -275,5 +306,7 @@
         private vatsys.TextLabel textLabel1;
         private vatsys.InsetPanel insetPanel2;
         private VATSYSControls.DropDownBox dd_freq;
+        private vatsys.TextLabel lbl_readback;
+        private VATSYSControls.DropDownBox dd_freq2;
     }
 }
