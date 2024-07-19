@@ -7,7 +7,9 @@ using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Helpers.Tranceiver;
+using static vatsys.Airspace2;
 using static vatsys.FDP2;
+using static vatsys.FDP2.FDR.ExtractedRoute;
 
 namespace vatACARS.Components
 {
@@ -18,8 +20,6 @@ namespace vatACARS.Components
         private static Logger logger = new Logger("QuickFillWindow");
         private static Label SelectedLabel;
         private string identifier;
-
-        private FDR networkPilotFDR;
 
         private List<Label> quickFillItems = new List<Label>();
 
@@ -39,6 +39,10 @@ namespace vatACARS.Components
             if (identifier == "POSITION")
             {
                 LoadAddRoute();
+            }
+            if (identifier == "LEVEL")
+            {
+                LoadLevel();
             }
             else
             {
@@ -125,7 +129,52 @@ namespace vatACARS.Components
                 foreach (FDP2.FDR.ExtractedRoute.Segment segment in networkPilotFDR.ParsedRoute.ToList())
                 {
                     if (segment.Type == FDP2.FDR.ExtractedRoute.Segment.SegmentTypes.WAYPOINT)
-                        AddQuickFillItem(segment.Intersection.Name);
+                        if (segment.Intersection.Name.Length > 5)
+                        {
+                            AddQuickFillItem(segment.Intersection.FullName);
+                        }
+                        else
+                        {
+                            AddQuickFillItem(segment.Intersection.Name);
+                        }
+                }
+                UpdateScrollbar();
+            }
+        }
+
+        private void LoadLevel()
+        {
+            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
+            {
+                try
+                {
+                    foreach (string item in JSONReader.quickFillItems.data[identifier])
+                    {
+                        AddQuickFillItem(item);
+                    }
+                    UpdateScrollbar();
+                }
+                catch (Exception ex)
+                {
+                    logger.Log(ex.ToString());
+                }
+            }
+            else
+            {
+                string levelPrefix = (networkPilotFDR.CFLString != null && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL");
+                int levelValue = int.Parse(networkPilotFDR.CFLString);
+
+                foreach (string item in JSONReader.quickFillItems.data[identifier])
+                {
+                    if (item.StartsWith(levelPrefix))
+                    {
+                        int itemValue = int.Parse(item.Substring(levelPrefix.Length));
+                        if (Math.Abs(levelValue - itemValue) <= 100)
+                        {
+                            AddQuickFillItem(item);
+                        }
+                    }
                 }
                 UpdateScrollbar();
             }
@@ -190,7 +239,7 @@ namespace vatACARS.Components
 
         private void UpdateScrollbar()
         {
-            if (quickFillItems.Count > 1)
+            if (quickFillItems.Count > 32)
             {
                 scr_quickfill.PreferredHeight = quickFillItems.Count * 63;
                 scr_quickfill.ActualHeight = (quickFillItems.Count * 63) / 10;

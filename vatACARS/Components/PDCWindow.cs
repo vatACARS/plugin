@@ -15,7 +15,6 @@ namespace vatACARS.Components
     {
         private static Logger logger = new Logger("PDCWindow");
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
-        private FDR networkPilotFDR;
         private Dictionary<string, string> PDCElements = new Dictionary<string, string>();
         private IMessageData selectedMsg;
 
@@ -31,7 +30,7 @@ namespace vatACARS.Components
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}\nDEP FREQ: {dd_freq.Text}{(tbx_freetext.Text != "" ? $"\n{tbx_freetext.Text.ToUpperInvariant()}" : "")}";
+            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}";
             FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
             _ = HoppiesInterface.SendMessage(req);
 
@@ -112,7 +111,9 @@ namespace vatACARS.Components
                 { "SIDRwy", $"{networkPilotFDR.SID.Name} DEP RWY {networkPilotFDR.DepartureRunway.Name}" },
                 { "Route", $"ROUTE: {CutStringAndAppendT(route)}" },
                 { "InitAlt", $"CLIMB VIA SID TO: {(networkPilotFDR.CFLString != null && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL")}{networkPilotFDR.CFLString.PadLeft(3, '0')}" },
-                { "SqwkDeps", $"SQUAWK {Convert.ToString(networkPilotFDR.AssignedSSRCode, 8).PadLeft(4, '0')}" }
+                { "DepFREQ", $"DEP FREQ: {dd_freq.Text}" },
+                { "SqwkDeps", $"SQUAWK {Convert.ToString(networkPilotFDR.AssignedSSRCode, 8).PadLeft(4, '0')}" },
+                { "ReadBack", $"ONLY READBACK SID, SQUAWK CODE, AND BAY NO. ON: {dd_freq2.Text}" }
             };
 
             lbl_pdcHeader.Text = PDCElements["PDC"];
@@ -158,6 +159,7 @@ namespace vatACARS.Components
             foreach (string freq in freqs)
             {
                 dd_freq.Items.Add(freq);
+                dd_freq2.Items.Add(freq);
             }
         }
 
@@ -181,6 +183,10 @@ namespace vatACARS.Components
                 dd_freq.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
                 dd_freq.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
                 dd_freq.FocusColor = Color.Cyan;
+
+                dd_freq2.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                dd_freq2.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                dd_freq2.FocusColor = Color.Cyan;
 
                 btn_send.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
                 btn_send.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
