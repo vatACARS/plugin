@@ -38,8 +38,6 @@
             this.lbl_pdcHeader = new vatsys.TextLabel();
             this.lbl_route = new vatsys.TextLabel();
             this.lbl_depFreq = new vatsys.TextLabel();
-            this.tbx_freetext = new vatsys.TextField();
-            this.textLabel1 = new vatsys.TextLabel();
             this.insetPanel2 = new vatsys.InsetPanel();
             this.dd_freq = new VATSYSControls.DropDownBox();
             this.lbl_readback = new vatsys.TextLabel();
@@ -130,7 +128,7 @@
             this.lbl_sqwkDeps.HasBorder = false;
             this.lbl_sqwkDeps.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_sqwkDeps.InteractiveText = true;
-            this.lbl_sqwkDeps.Location = new System.Drawing.Point(9, 179);
+            this.lbl_sqwkDeps.Location = new System.Drawing.Point(12, 179);
             this.lbl_sqwkDeps.Name = "lbl_sqwkDeps";
             this.lbl_sqwkDeps.Size = new System.Drawing.Size(337, 18);
             this.lbl_sqwkDeps.TabIndex = 92;
@@ -182,32 +180,6 @@
             this.lbl_depFreq.Text = "DEP FREQ:";
             this.lbl_depFreq.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbx_freetext
-            // 
-            this.tbx_freetext.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_freetext.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.tbx_freetext.Location = new System.Drawing.Point(109, 200);
-            this.tbx_freetext.Name = "tbx_freetext";
-            this.tbx_freetext.NumericCharOnly = false;
-            this.tbx_freetext.OctalOnly = false;
-            this.tbx_freetext.Size = new System.Drawing.Size(240, 25);
-            this.tbx_freetext.TabIndex = 98;
-            // 
-            // textLabel1
-            // 
-            this.textLabel1.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.textLabel1.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.textLabel1.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.textLabel1.HasBorder = false;
-            this.textLabel1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.textLabel1.InteractiveText = true;
-            this.textLabel1.Location = new System.Drawing.Point(9, 202);
-            this.textLabel1.Name = "textLabel1";
-            this.textLabel1.Size = new System.Drawing.Size(91, 18);
-            this.textLabel1.TabIndex = 99;
-            this.textLabel1.Text = "FREE TEXT:";
-            this.textLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // insetPanel2
             // 
             this.insetPanel2.Controls.Add(this.lbl_metaInfo);
@@ -239,7 +211,7 @@
             this.lbl_readback.HasBorder = false;
             this.lbl_readback.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbl_readback.InteractiveText = true;
-            this.lbl_readback.Location = new System.Drawing.Point(7, 228);
+            this.lbl_readback.Location = new System.Drawing.Point(12, 200);
             this.lbl_readback.Name = "lbl_readback";
             this.lbl_readback.Size = new System.Drawing.Size(342, 38);
             this.lbl_readback.TabIndex = 103;
@@ -252,7 +224,7 @@
             this.dd_freq2.FocusColor = System.Drawing.Color.Cyan;
             this.dd_freq2.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.dd_freq2.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_freq2.Items")));
-            this.dd_freq2.Location = new System.Drawing.Point(109, 250);
+            this.dd_freq2.Location = new System.Drawing.Point(109, 221);
             this.dd_freq2.Name = "dd_freq2";
             this.dd_freq2.SelectedIndex = -1;
             this.dd_freq2.Size = new System.Drawing.Size(162, 25);
@@ -269,8 +241,6 @@
             this.Controls.Add(this.dd_freq);
             this.Controls.Add(this.lbl_destRoute);
             this.Controls.Add(this.insetPanel2);
-            this.Controls.Add(this.textLabel1);
-            this.Controls.Add(this.tbx_freetext);
             this.Controls.Add(this.lbl_depFreq);
             this.Controls.Add(this.lbl_route);
             this.Controls.Add(this.lbl_sqwkDeps);
@@ -288,7 +258,6 @@
             this.Text = "PDC Editor";
             this.insetPanel2.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -302,8 +271,6 @@
         private vatsys.TextLabel lbl_pdcHeader;
         private vatsys.TextLabel lbl_route;
         private vatsys.TextLabel lbl_depFreq;
-        private vatsys.TextField tbx_freetext;
-        private vatsys.TextLabel textLabel1;
         private vatsys.InsetPanel insetPanel2;
         private VATSYSControls.DropDownBox dd_freq;
         private vatsys.TextLabel lbl_readback;

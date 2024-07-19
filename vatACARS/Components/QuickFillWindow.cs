@@ -7,7 +7,9 @@ using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Helpers.Tranceiver;
+using static vatsys.Airspace2;
 using static vatsys.FDP2;
+using static vatsys.FDP2.FDR.ExtractedRoute;
 
 namespace vatACARS.Components
 {
@@ -124,7 +126,14 @@ namespace vatACARS.Components
                 foreach (FDP2.FDR.ExtractedRoute.Segment segment in networkPilotFDR.ParsedRoute.ToList())
                 {
                     if (segment.Type == FDP2.FDR.ExtractedRoute.Segment.SegmentTypes.WAYPOINT)
-                        AddQuickFillItem(segment.Intersection.Name);
+                        if (segment.Intersection.Name.Length > 5)
+                        {
+                            AddQuickFillItem(segment.Intersection.FullName);
+                        }
+                        else
+                        {
+                            AddQuickFillItem(segment.Intersection.Name);
+                        }
                 }
                 UpdateScrollbar();
             }

@@ -30,7 +30,7 @@ namespace vatACARS.Components
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}\n {(tbx_freetext.Text != "" ? $"\n{tbx_freetext.Text.ToUpperInvariant()}" : "")}";
+            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}";
             FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
             _ = HoppiesInterface.SendMessage(req);
 
