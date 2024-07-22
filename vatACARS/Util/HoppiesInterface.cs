@@ -133,7 +133,6 @@ namespace vatACARS.Util
             var rawMessages = await PollMessages();
             if (rawMessages == "OK")
             {
-                logger.Log("No new messages.");
                 if (!discardedFirstRequest) discardedFirstRequest = true;
                 return;
             }
