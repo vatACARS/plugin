@@ -113,7 +113,6 @@ namespace vatACARS.Util
             }
             catch (FormatException ex)
             {
-                // CPDLCMessage format was invalid
                 logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
                 msg = new CPDLCMessage();
             }
@@ -123,9 +122,7 @@ namespace vatACARS.Util
 
         private static async Task<string> PollMessages()
         {
-            logger.Log("Polling for new messages...");
             var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null), false);
-            logger.Log("Polling cycle completed.");
 
             return pollResponse.ToUpper().Trim();
         }
@@ -134,7 +131,6 @@ namespace vatACARS.Util
         {
             SetRandomInterval();
             var rawMessages = await PollMessages();
-            logger.Log($"Received raw messages:\n{rawMessages}");
             if (rawMessages == "OK")
             {
                 logger.Log("No new messages.");
@@ -160,7 +156,6 @@ namespace vatACARS.Util
             List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
             List<TelexMessage> telexMessages = new List<TelexMessage>();
 
-            logger.Log($"Received {responses.Count} messages.");
             if (responses.Count > 0)
             {
                 foreach (Match response in responses)
