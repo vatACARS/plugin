@@ -59,6 +59,7 @@ namespace vatACARS.Components
             this.tbl_quickFillSelector.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 63F));
             this.tbl_quickFillSelector.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 63F));
             this.tbl_quickFillSelector.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 63F));
+            this.tbl_quickFillSelector.Font = new System.Drawing.Font("Terminus (TTF)", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.tbl_quickFillSelector.Location = new System.Drawing.Point(3, 3);
             this.tbl_quickFillSelector.Name = "tbl_quickFillSelector";
             this.tbl_quickFillSelector.RowCount = 4;
@@ -75,13 +76,13 @@ namespace vatACARS.Components
             this.scr_quickfill.Change = 1;
             this.scr_quickfill.Location = new System.Drawing.Point(4, 170);
             this.scr_quickfill.Name = "scr_quickfill";
-            this.scr_quickfill.Orientation = ScrollOrientation.HorizontalScroll;
+            this.scr_quickfill.Orientation = System.Windows.Forms.ScrollOrientation.HorizontalScroll;
             this.scr_quickfill.PreferredHeight = 10;
             this.scr_quickfill.Size = new System.Drawing.Size(501, 20);
             this.scr_quickfill.TabIndex = 9;
             this.scr_quickfill.Value = 0;
-            this.scr_quickfill.Scrolling += new System.EventHandler(this.scr_quickfill_Scroll);
             this.scr_quickfill.Scroll += new System.EventHandler(this.scr_quickfill_Scroll);
+            this.scr_quickfill.Scrolling += new System.EventHandler(this.scr_quickfill_Scroll);
             // 
             // btn_confirm
             // 
