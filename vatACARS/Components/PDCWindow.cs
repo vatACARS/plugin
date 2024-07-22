@@ -17,6 +17,7 @@ namespace vatACARS.Components
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
         private Dictionary<string, string> PDCElements = new Dictionary<string, string>();
         private IMessageData selectedMsg;
+        private FDR networkPilotFDR;
 
         public PDCWindow()
         {
