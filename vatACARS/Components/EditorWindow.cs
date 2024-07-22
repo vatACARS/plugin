@@ -10,7 +10,7 @@ using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Components.QuickFillWindow;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS.Components
 {
@@ -77,7 +77,7 @@ namespace vatACARS.Components
                     return;
                 }
 
-                if (msg.State == 3)
+                if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished)
                 {
                     Text = $"Viewing Message from {msg.Station}";
                     foreach (Control ctl in Controls)
@@ -272,7 +272,7 @@ namespace vatACARS.Components
                     {
                         addTelexMessage(new TelexMessage()
                         {
-                            State = 3,
+                            State = MessageState.Uplink,
                             Station = selectedMsg.Station,
                             Content = resp.Replace("\n", ", "),
                             TimeReceived = DateTime.UtcNow
@@ -281,7 +281,7 @@ namespace vatACARS.Components
                     else
                     {
                         selectedMsg.Content = resp;
-                        selectedMsg.setMessageState(3); // Done
+                        selectedMsg.setMessageState(MessageState.Finished); // Done
                     }
                     _ = HoppiesInterface.SendMessage(req);
                 }
@@ -308,7 +308,7 @@ namespace vatACARS.Components
 
                         addCPDLCMessage(new CPDLCMessage()
                         {
-                            State = responseCode == "N" ? 3 : 2,
+                            State = responseCode == "N" ? MessageState.Finished : MessageState.Uplink,
                             Station = selectedMsg.Station,
                             Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
                             TimeReceived = DateTime.UtcNow,
@@ -326,14 +326,7 @@ namespace vatACARS.Components
                         });
 
                         selectedMsg.Content = encodedMessage.Replace("@", "");
-                        if (responseCode == "N")
-                        {
-                            selectedMsg.setMessageState(3);
-                        }
-                        else
-                        {
-                            selectedMsg.setMessageState(2); // Uplink
-                        }
+                        selectedMsg.setMessageState(responseCode == "N" ? MessageState.Finished : MessageState.Uplink);
                     }
 
                     _ = HoppiesInterface.SendMessage(req);
