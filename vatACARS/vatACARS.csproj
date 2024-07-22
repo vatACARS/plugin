@@ -134,7 +134,7 @@
       <DependentUpon>UpdateNotification.cs</DependentUpon>
     </Compile>
     <Compile Include="Lib\JSONReader.cs" />
-    <Compile Include="Lib\Tranceiver.cs" />
+    <Compile Include="Lib\Transceiver.cs" />
     <Compile Include="Lib\UpdateClient.cs" />
     <Compile Include="Lib\XMLReader.cs" />
     <Compile Include="Lib\VersionChecker.cs" />
