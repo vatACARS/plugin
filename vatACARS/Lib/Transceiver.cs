@@ -23,13 +23,9 @@ namespace vatACARS.Helpers
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
 
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
-
         public static event EventHandler<IMessageData> MessageUpdated;
-
         public static event EventHandler<Station> StationAdded;
-
         public static event EventHandler<Station> StationRemoved;
-
         public static event EventHandler<TelexMessage> TelexMessageReceived;
 
         public interface IMessageData
@@ -44,26 +40,19 @@ namespace vatACARS.Helpers
         {
             try
             {
-                logger.Log("CPDLCMessage successfully received.");
                 AudioInterface.playSound("incomingMessage");
 
                 if (message.Content == "LOGOFF") getAllStations().FirstOrDefault(station => station.Callsign == message.Station).removeStation();
 
                 if (message.ReplyMessageId != -1 && ClosingMessages.Contains(message.Content))
                 {
-                    logger.Log($"Closing message: '{message.Content}' - ReplyID: {message.ReplyMessageId}");
                     SentCPDLCMessage sentCPDLCMessage = SentCPDLCMessages.FirstOrDefault(msg => msg.MessageId == message.ReplyMessageId);
                     CPDLCMessage originalMessage = null;
                     if (sentCPDLCMessage != null) originalMessage = CPDLCMessages.FirstOrDefault(msg => msg.MessageId == sentCPDLCMessage.ReplyMessageId);
 
-                    if (originalMessage == null)
-                    {
-                        logger.Log("Original message not found.");
-                        CPDLCMessages.Add(message);
-                    }
+                    if (originalMessage == null) CPDLCMessages.Add(message);
                     else
                     {
-                        logger.Log($"Found message: '{originalMessage.Content}' - ID: {originalMessage.MessageId}");
                         SentCPDLCMessages.Remove(sentCPDLCMessage);
                         originalMessage.Response = message.Content;
                         if (message.Content != "STANDBY") originalMessage.setMessageState(MessageState.Finished);
@@ -96,7 +85,6 @@ namespace vatACARS.Helpers
 
         public static void addTelexMessage(TelexMessage message)
         {
-            logger.Log("TelexMessage successfully received.");
             AudioInterface.playSound("incomingMessage");
             TelexMessages.Add(message);
             TelexMessageReceived?.Invoke(null, message);
