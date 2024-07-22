@@ -39,7 +39,6 @@ namespace vatACARS.Util
                 {
                     using (var fs = new FileStream(fileName, FileMode.CreateNew))
                     {
-                        logger.Log($"({id}) Writing to file...");
                         await s.CopyToAsync(fs);
                         logger.Log($"({id}) Download completed.");
                     }
@@ -103,7 +102,6 @@ namespace vatACARS.Util
                     return "";
                 }
 
-                logger.Log($"({id}) GET request completed.");
                 return await response.Content.ReadAsStringAsync();
             }
             catch (HttpRequestException ex)
@@ -164,8 +162,6 @@ namespace vatACARS.Util
                     logger.Log($"({id}) POST request failed: {ex.ToString()}");
                     return "";
                 }
-
-                logger.Log($"({id}) POST request completed.");
 
                 return await response.Content.ReadAsStringAsync();
             }
