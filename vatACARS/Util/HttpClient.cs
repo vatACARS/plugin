@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace vatACARS.Util
@@ -52,6 +53,18 @@ namespace vatACARS.Util
             {
                 Console.WriteLine($"File I/O error: {ex.Message}");
             }
+            catch (TaskCanceledException ex)
+            {
+                if (!httpClient.Timeout.Equals(Timeout.InfiniteTimeSpan))
+                {
+                    logger.Log($"({id}) HTTP request timeout: {ex.Message}");
+                }
+                else
+                {
+                    logger.Log($"({id}) Task was canceled: {ex.Message}");
+                }
+                throw;
+            }
             catch (Exception ex)
             {
                 logger.Log($"({id}) An error occured: {ex.Message}");
@@ -96,6 +109,18 @@ namespace vatACARS.Util
             catch (HttpRequestException ex)
             {
                 logger.Log($"({id}) HTTP request error: {ex.Message}");
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                if (!httpClient.Timeout.Equals(Timeout.InfiniteTimeSpan))
+                {
+                    logger.Log($"({id}) HTTP request timeout: {ex.Message}");
+                }
+                else
+                {
+                    logger.Log($"({id}) Task was canceled: {ex.Message}");
+                }
                 throw;
             }
             catch (Exception ex)
@@ -147,6 +172,18 @@ namespace vatACARS.Util
             catch (HttpRequestException ex)
             {
                 logger.Log($"({id}) HTTP request error: {ex.Message}");
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                if (!httpClient.Timeout.Equals(Timeout.InfiniteTimeSpan))
+                {
+                    logger.Log($"({id}) HTTP request timeout: {ex.Message}");
+                }
+                else
+                {
+                    logger.Log($"({id}) Task was canceled: {ex.Message}");
+                }
                 throw;
             }
             catch (Exception ex)
