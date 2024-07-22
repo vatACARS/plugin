@@ -5,12 +5,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS.Util
 {
@@ -107,12 +108,11 @@ namespace vatACARS.Util
                     MessageId = fields[1] != "" ? int.Parse(fields[1]) : -1,
                     ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,
                     ResponseType = fields[3],
-                    Content = fields[4]
+                    Content = String.Join(", ", fields.Skip(3))
                 };
             }
             catch (FormatException ex)
             {
-                // CPDLCMessage format was invalid
                 logger.Log($"CPDLCMessage from {station} was invalid! {ex.Message}");
                 msg = new CPDLCMessage();
             }
@@ -122,9 +122,7 @@ namespace vatACARS.Util
 
         private static async Task<string> PollMessages()
         {
-            logger.Log("Polling for new messages...");
             var pollResponse = await SendMessage(ConstructMessage(ClientInformation.Callsign, "poll", null), false);
-            logger.Log("Polling cycle completed.");
 
             return pollResponse.ToUpper().Trim();
         }
@@ -133,10 +131,8 @@ namespace vatACARS.Util
         {
             SetRandomInterval();
             var rawMessages = await PollMessages();
-            logger.Log($"Received raw messages:\n{rawMessages}");
             if (rawMessages == "OK")
             {
-                logger.Log("No new messages.");
                 if (!discardedFirstRequest) discardedFirstRequest = true;
                 return;
             }
@@ -159,7 +155,6 @@ namespace vatACARS.Util
             List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
             List<TelexMessage> telexMessages = new List<TelexMessage>();
 
-            logger.Log($"Received {responses.Count} messages.");
             if (responses.Count > 0)
             {
                 foreach (Match response in responses)
@@ -185,7 +180,7 @@ namespace vatACARS.Util
                                 logger.Log($"ADS-C: {station} | {mContent}");
                                 telexMessages.Add(new TelexMessage()
                                 {
-                                    State = 3,
+                                    State = MessageState.ADSC,
                                     Station = station,
                                     TimeReceived = DateTime.UtcNow,
                                     Content = mContent

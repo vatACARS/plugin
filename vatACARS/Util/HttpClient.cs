@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace vatACARS.Util
@@ -38,7 +39,6 @@ namespace vatACARS.Util
                 {
                     using (var fs = new FileStream(fileName, FileMode.CreateNew))
                     {
-                        logger.Log($"({id}) Writing to file...");
                         await s.CopyToAsync(fs);
                         logger.Log($"({id}) Download completed.");
                     }
@@ -51,6 +51,18 @@ namespace vatACARS.Util
             catch (IOException ex)
             {
                 Console.WriteLine($"File I/O error: {ex.Message}");
+            }
+            catch (TaskCanceledException ex)
+            {
+                if (!httpClient.Timeout.Equals(Timeout.InfiniteTimeSpan))
+                {
+                    logger.Log($"({id}) HTTP request timeout: {ex.Message}");
+                }
+                else
+                {
+                    logger.Log($"({id}) Task was canceled: {ex.Message}");
+                }
+                throw;
             }
             catch (Exception ex)
             {
@@ -90,12 +102,23 @@ namespace vatACARS.Util
                     return "";
                 }
 
-                logger.Log($"({id}) GET request completed.");
                 return await response.Content.ReadAsStringAsync();
             }
             catch (HttpRequestException ex)
             {
                 logger.Log($"({id}) HTTP request error: {ex.Message}");
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                if (!httpClient.Timeout.Equals(Timeout.InfiniteTimeSpan))
+                {
+                    logger.Log($"({id}) HTTP request timeout: {ex.Message}");
+                }
+                else
+                {
+                    logger.Log($"({id}) Task was canceled: {ex.Message}");
+                }
                 throw;
             }
             catch (Exception ex)
@@ -140,13 +163,23 @@ namespace vatACARS.Util
                     return "";
                 }
 
-                logger.Log($"({id}) POST request completed.");
-
                 return await response.Content.ReadAsStringAsync();
             }
             catch (HttpRequestException ex)
             {
                 logger.Log($"({id}) HTTP request error: {ex.Message}");
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                if (!httpClient.Timeout.Equals(Timeout.InfiniteTimeSpan))
+                {
+                    logger.Log($"({id}) HTTP request timeout: {ex.Message}");
+                }
+                else
+                {
+                    logger.Log($"({id}) Task was canceled: {ex.Message}");
+                }
                 throw;
             }
             catch (Exception ex)

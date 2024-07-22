@@ -6,10 +6,8 @@ using System.Windows.Forms;
 using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
-using static vatsys.Airspace2;
+using static vatACARS.Helpers.Transceiver;
 using static vatsys.FDP2;
-using static vatsys.FDP2.FDR.ExtractedRoute;
 
 namespace vatACARS.Components
 {
@@ -20,6 +18,7 @@ namespace vatACARS.Components
         private static Logger logger = new Logger("QuickFillWindow");
         private static Label SelectedLabel;
         private string identifier;
+        private FDR networkPilotFDR;
 
         private List<Label> quickFillItems = new List<Label>();
 
@@ -119,7 +118,7 @@ namespace vatACARS.Components
 
         private void LoadAddRoute()
         {
-            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
             if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
             {
                 errorHandler.AddError("Pilot has invalid or No Route.");

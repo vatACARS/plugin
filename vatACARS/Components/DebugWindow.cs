@@ -3,7 +3,7 @@ using System.Drawing;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS.Components
 {
@@ -23,9 +23,9 @@ namespace vatACARS.Components
             {
                 if (dd_type.Text == "CPDLCMessage")
                 {
-                    addCPDLCMessage(new Tranceiver.CPDLCMessage()
+                    addCPDLCMessage(new CPDLCMessage()
                     {
-                        State = int.Parse(dd_state.Text),
+                        State = (MessageState)int.Parse(dd_state.Text),
                         Station = tbx_station.Text,
                         Content = tbx_content.Text,
                         TimeReceived = DateTime.UtcNow
@@ -33,9 +33,9 @@ namespace vatACARS.Components
                 }
                 else if (dd_type.Text == "TelexMessage")
                 {
-                    addTelexMessage(new Tranceiver.TelexMessage()
+                    addTelexMessage(new TelexMessage()
                     {
-                        State = int.Parse(dd_state.Text),
+                        State = (MessageState)int.Parse(dd_state.Text),
                         Station = tbx_station.Text,
                         Content = tbx_content.Text,
                         TimeReceived = DateTime.UtcNow
@@ -56,7 +56,7 @@ namespace vatACARS.Components
         {
             try
             {
-                addStation(new Tranceiver.Station()
+                addStation(new Transceiver.Station()
                 {
                     Callsign = tbx_stationc.Text,
                     Provider = int.Parse(dd_prov.Text)

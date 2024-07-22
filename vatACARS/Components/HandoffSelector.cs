@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Windows.Forms;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS.Components
 {
@@ -51,12 +51,19 @@ namespace vatACARS.Components
 
                 addCPDLCMessage(new CPDLCMessage()
                 {
-                    State = 2,
+                    State = MessageState.Uplink,
                     Station = selectedStation.Callsign,
                     Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
                     TimeReceived = DateTime.UtcNow,
                     MessageId = SentMessages,
                     ReplyMessageId = -1
+                });
+
+                addTelexMessage(new TelexMessage()
+                {
+                    State = MessageState.Finished,
+                    Station = ((StationInformation)SelectedDataAuthority.Tag).Station_Code,
+                    Content = $"HANDED {selectedStation.Callsign} TO YOU\nTHIS IS AN AUTO MSG, REPLY NOT REQD.",
                 });
 
                 Close();

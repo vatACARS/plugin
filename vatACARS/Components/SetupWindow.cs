@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using vatACARS.Components;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS
 {
@@ -251,10 +251,6 @@ namespace vatACARS
             Properties.Settings.Default.Save();
         }
 
-        private void btn_test_Click(object sender, EventArgs e)
-        {
-        }
-
         private void SetupWindow_Shown(object sender, EventArgs e)
         {
             tbx_stationCode.Text = Properties.Settings.Default.stationCode;
@@ -332,11 +328,6 @@ namespace vatACARS
                 Properties.Settings.Default.vatACARSToken = tbx_vatACARSToken.Text;
                 Properties.Settings.Default.Save();
             }
-        }
-
-        private void btn_debug_Click(object sender, EventArgs e)
-        {
-            DoShowDebugWindow();
         }
     }
 }
