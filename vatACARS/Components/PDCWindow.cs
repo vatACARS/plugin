@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Windows.Forms;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 using static vatsys.FDP2;
 
 namespace vatACARS.Components
@@ -44,7 +44,7 @@ namespace vatACARS.Components
 
             addCPDLCMessage(new CPDLCMessage()
             {
-                State = 2,
+                State = MessageState.Uplink,
                 Station = selectedMsg.Station,
                 Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
                 TimeReceived = DateTime.UtcNow,
@@ -52,7 +52,7 @@ namespace vatACARS.Components
                 ReplyMessageId = -1
             });
 
-            selectedMsg.setMessageState(3);
+            selectedMsg.setMessageState(MessageState.Finished);
             Close();
         }
 
@@ -80,7 +80,7 @@ namespace vatACARS.Components
 
         private void InitPlaceholders()
         {
-            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
             if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
             {
                 Close();
