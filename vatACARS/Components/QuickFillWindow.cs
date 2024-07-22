@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 using static vatsys.FDP2;
 
 namespace vatACARS.Components
@@ -115,7 +115,7 @@ namespace vatACARS.Components
 
         private void LoadAddRoute()
         {
-            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
             if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
             {
                 errorHandler.AddError("Pilot has invalid or No Route.");
