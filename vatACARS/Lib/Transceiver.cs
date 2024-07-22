@@ -1,5 +1,5 @@
 ﻿/*
- * Tranceiver.cs
+ * Transceiver.cs
  * Handles communication between vatACARS and ACARS servers.
  */
 
@@ -11,13 +11,13 @@ using vatACARS.Util;
 
 namespace vatACARS.Helpers
 {
-    public static class Tranceiver
+    public static class Transceiver
     {
         public static bool connected = false;
         public static int SentMessages = 1;
         private static List<string> ClosingMessages = new List<string>() { "WILCO", "UNABLE", "ROGER", "STANDBY", "AFFIRM", "NEGATIVE" };
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
-        private static Logger logger = new Logger("Tranceiver");
+        private static Logger logger = new Logger("Transceiver");
         private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
         private static List<Station> Stations = new List<Station>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
@@ -35,7 +35,7 @@ namespace vatACARS.Helpers
         public interface IMessageData
         {
             string Content { get; set; }
-            int State { get; set; }
+            MessageState State { get; set; }
             string Station { get; set; }
             DateTime TimeReceived { get; set; }
         }
@@ -66,13 +66,13 @@ namespace vatACARS.Helpers
                         logger.Log($"Found message: '{originalMessage.Content}' - ID: {originalMessage.MessageId}");
                         SentCPDLCMessages.Remove(sentCPDLCMessage);
                         originalMessage.Response = message.Content;
-                        if (message.Content != "STANDBY") originalMessage.setMessageState(4); // Done
+                        if (message.Content != "STANDBY") originalMessage.setMessageState(MessageState.Finished);
                     }
                 }
                 else
                 {
                     CPDLCMessages.Add(message);
-                    if (message.ResponseType == "N") message.setMessageState(3); // ResponseNotReqd
+                    if (message.ResponseType == "N") message.setMessageState(MessageState.DownlinkResponseNotRequired);
                 }
             }
             catch (Exception ex)
@@ -123,11 +123,11 @@ namespace vatACARS.Helpers
             StationRemoved?.Invoke(null, station);
         }
 
-        public static async void setMessageState(this IMessageData message, int state)
+        public static async void setMessageState(this IMessageData message, MessageState state)
         {
             message.State = state;
 
-            if (state == 3)
+            if (state == MessageState.Finished)
             {
                 await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.finishedMessageTimeout));
                 message.removeMessage();
@@ -156,13 +156,14 @@ namespace vatACARS.Helpers
              * 2 = Uplink
              * 3 = DownlinkRespNotReqd
              * 4 = Finished
+             * 5 = ADS-C
              */
             public int MessageId;
             public int ReplyMessageId;
             public string ResponseType;
             public string Content { get; set; }
             public string Response { get; set; } = "";
-            public int State { get; set; }
+            public MessageState State { get; set; }
             public string Station { get; set; }
             public DateTime TimeReceived { get; set; }
         }
@@ -192,9 +193,10 @@ namespace vatACARS.Helpers
              * 2 = Uplink
              * 3 = DownlinkRespNotReqd
              * 4 = Finished
+             * 5 = ADS-C
              */
             public string Content { get; set; }
-            public int State { get; set; }
+            public MessageState State { get; set; }
             public string Station { get; set; }
             public DateTime TimeReceived { get; set; }
         }
