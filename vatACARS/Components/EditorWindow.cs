@@ -46,6 +46,8 @@ namespace vatACARS.Components
             StyleComponent();
             selectedMsg = DispatchWindow.SelectedMessage;
 
+            lbl_response.Invalidate();
+
             if (selectedMsg is TelexMessage)
             {
                 var msg = (TelexMessage)selectedMsg;
@@ -72,12 +74,12 @@ namespace vatACARS.Components
 
                 if (msg.Content == "(no message received)")
                 {
-                    this.Text = $"Sending to {msg.Station}";
+                    Text = $"Sending to {msg.Station}";
                     btn_editor_Click(null, null);
                     return;
                 }
 
-                if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished)
+                if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished || msg.State == MessageState.ADSC)
                 {
                     Text = $"Viewing Message from {msg.Station}";
                     foreach (Control ctl in Controls)
@@ -93,7 +95,7 @@ namespace vatACARS.Components
             {
                 var msg = (CPDLCMessage)selectedMsg;
 
-                this.Text = $"Replying to {msg.Station}";
+                Text = $"Replying to {msg.Station}";
                 ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
                 lvMsg.SubItems.Add($"{msg.Content}");
                 lvMsg.Font = MMI.eurofont_winsml;
