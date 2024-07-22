@@ -5,12 +5,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS.Util
 {
@@ -107,7 +108,7 @@ namespace vatACARS.Util
                     MessageId = fields[1] != "" ? int.Parse(fields[1]) : -1,
                     ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,
                     ResponseType = fields[3],
-                    Content = fields[4]
+                    Content = String.Join(", ", fields.Skip(3))
                 };
             }
             catch (FormatException ex)
@@ -185,7 +186,7 @@ namespace vatACARS.Util
                                 logger.Log($"ADS-C: {station} | {mContent}");
                                 telexMessages.Add(new TelexMessage()
                                 {
-                                    State = 3,
+                                    State = MessageState.ADSC,
                                     Station = station,
                                     TimeReceived = DateTime.UtcNow,
                                     Content = mContent
