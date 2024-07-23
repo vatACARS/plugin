@@ -3,7 +3,7 @@ using System.Net.Http;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS.Components
 {
@@ -24,7 +24,8 @@ namespace vatACARS.Components
         {
             try
             {
-                selectedMsg.setMessageState(3);
+                selectedMsg.Content = "LOGON ACCEPTED";
+                selectedMsg.setMessageState(MessageState.Finished);
                 addStation(new Station()
                 {
                     Provider = 0,
@@ -44,7 +45,7 @@ namespace vatACARS.Components
         {
             try
             {
-                selectedMsg.setMessageState(3);
+                selectedMsg.setMessageState(MessageState.Finished);
                 FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}/{selectedMsg.MessageId}/N/SERVICE UNAVAILABLE");
                 _ = HoppiesInterface.SendMessage(req);
             }

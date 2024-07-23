@@ -5,15 +5,17 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using vatACARS.Components;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS
 {
     public partial class SetupWindow : BaseForm
     {
         private static HttpClient client = new HttpClient();
+        private static DebugWindow debugWindow;
 
         private static bool Hoppies = Properties.Settings.Default.enableHoppies;
 
@@ -249,10 +251,6 @@ namespace vatACARS
             Properties.Settings.Default.Save();
         }
 
-        private void btn_test_Click(object sender, EventArgs e)
-        {
-        }
-
         private void SetupWindow_Shown(object sender, EventArgs e)
         {
             tbx_stationCode.Text = Properties.Settings.Default.stationCode;
@@ -301,6 +299,20 @@ namespace vatACARS
             sld_auralAlertVolume.ForeColor = Colours.GetColour(Colours.Identities.ListSeparator);
             sld_auralAlertVolume.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             sld_auralAlertVolume.Font = MMI.eurofont_winsml;
+        }
+
+        private static void DoShowDebugWindow()
+        {
+            if (debugWindow == null || debugWindow.IsDisposed)
+            {
+                debugWindow = new DebugWindow();
+            }
+            else if (debugWindow.Visible)
+            {
+                return;
+            }
+
+            debugWindow.Show(Form.ActiveForm);
         }
 
         private void tbx_hoppiesLogonCode_TextChanged(object sender, EventArgs e)

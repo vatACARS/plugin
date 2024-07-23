@@ -49,25 +49,22 @@ namespace vatACARS.Util
                 AudioInterface.playSound("error");
                 StopListening();
                 HoppiesInterface.StopListening();
-                Tranceiver.connected = false;
+                Transceiver.connected = false;
                 SetupWindow setupWindow = new SetupWindow();
                 setupWindow.ShowDialog();
                 return;
             }
+
             string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                {"station", Tranceiver.ClientInformation.Callsign},
+                {"station", Transceiver.ClientInformation.Callsign},
                 {"token", Properties.Settings.Default.vatACARSToken},
                 {"sectors", JsonConvert.SerializeObject(MMI.SectorsControlled.Where(sector => !MMI.SectorsControlled.SelectMany(s => s.SubSectors).Contains(sector)).ToList().Select(sector => new { name = sector.Name, callsign = sector.Callsign, frequency = sector.Frequency }).ToArray()) },
                 {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition.DefaultCenter.Latitude, longitude = MMI.PrimePosition.DefaultCenter.Longitude })}
             }));
 
             APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
-            if (!ResponseDecoded.Success)
-            {
-                logger.Log($"Heartbeat failed: {ResponseDecoded.Message}");
-                AudioInterface.playSound("error");
-            }
+            if (!ResponseDecoded.Success) ErrorHandler.GetInstance().AddError($"Heartbeat to vatACARS failed: {ResponseDecoded.Message}");
 
             string OnlineStationsResponse = await client.GetStringTaskAsync("/atsu/online");
             StationInformation[] StationsResponseDecoded = JsonConvert.DeserializeObject<StationInformation[]>(OnlineStationsResponse);

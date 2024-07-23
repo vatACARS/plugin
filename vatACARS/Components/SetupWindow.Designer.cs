@@ -152,7 +152,6 @@
             this.btn_auralAlertVolumeTest.SubText = "";
             this.btn_auralAlertVolumeTest.TabIndex = 22;
             this.btn_auralAlertVolumeTest.UseVisualStyleBackColor = true;
-            this.btn_auralAlertVolumeTest.Click += new System.EventHandler(this.btn_test_Click);
             this.btn_auralAlertVolumeTest.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_auralAlertVolumeTest_MouseUp);
             // 
             // lbl_auralAlertVolume
@@ -303,6 +302,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HasMinimizeButton = false;
             this.HasSendBackButton = false;
+            this.KeyPreview = true;
             this.MiddleClickClose = false;
             this.MinimizeBox = false;
             this.Name = "SetupWindow";

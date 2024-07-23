@@ -10,7 +10,7 @@ using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Components.QuickFillWindow;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 
 namespace vatACARS.Components
 {
@@ -46,6 +46,8 @@ namespace vatACARS.Components
             StyleComponent();
             selectedMsg = DispatchWindow.SelectedMessage;
 
+            lbl_response.Invalidate();
+
             if (selectedMsg is TelexMessage)
             {
                 var msg = (TelexMessage)selectedMsg;
@@ -72,12 +74,12 @@ namespace vatACARS.Components
 
                 if (msg.Content == "(no message received)")
                 {
-                    this.Text = $"Sending to {msg.Station}";
+                    Text = $"Sending to {msg.Station}";
                     btn_editor_Click(null, null);
                     return;
                 }
 
-                if (msg.State == 3)
+                if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished || msg.State == MessageState.ADSC)
                 {
                     Text = $"Viewing Message from {msg.Station}";
                     foreach (Control ctl in Controls)
@@ -93,7 +95,7 @@ namespace vatACARS.Components
             {
                 var msg = (CPDLCMessage)selectedMsg;
 
-                this.Text = $"Replying to {msg.Station}";
+                Text = $"Replying to {msg.Station}";
                 ListViewItem lvMsg = new ListViewItem(msg.TimeReceived.ToString("HH:mm"));
                 lvMsg.SubItems.Add($"{msg.Content}");
                 lvMsg.Font = MMI.eurofont_winsml;
@@ -208,6 +210,7 @@ namespace vatACARS.Components
         private void btn_editor_Click(object sender, EventArgs e)
         {
             lbl_response.Text = "";
+            lbl_response.Refresh();
             pnl_categories.Visible = true;
             response = new ResponseItem[5];
             responseIndex = 0;
@@ -271,7 +274,7 @@ namespace vatACARS.Components
                     {
                         addTelexMessage(new TelexMessage()
                         {
-                            State = 3,
+                            State = MessageState.Uplink,
                             Station = selectedMsg.Station,
                             Content = resp.Replace("\n", ", "),
                             TimeReceived = DateTime.UtcNow
@@ -280,7 +283,7 @@ namespace vatACARS.Components
                     else
                     {
                         selectedMsg.Content = resp;
-                        selectedMsg.setMessageState(3); // Done
+                        selectedMsg.setMessageState(MessageState.Finished); // Done
                     }
                     _ = HoppiesInterface.SendMessage(req);
                 }
@@ -307,7 +310,7 @@ namespace vatACARS.Components
 
                         addCPDLCMessage(new CPDLCMessage()
                         {
-                            State = responseCode == "N" ? 3 : 2,
+                            State = responseCode == "N" ? MessageState.Finished : MessageState.Uplink,
                             Station = selectedMsg.Station,
                             Content = encodedMessage.Replace("@", "").Replace("\n", ", "),
                             TimeReceived = DateTime.UtcNow,
@@ -325,14 +328,7 @@ namespace vatACARS.Components
                         });
 
                         selectedMsg.Content = encodedMessage.Replace("@", "");
-                        if (responseCode == "N")
-                        {
-                            selectedMsg.setMessageState(3);
-                        }
-                        else
-                        {
-                            selectedMsg.setMessageState(2); // Uplink
-                        }
+                        selectedMsg.setMessageState(responseCode == "N" ? MessageState.Finished : MessageState.Uplink);
                     }
 
                     _ = HoppiesInterface.SendMessage(req);

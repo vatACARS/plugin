@@ -11,14 +11,14 @@ using vatACARS.Lib;
 using vatACARS.Util;
 using vatsys;
 using vatsys.Plugin;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 using static vatsys.FDP2;
 
 namespace vatACARS
 {
     public static class AppData
     {
-        public static Version CurrentVersion { get; } = new Version(1, 0, 3);
+        public static Version CurrentVersion { get; } = new Version(1, 0, 4);
     }
 
     [Export(typeof(IPlugin))]
@@ -211,10 +211,16 @@ namespace vatACARS
 
         private void CPDLCLabelClick(CustomLabelItemMouseClickEventArgs e)
         {
+            FDR fdr = e.Track.GetFDR();
+            if (fdr == null)
+            {
+                ErrorHandler.GetInstance().AddError($"Selected aircraft has not submitted a flight plan.");
+                return;
+            }
             DispatchWindow.SelectedMessage = new CPDLCMessage()
             {
                 State = 0,
-                Station = e.Track.GetFDR().Callsign,
+                Station = fdr.Callsign,
                 Content = "(no message received)",
                 TimeReceived = DateTime.UtcNow
             };
@@ -297,6 +303,11 @@ namespace vatACARS
             {
                 logger.Log($"Error in Start: {e.Message}");
             }
+        }
+
+        private void ActiveForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

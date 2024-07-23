@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
-using static vatACARS.Helpers.Tranceiver;
+using static vatACARS.Helpers.Transceiver;
 using static vatACARS.Util.ExtendedUI;
 
 namespace vatACARS.Components
@@ -50,6 +50,7 @@ namespace vatACARS.Components
                 }
             };
 
+
             UpdateMessages();
         }
 
@@ -57,23 +58,23 @@ namespace vatACARS.Components
         {
             try
             {
-                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 4 ? -1 : message.State, lvw_messages);
+                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == MessageState.Finished ? -1 : (int)message.State, lvw_messages);
                 item.SubItems.Add($"{message.Station}: {message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
-                item.Group = lvw_messages.Groups[message.State];
-                if (message.State == 0 || message.State == 3)
-                { // DOWNLINK OR DOWNLINKRESPNOTREQUIRED
+                item.Group = lvw_messages.Groups[(int)message.State];
+                if (message.State == MessageState.Downlink || message.State == MessageState.DownlinkResponseNotRequired || message.State == MessageState.ADSC)
+                {
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
-                else if (message.State == 1)
-                { // STBY/DEFER
+                else if (message.State == MessageState.StbyDefer)
+                {
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCFreetext);
                 }
-                else if (message.State == 2)
-                { // UPLINK
+                else if (message.State == MessageState.Uplink)
+                {
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
@@ -84,7 +85,7 @@ namespace vatACARS.Components
                 }
                 lvw_messages.Items.Add(item);
 
-                if (message.State < 2)
+                if (message.State == MessageState.Downlink || message.State == MessageState.StbyDefer)
                 {
                     GenericButton finishBtn = item.ContextMenu.CreateButton();
                     finishBtn.Text = "Unable";
@@ -94,12 +95,12 @@ namespace vatACARS.Components
                         item.ContextMenu.Show(false);
                         FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "telex", $"UNABLE");
                         _ = HoppiesInterface.SendMessage(req);
-                        message.setMessageState(3);
+                        message.setMessageState(MessageState.Finished);
                         UpdateMessages();
                     };
                 }
 
-                if (message.State == 0)
+                if (message.State == MessageState.Downlink)
                 {
                     GenericButton stbyBtn = item.ContextMenu.CreateButton();
                     stbyBtn.Text = "Standby";
@@ -109,12 +110,12 @@ namespace vatACARS.Components
                         item.ContextMenu.Show(false);
                         FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "telex", $"STANDBY");
                         _ = HoppiesInterface.SendMessage(req);
-                        message.setMessageState(1);
+                        message.setMessageState(MessageState.StbyDefer);
                         UpdateMessages();
                     };
                 }
 
-                if (message.State == 3)
+                if (message.State == MessageState.Finished)
                 {
                     GenericButton viewBtn = item.ContextMenu.CreateButton();
                     viewBtn.Text = "View";
@@ -138,24 +139,24 @@ namespace vatACARS.Components
         {
             try
             {
-                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == 4 ? -1 : message.State, lvw_messages);
+                ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == MessageState.Finished ? -1 : (int)message.State, lvw_messages);
 
                 item.SubItems.Add($"{message.Station.PadRight(7)}: {(message.Response != "" ? $"[{message.Response}] " : "")}{message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
-                item.Group = lvw_messages.Groups[message.State];
-                if (message.State == 0 || message.State == 3)
-                { // DOWNLINK OR DOWNLINKRESPNOTREQUIRED
+                item.Group = lvw_messages.Groups[(int)message.State];
+                if (message.State == MessageState.Downlink || message.State == MessageState.DownlinkResponseNotRequired)
+                {
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
-                else if (message.State == 1)
-                { // STBY/DEFER
+                else if (message.State == MessageState.StbyDefer)
+                {
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCFreetext);
                 }
-                else if (message.State == 2)
-                { // UPLINK
+                else if (message.State == MessageState.Uplink)
+                {
                     item.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
                     item.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 }
@@ -166,7 +167,7 @@ namespace vatACARS.Components
                 }
                 lvw_messages.Items.Add(item);
 
-                if (message.State < 4)
+                if (message.State != MessageState.Finished)
                 {
                     GenericButton finishBtn = item.ContextMenu.CreateButton();
                     finishBtn.Text = "Close";
@@ -174,9 +175,7 @@ namespace vatACARS.Components
                     finishBtn.Click += delegate
                     {
                         item.ContextMenu.Show(false);
-                        //FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/UNABLE");
-                        //_ = HoppiesInterface.SendMessage(req);
-                        message.setMessageState(3);
+                        message.setMessageState(MessageState.Finished);
                         UpdateMessages();
                     };
                 }
@@ -192,12 +191,12 @@ namespace vatACARS.Components
                         FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/STANDBY");
                         _ = HoppiesInterface.SendMessage(req);
                         message.Content = "STANDBY";
-                        message.setMessageState(1);
+                        message.setMessageState(MessageState.StbyDefer);
                         UpdateMessages();
                     };
                 }
 
-                if (message.State == 3)
+                if (message.State == MessageState.Uplink || message.State == MessageState.Finished || message.State == MessageState.ADSC)
                 {
                     GenericButton viewBtn = item.ContextMenu.CreateButton();
                     viewBtn.Text = "View";
@@ -226,7 +225,6 @@ namespace vatACARS.Components
             callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
             callsignLabel.Margin = new Padding(3); // A bit of spacing
 
-            callsignLabel.MouseEnter += (sender, e) => callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCDownlink);
             callsignLabel.MouseLeave += (sender, e) => callsignLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
 
             callsignLabel.MouseDown += (sender, e) =>
@@ -312,7 +310,7 @@ namespace vatACARS.Components
 
                     if (e.Button == MouseButtons.Left)
                     {
-                        if (msg.State == 0 || msg.State == 1 || msg.State == 3)
+                        if (msg.State == MessageState.Downlink || msg.State == MessageState.DownlinkResponseNotRequired || msg.State == MessageState.StbyDefer)
                         {
                             SelectedMessage = msg;
                             if (msg is CPDLCMessage)

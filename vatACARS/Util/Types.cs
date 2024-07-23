@@ -35,4 +35,14 @@ namespace vatACARS.Util
         public string Sectors { get; set; }
         public string Station_Code { get; set; }
     }
+
+    public enum MessageState
+    {
+        Downlink = 0,
+        DownlinkResponseNotRequired = 1,
+        ADSC = 2,
+        StbyDefer = 3,
+        Uplink = 4,
+        Finished = 5
+    }
 }
