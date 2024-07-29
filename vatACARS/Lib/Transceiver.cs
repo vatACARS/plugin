@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using vatACARS.Components;
 using vatACARS.Util;
 
 namespace vatACARS.Helpers
@@ -161,6 +162,7 @@ namespace vatACARS.Helpers
             public MessageState State { get; set; }
             public string Station { get; set; }
             public DateTime TimeReceived { get; set; }
+            public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
         }
 
         public class SentCPDLCMessage
@@ -194,6 +196,7 @@ namespace vatACARS.Helpers
             public MessageState State { get; set; }
             public string Station { get; set; }
             public DateTime TimeReceived { get; set; }
+            public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
         }
     }
 }
