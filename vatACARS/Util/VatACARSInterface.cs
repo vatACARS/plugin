@@ -45,7 +45,7 @@ namespace vatACARS.Util
 
         private static async void HeartbeatTimer(object sender, ElapsedEventArgs e)
         {
-            if (!Network.IsConnected || !Network.IsValidATC)
+            if (!Network.IsConnected || !Network.IsValidATC || Transceiver.ClientInformation.Callsign == null || MMI.SectorsControlled.Count < 1)
             {
                 StopListening();
                 HoppiesInterface.StopListening();
@@ -57,7 +57,7 @@ namespace vatACARS.Util
                 }
                 return;
             }
-
+            
             string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 {"station", Transceiver.ClientInformation.Callsign},
