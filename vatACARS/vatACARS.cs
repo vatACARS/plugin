@@ -18,7 +18,7 @@ namespace vatACARS
 {
     public static class AppData
     {
-        public static Version CurrentVersion { get; } = new Version(1, 0, 4);
+        public static Version CurrentVersion { get; } = new Version(1, 0, 6);
     }
 
     [Export(typeof(IPlugin))]
@@ -26,7 +26,7 @@ namespace vatACARS
     {
         private static DispatchWindow dispatchWindow = new DispatchWindow();
         private static HandoffSelector HandoffSelector;
-        private static SetupWindow setupWindow;
+        public static SetupWindow setupWindow;
         private readonly Logger logger = new Logger("vatACARS");
         private CustomToolStripMenuItem dispatchWindowMenu;
         private CustomToolStripMenuItem setupWindowMenu;
@@ -195,7 +195,7 @@ namespace vatACARS
             dispatchWindow.Show(Form.ActiveForm);
         }
 
-        private static void DoShowSetupWindow()
+        public static void DoShowSetupWindow()
         {
             if (setupWindow == null || setupWindow.IsDisposed)
             {
