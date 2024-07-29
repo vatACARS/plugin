@@ -345,14 +345,12 @@ namespace vatACARS.Components
                                     }
                                     else
                                     {
-                                        EditorWindow window2 = new EditorWindow();
-                                        window2.Show(ActiveForm);
+                                        ShowEditorWindow(msg);
                                     }
                                     return;
                                 }
                             }
-                            EditorWindow window = new EditorWindow();
-                            window.Show(ActiveForm);
+                            ShowEditorWindow(msg);
                         }
                         lvw_messages.Invalidate();
                     }
@@ -368,6 +366,28 @@ namespace vatACARS.Components
             {
                 logger.Log($"Something went wrong:\n{ex.ToString()}");
             }
+        }
+
+        private void ShowEditorWindow(IMessageData msg)
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is EditorWindow && ((EditorWindow)form).selectedMsg == msg)
+                {
+                    if (form.Visible)
+                    {
+                        form.BringToFront();
+                        return;
+                    }
+                    else
+                    {
+                        form.Close();
+                    }
+                }
+            }
+            EditorWindow window = new EditorWindow();
+            window.selectedMsg = msg;
+            window.Show(ActiveForm);
         }
 
         private void PollTimer(object sender, ElapsedEventArgs e)

@@ -101,6 +101,7 @@
             this.btn_escape.TabIndex = 2;
             this.btn_escape.Text = "Escape";
             this.btn_escape.UseVisualStyleBackColor = true;
+            this.btn_escape.Click += new System.EventHandler(this.btn_escape_Click);
             // 
             // insetPanel2
             // 
@@ -418,6 +419,7 @@
             this.btn_restore.TabIndex = 22;
             this.btn_restore.Text = "Restore";
             this.btn_restore.UseVisualStyleBackColor = true;
+            this.btn_restore.Click += new System.EventHandler(this.btn_restore_Click);
             // 
             // btn_send
             // 

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using vatACARS.Components;
 using vatACARS.Util;
 
 namespace vatACARS.Helpers
@@ -79,8 +80,15 @@ namespace vatACARS.Helpers
 
         public static void addStation(Station station)
         {
-            Stations.Add(station);
-            StationAdded?.Invoke(null, station);
+            if (!Stations.Any(s => s.Callsign == station.Callsign))
+            {
+                Stations.Add(station);
+                StationAdded?.Invoke(null, station);
+            }
+            else
+            {
+                ErrorHandler.GetInstance().AddError($"Station Already Exists: {station.Callsign}");
+            }
         }
 
         public static void addTelexMessage(TelexMessage message)
@@ -154,6 +162,7 @@ namespace vatACARS.Helpers
             public MessageState State { get; set; }
             public string Station { get; set; }
             public DateTime TimeReceived { get; set; }
+            public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
         }
 
         public class SentCPDLCMessage
@@ -187,6 +196,7 @@ namespace vatACARS.Helpers
             public MessageState State { get; set; }
             public string Station { get; set; }
             public DateTime TimeReceived { get; set; }
+            public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
         }
     }
 }

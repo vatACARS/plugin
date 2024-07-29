@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Timers;
 using vatACARS.Helpers;
 using vatsys;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace vatACARS.Util
 {
@@ -46,12 +47,14 @@ namespace vatACARS.Util
         {
             if (!Network.IsConnected || !Network.IsValidATC)
             {
-                AudioInterface.playSound("error");
                 StopListening();
                 HoppiesInterface.StopListening();
                 Transceiver.connected = false;
-                SetupWindow setupWindow = new SetupWindow();
-                setupWindow.ShowDialog();
+                ErrorHandler.GetInstance().AddError("You have been disconnected from vatACARS.");
+                if (vatACARS.setupWindow != null)
+                {
+                    vatACARS.setupWindow.Close();
+                }
                 return;
             }
 

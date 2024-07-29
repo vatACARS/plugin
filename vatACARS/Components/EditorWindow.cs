@@ -38,7 +38,7 @@ namespace vatACARS.Components
         private static Logger logger = new Logger("EditorWindow");
         private static ResponseItem[] response = new ResponseItem[5];
         private static int responseIndex = 0;
-        private IMessageData selectedMsg;
+        public IMessageData selectedMsg;
 
         public EditorWindow()
         {
@@ -51,10 +51,6 @@ namespace vatACARS.Components
             if (selectedMsg is TelexMessage)
             {
                 var msg = (TelexMessage)selectedMsg;
-
-                btn_suspend.Enabled = false;
-                btn_restore.Enabled = false;
-                btn_escape.Enabled = false;
 
                 this.Text = $"Replying to {msg.Station}";
                 string[] msgSplit = CutString(msg.Content);
@@ -209,11 +205,11 @@ namespace vatACARS.Components
 
         private void btn_editor_Click(object sender, EventArgs e)
         {
-            lbl_response.Text = "";
-            lbl_response.Refresh();
             pnl_categories.Visible = true;
+            lbl_response.Refresh();
             response = new ResponseItem[5];
             responseIndex = 0;
+            lbl_response.Text = string.Empty;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
             ShowGroup("1");
         }
@@ -352,7 +348,19 @@ namespace vatACARS.Components
         }
 
         private void btn_suspend_Click(object sender, EventArgs e)
-        { }
+        {
+            var message = selectedMsg as dynamic;
+            if (message != null)
+            {
+                message.SuspendedResponses.Clear();
+                foreach (ResponseItem item in response.Where(obj => obj != null && obj.Entry.Element != ""))
+                {
+                    message.SuspendedResponses.Add(item);
+                }
+
+            }
+            Close();
+        }
 
         private void btn_tfc_Click(object sender, EventArgs e)
         {
@@ -665,15 +673,49 @@ namespace vatACARS.Components
             scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
         }
+
+        private void btn_escape_Click(object sender, EventArgs e)
+        {
+            lbl_response.Refresh();
+            response = new ResponseItem[5];
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            lbl_response.Text = string.Empty;
+        }
+
+        private void btn_restore_Click(object sender, EventArgs e)
+        {
+            lbl_response.Refresh();
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            lbl_response.Text = string.Empty;
+
+            var message = selectedMsg as dynamic;
+            if (message != null)
+            {
+                var responses = message.SuspendedResponses;
+                foreach (ResponseItem item in responses)
+                {
+                    btn_messageScroller.Text = (responseIndex + 1).ToString();
+                    var responsecode = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == item.Entry.Code).ToList().FirstOrDefault().Clone();
+                    HandleResponse(responsecode);
+
+                    if (responseIndex < responses.Count - 1)
+                    {
+                        responseIndex++;
+                    }
+                }
+            }
+        }
     }
 
-    internal class ResponseItem
+    public class ResponseItem
     {
         public UplinkEntry Entry;
         public ResponseItemPlaceholderData[] Placeholders;
     }
 
-    internal class ResponseItemPlaceholderData
+    public class ResponseItemPlaceholderData
     {
         public string Placeholder;
         public Size Size;
