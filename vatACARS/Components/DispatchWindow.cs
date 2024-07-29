@@ -59,7 +59,7 @@ namespace vatACARS.Components
             try
             {
                 ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == MessageState.Finished ? -1 : (int)message.State, lvw_messages);
-                item.SubItems.Add($"{message.Station}: {message.Content}");
+                item.SubItems.Add($"{message.Station.PadRight(7)}: {message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
                 item.Group = lvw_messages.Groups[(int)message.State];
@@ -411,9 +411,10 @@ namespace vatACARS.Components
 
             il = new ImageList();
             il.Images.Add(Properties.Resources.RXIcon);
+            il.Images.Add(Properties.Resources.RXIcon);
+            il.Images.Add(Properties.Resources.ADSCIcon);
             il.Images.Add(Properties.Resources.DeferIcon);
             il.Images.Add(Properties.Resources.TXIcon);
-            il.Images.Add(Properties.Resources.ADSCIcon);
 
             lvw_messages.SmallImageList = il;
         }
