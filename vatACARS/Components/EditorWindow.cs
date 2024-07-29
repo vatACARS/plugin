@@ -16,6 +16,8 @@ namespace vatACARS.Components
 {
     public partial class EditorWindow : BaseForm
     {
+        public IMessageData selectedMsg;
+
         private static readonly Dictionary<string, List<string>> keywordGroupMapping = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
             { "14", new List<string> { "EMERG", "EMERGENCY", "MAYDAY", "PAN PAN" } } ,
@@ -38,7 +40,6 @@ namespace vatACARS.Components
         private static Logger logger = new Logger("EditorWindow");
         private static ResponseItem[] response = new ResponseItem[5];
         private static int responseIndex = 0;
-        public IMessageData selectedMsg;
 
         public EditorWindow()
         {
@@ -214,6 +215,15 @@ namespace vatACARS.Components
             ShowGroup("1");
         }
 
+        private void btn_escape_Click(object sender, EventArgs e)
+        {
+            lbl_response.Refresh();
+            response = new ResponseItem[5];
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            lbl_response.Text = string.Empty;
+        }
+
         private void btn_messageScroller_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && responseIndex < 4)
@@ -238,6 +248,32 @@ namespace vatACARS.Components
             }
 
             lbl_response.Text = response[responseIndex].Entry.Element ?? string.Empty;
+        }
+
+        private void btn_restore_Click(object sender, EventArgs e)
+        {
+            lbl_response.Refresh();
+            response = new ResponseItem[5];
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            lbl_response.Text = string.Empty;
+
+            var message = selectedMsg as dynamic;
+            if (message != null)
+            {
+                var responses = message.SuspendedResponses;
+                foreach (ResponseItem item in responses)
+                {
+                    btn_messageScroller.Text = (responseIndex + 1).ToString();
+                    var responsecode = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == item.Entry.Code).ToList().FirstOrDefault().Clone();
+                    HandleResponse(responsecode);
+
+                    if (responseIndex < responses.Count - 1)
+                    {
+                        responseIndex++;
+                    }
+                }
+            }
         }
 
         private void btn_send_Click(object sender, EventArgs e)
@@ -357,7 +393,6 @@ namespace vatACARS.Components
                 {
                     message.SuspendedResponses.Add(item);
                 }
-
             }
             Close();
         }
@@ -672,41 +707,6 @@ namespace vatACARS.Components
 
             scr_messageSelector.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-        }
-
-        private void btn_escape_Click(object sender, EventArgs e)
-        {
-            lbl_response.Refresh();
-            response = new ResponseItem[5];
-            responseIndex = 0;
-            btn_messageScroller.Text = (responseIndex + 1).ToString();
-            lbl_response.Text = string.Empty;
-        }
-
-        private void btn_restore_Click(object sender, EventArgs e)
-        {
-            lbl_response.Refresh();
-            response = new ResponseItem[5];
-            responseIndex = 0;
-            btn_messageScroller.Text = (responseIndex + 1).ToString();
-            lbl_response.Text = string.Empty;
-
-            var message = selectedMsg as dynamic;
-            if (message != null)
-            {
-                var responses = message.SuspendedResponses;
-                foreach (ResponseItem item in responses)
-                {
-                    btn_messageScroller.Text = (responseIndex + 1).ToString();
-                    var responsecode = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == item.Entry.Code).ToList().FirstOrDefault().Clone();
-                    HandleResponse(responsecode);
-
-                    if (responseIndex < responses.Count - 1)
-                    {
-                        responseIndex++;
-                    }
-                }
-            }
         }
     }
 

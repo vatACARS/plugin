@@ -68,16 +68,15 @@ namespace vatACARS.Util
                 {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition.DefaultCenter.Latitude, longitude = MMI.PrimePosition.DefaultCenter.Longitude })}
             }));
 
-            APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
-            if (!ResponseDecoded.Success) ErrorHandler.GetInstance().AddError($"Heartbeat to vatACARS failed: {ResponseDecoded.Message}");
+                APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
+                if (!ResponseDecoded.Success) ErrorHandler.GetInstance().AddError($"Heartbeat to vatACARS failed: {ResponseDecoded.Message}");
 
-            string OnlineStationsResponse = await client.GetStringTaskAsync("/atsu/online");
-            StationInformation[] StationsResponseDecoded = JsonConvert.DeserializeObject<StationInformation[]>(OnlineStationsResponse);
+                string OnlineStationsResponse = await client.GetStringTaskAsync("/atsu/online");
+                StationInformation[] StationsResponseDecoded = JsonConvert.DeserializeObject<StationInformation[]>(OnlineStationsResponse);
 
-            stationsOnline = StationsResponseDecoded;
+                stationsOnline = StationsResponseDecoded;
 
-            logger.Log("Heartbeat successful.");
-
+                logger.Log("Heartbeat successful.");
             }
             catch (Exception ex) // THIS FIXES CRASH FOR NOW (josh its to do with http client stuff)
             {

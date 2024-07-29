@@ -24,9 +24,13 @@ namespace vatACARS.Helpers
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
 
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
+
         public static event EventHandler<IMessageData> MessageUpdated;
+
         public static event EventHandler<Station> StationAdded;
+
         public static event EventHandler<Station> StationRemoved;
+
         public static event EventHandler<TelexMessage> TelexMessageReceived;
 
         public interface IMessageData
@@ -161,8 +165,8 @@ namespace vatACARS.Helpers
             public string Response { get; set; } = "";
             public MessageState State { get; set; }
             public string Station { get; set; }
-            public DateTime TimeReceived { get; set; }
             public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
+            public DateTime TimeReceived { get; set; }
         }
 
         public class SentCPDLCMessage
@@ -195,8 +199,8 @@ namespace vatACARS.Helpers
             public string Content { get; set; }
             public MessageState State { get; set; }
             public string Station { get; set; }
-            public DateTime TimeReceived { get; set; }
             public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
+            public DateTime TimeReceived { get; set; }
         }
     }
 }

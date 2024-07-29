@@ -24,9 +24,9 @@ namespace vatACARS
     [Export(typeof(IPlugin))]
     public class vatACARS : IPlugin
     {
+        public static SetupWindow setupWindow;
         private static DispatchWindow dispatchWindow = new DispatchWindow();
         private static HandoffSelector HandoffSelector;
-        public static SetupWindow setupWindow;
         private readonly Logger logger = new Logger("vatACARS");
         private CustomToolStripMenuItem dispatchWindowMenu;
         private CustomToolStripMenuItem setupWindowMenu;
@@ -47,6 +47,20 @@ namespace vatACARS
         }
 
         public string Name => "vatACARS";
+
+        public static void DoShowSetupWindow()
+        {
+            if (setupWindow == null || setupWindow.IsDisposed)
+            {
+                setupWindow = new SetupWindow();
+            }
+            else if (setupWindow.Visible)
+            {
+                return;
+            }
+
+            setupWindow.Show(Form.ActiveForm);
+        }
 
         public CustomLabelItem GetCustomLabelItem(string itemType, Track track, FDR flightDataRecord, RDP.RadarTrack radarTrack)
         {
@@ -195,18 +209,9 @@ namespace vatACARS
             dispatchWindow.Show(Form.ActiveForm);
         }
 
-        public static void DoShowSetupWindow()
+        private void ActiveForm_KeyUp(object sender, KeyEventArgs e)
         {
-            if (setupWindow == null || setupWindow.IsDisposed)
-            {
-                setupWindow = new SetupWindow();
-            }
-            else if (setupWindow.Visible)
-            {
-                return;
-            }
-
-            setupWindow.Show(Form.ActiveForm);
+            throw new NotImplementedException();
         }
 
         private void CPDLCLabelClick(CustomLabelItemMouseClickEventArgs e)
@@ -248,7 +253,7 @@ namespace vatACARS
         private void PDCLabelClick(CustomLabelItemMouseClickEventArgs e)
         {
             FDR fdr = e.Track.GetFDR();
-            if(fdr == null)
+            if (fdr == null)
             {
                 ErrorHandler.GetInstance().AddError($"Selected aircraft has not submitted a flight plan.");
                 return;
@@ -303,11 +308,6 @@ namespace vatACARS
             {
                 logger.Log($"Error in Start: {e.Message}");
             }
-        }
-
-        private void ActiveForm_KeyUp(object sender, KeyEventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }

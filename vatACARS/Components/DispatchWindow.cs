@@ -50,7 +50,6 @@ namespace vatACARS.Components
                 }
             };
 
-
             UpdateMessages();
         }
 
@@ -368,6 +367,16 @@ namespace vatACARS.Components
             }
         }
 
+        private void PollTimer(object sender, ElapsedEventArgs e)
+        {
+            UpdateMessages();
+        }
+
+        private void scr_messages_Scroll(object sender, EventArgs e)
+        {
+            lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
+        }
+
         private void ShowEditorWindow(IMessageData msg)
         {
             foreach (Form form in Application.OpenForms)
@@ -388,16 +397,6 @@ namespace vatACARS.Components
             EditorWindow window = new EditorWindow();
             window.selectedMsg = msg;
             window.Show(ActiveForm);
-        }
-
-        private void PollTimer(object sender, ElapsedEventArgs e)
-        {
-            UpdateMessages();
-        }
-
-        private void scr_messages_Scroll(object sender, EventArgs e)
-        {
-            lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
         }
 
         private void StyleComponent()
