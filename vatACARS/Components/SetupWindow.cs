@@ -62,6 +62,20 @@ namespace vatACARS
             }
         }
 
+        private static void DoShowDebugWindow()
+        {
+            if (debugWindow == null || debugWindow.IsDisposed)
+            {
+                debugWindow = new DebugWindow();
+            }
+            else if (debugWindow.Visible)
+            {
+                return;
+            }
+
+            debugWindow.Show(Form.ActiveForm);
+        }
+
         private void btn_auralAlertVolumeTest_MouseUp(object sender, MouseEventArgs e)
         {
             AudioInterface.playSound("incomingMessage");
@@ -299,20 +313,6 @@ namespace vatACARS
             sld_auralAlertVolume.ForeColor = Colours.GetColour(Colours.Identities.ListSeparator);
             sld_auralAlertVolume.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             sld_auralAlertVolume.Font = MMI.eurofont_winsml;
-        }
-
-        private static void DoShowDebugWindow()
-        {
-            if (debugWindow == null || debugWindow.IsDisposed)
-            {
-                debugWindow = new DebugWindow();
-            }
-            else if (debugWindow.Visible)
-            {
-                return;
-            }
-
-            debugWindow.Show(Form.ActiveForm);
         }
 
         private void tbx_hoppiesLogonCode_TextChanged(object sender, EventArgs e)

@@ -15,9 +15,9 @@ namespace vatACARS.Components
     {
         private static Logger logger = new Logger("PDCWindow");
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
+        private FDR networkPilotFDR;
         private Dictionary<string, string> PDCElements = new Dictionary<string, string>();
         private IMessageData selectedMsg;
-        private FDR networkPilotFDR;
 
         public PDCWindow()
         {

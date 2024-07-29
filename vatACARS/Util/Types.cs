@@ -2,6 +2,16 @@
 
 namespace vatACARS.Util
 {
+    public enum MessageState
+    {
+        Downlink = 0,
+        DownlinkResponseNotRequired = 1,
+        ADSC = 2,
+        StbyDefer = 3,
+        Uplink = 4,
+        Finished = 5
+    }
+
     public class APIResponse
     {
         public string Message { get; set; }
@@ -34,15 +44,5 @@ namespace vatACARS.Util
         public DateTime Opened { get; set; }
         public string Sectors { get; set; }
         public string Station_Code { get; set; }
-    }
-
-    public enum MessageState
-    {
-        Downlink = 0,
-        DownlinkResponseNotRequired = 1,
-        ADSC = 2,
-        StbyDefer = 3,
-        Uplink = 4,
-        Finished = 5
     }
 }

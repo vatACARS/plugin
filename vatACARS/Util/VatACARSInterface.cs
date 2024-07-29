@@ -4,13 +4,13 @@
  */
 
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Timers;
 using vatACARS.Helpers;
 using vatsys;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace vatACARS.Util
 {
@@ -57,8 +57,10 @@ namespace vatACARS.Util
                 }
                 return;
             }
-            
-            string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
+
+            try
+            {
+                string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 {"station", Transceiver.ClientInformation.Callsign},
                 {"token", Properties.Settings.Default.vatACARSToken},
@@ -66,15 +68,20 @@ namespace vatACARS.Util
                 {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition.DefaultCenter.Latitude, longitude = MMI.PrimePosition.DefaultCenter.Longitude })}
             }));
 
-            APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
-            if (!ResponseDecoded.Success) ErrorHandler.GetInstance().AddError($"Heartbeat to vatACARS failed: {ResponseDecoded.Message}");
+                APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
+                if (!ResponseDecoded.Success) ErrorHandler.GetInstance().AddError($"Heartbeat to vatACARS failed: {ResponseDecoded.Message}");
 
-            string OnlineStationsResponse = await client.GetStringTaskAsync("/atsu/online");
-            StationInformation[] StationsResponseDecoded = JsonConvert.DeserializeObject<StationInformation[]>(OnlineStationsResponse);
+                string OnlineStationsResponse = await client.GetStringTaskAsync("/atsu/online");
+                StationInformation[] StationsResponseDecoded = JsonConvert.DeserializeObject<StationInformation[]>(OnlineStationsResponse);
 
-            stationsOnline = StationsResponseDecoded;
+                stationsOnline = StationsResponseDecoded;
 
-            logger.Log("Heartbeat successful.");
+                logger.Log("Heartbeat successful.");
+            }
+            catch (Exception ex) // THIS FIXES CRASH FOR NOW (josh its to do with http client stuff)
+            {
+                logger.Log($"Crash Saved: {ex.ToString()}");
+            }
         }
     }
 }
