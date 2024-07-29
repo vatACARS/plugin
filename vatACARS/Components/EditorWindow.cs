@@ -686,6 +686,7 @@ namespace vatACARS.Components
         private void btn_restore_Click(object sender, EventArgs e)
         {
             lbl_response.Refresh();
+            response = new ResponseItem[5];
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
             lbl_response.Text = string.Empty;
