@@ -4,6 +4,7 @@
  */
 
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -57,8 +58,10 @@ namespace vatACARS.Util
                 }
                 return;
             }
-            
-            string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
+
+            try
+            {
+                string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 {"station", Transceiver.ClientInformation.Callsign},
                 {"token", Properties.Settings.Default.vatACARSToken},
@@ -75,6 +78,12 @@ namespace vatACARS.Util
             stationsOnline = StationsResponseDecoded;
 
             logger.Log("Heartbeat successful.");
+
+            }
+            catch (Exception ex) // THIS FIXES CRASH FOR NOW (josh its to do with http client stuff)
+            {
+                logger.Log($"Crash Saved: {ex.ToString()}");
+            }
         }
     }
 }
