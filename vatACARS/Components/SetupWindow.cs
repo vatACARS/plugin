@@ -23,6 +23,7 @@ namespace vatACARS
         {
             InitializeComponent();
             StyleComponent();
+            this.Text = ($"vatACARS Setup v{AppData.CurrentVersion}");
         }
 
         public static void SetHoppies(bool value)
