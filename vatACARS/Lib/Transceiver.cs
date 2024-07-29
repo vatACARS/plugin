@@ -79,8 +79,15 @@ namespace vatACARS.Helpers
 
         public static void addStation(Station station)
         {
-            Stations.Add(station);
-            StationAdded?.Invoke(null, station);
+            if (!Stations.Any(s => s.Callsign == station.Callsign))
+            {
+                Stations.Add(station);
+                StationAdded?.Invoke(null, station);
+            }
+            else
+            {
+                ErrorHandler.GetInstance().AddError($"Station Already Exists: {station.Callsign}");
+            }
         }
 
         public static void addTelexMessage(TelexMessage message)
