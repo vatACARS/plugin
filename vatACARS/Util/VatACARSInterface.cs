@@ -11,7 +11,6 @@ using System.Net.Http;
 using System.Timers;
 using vatACARS.Helpers;
 using vatsys;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace vatACARS.Util
 {
