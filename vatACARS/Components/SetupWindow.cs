@@ -15,7 +15,6 @@ namespace vatACARS
     public partial class SetupWindow : BaseForm
     {
         private static HttpClient client = new HttpClient();
-        private static DebugWindow debugWindow;
 
         private static bool Hoppies = Properties.Settings.Default.enableHoppies;
         private static bool sendReports = Properties.Settings.Default.sendReports;
@@ -82,20 +81,6 @@ namespace vatACARS
                 Properties.Settings.Default.finishedMessageTimeout = timeout;
                 Properties.Settings.Default.Save();
             }
-        }
-
-        private static void DoShowDebugWindow()
-        {
-            if (debugWindow == null || debugWindow.IsDisposed)
-            {
-                debugWindow = new DebugWindow();
-            }
-            else if (debugWindow.Visible)
-            {
-                return;
-            }
-
-            debugWindow.Show(Form.ActiveForm);
         }
 
         private void btn_auralAlertVolumeTest_MouseUp(object sender, MouseEventArgs e)
