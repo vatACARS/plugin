@@ -144,11 +144,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tbl_connected.BackColor = System.Drawing.Color.Transparent;
             this.tbl_connected.ColumnCount = 5;
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
             this.tbl_connected.Location = new System.Drawing.Point(3, 3);
             this.tbl_connected.Name = "tbl_connected";
             this.tbl_connected.RowCount = 4;
@@ -207,8 +207,8 @@
             this.MinimumSize = new System.Drawing.Size(537, 354);
             this.Name = "DispatchWindow";
             this.Text = "Dispatch Interface";
+            this.ResizeBegin += new System.EventHandler(this.DispatchWindow_ResizeBegin);
             this.ResizeEnd += new System.EventHandler(this.DispatchWindow_ResizeEnd);
-            this.SizeChanged += new System.EventHandler(this.DispatchWindow_SizeChanged);
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
