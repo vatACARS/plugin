@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
@@ -9,12 +10,33 @@ namespace vatACARS.Components
 {
     public partial class DebugWindow : BaseForm
     {
+        private static bool netchecks = Properties.Settings.Default.netChecks;
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
 
         public DebugWindow()
         {
             InitializeComponent();
             StyleComponent();
+        }
+
+        public static void SetChecks(bool value)
+        {
+            Logger logger = new Logger("vatACARS");
+            if (netchecks != value)
+            {
+                netchecks = value;
+                if (netchecks)
+                {
+                    Properties.Settings.Default.netChecks = true;
+                    logger.Log("NetChecks ON.");
+                }
+                else
+                {
+                    Properties.Settings.Default.netChecks = false;
+                    logger.Log("NetChecks OFF.");
+                }
+                Properties.Settings.Default.Save();
+            }
         }
 
         private void btn_add_Click(object sender, EventArgs e)
@@ -52,6 +74,15 @@ namespace vatACARS.Components
             }
         }
 
+        private void btn_netchecks_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            Properties.Settings.Default.netChecks = !Properties.Settings.Default.netChecks;
+            btn_netchecks.Text = Properties.Settings.Default.netChecks ? "\u2713" : "";
+            btn_netchecks.Invalidate();
+            SetChecks(Properties.Settings.Default.netChecks);
+            Properties.Settings.Default.Save();
+        }
+
         private void btn_screate_Click(object sender, EventArgs e)
         {
             try
@@ -66,6 +97,13 @@ namespace vatACARS.Components
             {
                 errorHandler.AddError(ex.ToString());
             }
+        }
+
+        private void DebugWindow_Shown(object sender, EventArgs e)
+        {
+            btn_netchecks.Text = Properties.Settings.Default.netChecks ? "\u2713" : "";
+            btn_netchecks.Invalidate();
+            SetChecks(Properties.Settings.Default.netChecks);
         }
 
         private void StyleComponent()
@@ -93,6 +131,9 @@ namespace vatACARS.Components
 
             lbl_prov.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             lbl_prov.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+
+            lbl_netchecks.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_netchecks.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
 
             dd_state.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             dd_state.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);

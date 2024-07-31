@@ -45,17 +45,35 @@ namespace vatACARS.Util
 
         private static async void HeartbeatTimer(object sender, ElapsedEventArgs e)
         {
-            if (!Network.IsConnected || !Network.IsValidATC || Transceiver.ClientInformation.Callsign == null || MMI.SectorsControlled.Count < 1)
+            if (Properties.Settings.Default.netChecks)
             {
-                StopListening();
-                HoppiesInterface.StopListening();
-                Transceiver.connected = false;
-                ErrorHandler.GetInstance().AddError("You have been disconnected from vatACARS.");
-                if (vatACARS.setupWindow != null)
+                if (!Network.IsConnected || !Network.IsValidATC || Transceiver.ClientInformation.Callsign == null || MMI.SectorsControlled.Count < 1)
                 {
-                    vatACARS.setupWindow.Close();
+                    StopListening();
+                    HoppiesInterface.StopListening();
+                    Transceiver.connected = false;
+                    ErrorHandler.GetInstance().AddError("You have been disconnected from vatACARS.");
+                    if (vatACARS.setupWindow != null)
+                    {
+                        vatACARS.setupWindow.Close();
+                    }
+                    return;
                 }
-                return;
+            }
+            else
+            {
+                if (Transceiver.ClientInformation.Callsign == null || MMI.SectorsControlled.Count < 1)
+                {
+                    StopListening();
+                    HoppiesInterface.StopListening();
+                    Transceiver.connected = false;
+                    ErrorHandler.GetInstance().AddError("You have been disconnected from vatACARS.");
+                    if (vatACARS.setupWindow != null)
+                    {
+                        vatACARS.setupWindow.Close();
+                    }
+                    return;
+                }
             }
 
             try
