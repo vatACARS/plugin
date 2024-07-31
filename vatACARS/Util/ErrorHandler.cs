@@ -42,10 +42,14 @@ namespace vatACARS.Util
             try
             {
                 var error = new ErrorInfo { Id = Guid.NewGuid(), Message = message, Timestamp = DateTime.UtcNow };
-                Errors.Add(error);
-                logger.Log("Error Occurred: " + message);
-                ShowErrorWindow();
-                AudioInterface.playSound("error");
+
+                if (error.Message.Trim() != "")
+                {
+                    Errors.Add(error);
+                    logger.Log("Error Occurred: " + message);
+                    ShowErrorWindow();
+                    AudioInterface.playSound("error");
+                }
             }
             catch (Exception ex)
             {

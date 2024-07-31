@@ -183,9 +183,9 @@ namespace vatACARS.Components
                     logger.Log(ex.ToString());
                 }
             }
-            else
-            {
-                string levelPrefix = (networkPilotFDR.CFLString != null && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL");
+            else if(networkPilotFDR.CFLString.Trim() != "")
+            { 
+                string levelPrefix = (networkPilotFDR.CFLString.Trim() != "" && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL");
                 int levelValue = int.Parse(networkPilotFDR.CFLString);
 
                 foreach (string item in JSONReader.quickFillItems.data[identifier])
