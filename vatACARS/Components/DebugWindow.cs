@@ -1,17 +1,54 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using vatACARS.Helpers;
 using vatACARS.Util;
 using vatsys;
+using vatACARS.Lib;
 using static vatACARS.Helpers.Transceiver;
+using static vatsys.Colours;
+using System.Linq;
 
 namespace vatACARS.Components
 {
     public partial class DebugWindow : BaseForm
     {
+        private static List<string> Airlines = new List<string>()
+        {
+            "QFA",
+            "VCP",
+            "SIA",
+            "THY",
+            "JST",
+            "ANZ",
+            "UAL",
+            "QTR",
+            "BAW",
+            "CES",
+            "PAL",
+            "BTK",
+            "FDX",
+            "DAL",
+            "VOZ",
+            "AAL",
+            "KLM",
+            "RYR",
+            "AFR",
+            "ACA",
+            "KAL",
+            "UAE",
+            "JBU",
+            "SWA",
+            "ETD"
+        };
+
         private static bool netchecks = Properties.Settings.Default.netChecks;
+        private string callsign;
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
+        private string level = "";
+        private int provider;
+        private int state;
 
         public DebugWindow()
         {
@@ -83,6 +120,24 @@ namespace vatACARS.Components
             Properties.Settings.Default.Save();
         }
 
+
+        private void btn_rdmstn_Click(object sender, EventArgs e)
+        {
+            RandomStn();
+            try
+            {
+                addStation(new Transceiver.Station()
+                {
+                    Callsign = callsign,
+                    Provider = provider
+                });
+            }
+            catch (Exception ex)
+            {
+                errorHandler.AddError(ex.ToString());
+            }
+        }
+
         private void btn_screate_Click(object sender, EventArgs e)
         {
             try
@@ -104,6 +159,16 @@ namespace vatACARS.Components
             btn_netchecks.Text = Properties.Settings.Default.netChecks ? "\u2713" : "";
             btn_netchecks.Invalidate();
             SetChecks(Properties.Settings.Default.netChecks);
+        }
+
+        private void RandomStn()
+        {
+            var random = new Random();
+            var airline = Airlines[random.Next(Airlines.Count)];
+            var digitCount = random.Next(3, 5);
+            var randomDigits = random.Next((int)Math.Pow(10, digitCount - 1), (int)Math.Pow(10, digitCount)).ToString();
+            callsign = $"{airline}{randomDigits}";
+            provider = random.Next(1, 3);
         }
 
         private void StyleComponent()
@@ -135,6 +200,9 @@ namespace vatACARS.Components
             lbl_netchecks.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             lbl_netchecks.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
 
+            lbl_rdmstn.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lbl_rdmstn.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+
             dd_state.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             dd_state.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
             dd_state.FocusColor = Color.Cyan;
@@ -152,6 +220,9 @@ namespace vatACARS.Components
 
             btn_screate.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
             btn_screate.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
+
+            btn_rdmstn.ForeColor = Colours.GetColour(Colours.Identities.NonJurisdictionIQL);
+            btn_rdmstn.BackColor = Colours.GetColour(Colours.Identities.CPDLCSendButton);
         }
     }
 }

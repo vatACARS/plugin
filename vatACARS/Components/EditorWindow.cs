@@ -105,11 +105,7 @@ namespace vatACARS.Components
             response = new ResponseItem[5];
             responseIndex = 0;
 
-            lvw_messages.MouseWheel += (object sender, MouseEventArgs e) =>
-            {
-                if (e.Delta > 0) scr_messageSelector.Value -= scr_messageSelector.Change;
-                else scr_messageSelector.Value += scr_messageSelector.Change;
-            };
+
 
             lbl_response.Invalidate();
         }
@@ -587,6 +583,20 @@ namespace vatACARS.Components
             }
 
             lvw_messageSelector.SelectedItems.Clear();
+        }
+
+        private void MessageScroll_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                this.scr_messageSelector.Value -= scr_messageSelector.Change;
+            }
+            else
+            {
+                if (e.Delta >= 0)
+                    return;
+                this.scr_messageSelector.Value += scr_messageSelector.Change;
+            }
         }
 
         private void scr_messageSelector_Scroll(object sender, EventArgs e)

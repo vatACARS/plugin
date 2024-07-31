@@ -49,6 +49,8 @@
             this.lbl_stationcreate = new vatsys.TextLabel();
             this.btn_netchecks = new vatsys.GenericButton();
             this.lbl_netchecks = new vatsys.TextLabel();
+            this.btn_rdmstn = new vatsys.GenericButton();
+            this.lbl_rdmstn = new vatsys.TextLabel();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -210,6 +212,8 @@
             // 
             // insetPanel1
             // 
+            this.insetPanel1.Controls.Add(this.lbl_rdmstn);
+            this.insetPanel1.Controls.Add(this.btn_rdmstn);
             this.insetPanel1.Controls.Add(this.lbl_prov);
             this.insetPanel1.Controls.Add(this.dd_prov);
             this.insetPanel1.Controls.Add(this.btn_screate);
@@ -218,7 +222,7 @@
             this.insetPanel1.Controls.Add(this.lbl_stationcreate);
             this.insetPanel1.Location = new System.Drawing.Point(12, 146);
             this.insetPanel1.Name = "insetPanel1";
-            this.insetPanel1.Size = new System.Drawing.Size(457, 67);
+            this.insetPanel1.Size = new System.Drawing.Size(457, 97);
             this.insetPanel1.TabIndex = 109;
             // 
             // lbl_prov
@@ -306,7 +310,7 @@
             // btn_netchecks
             // 
             this.btn_netchecks.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_netchecks.Location = new System.Drawing.Point(177, 216);
+            this.btn_netchecks.Location = new System.Drawing.Point(174, 249);
             this.btn_netchecks.Name = "btn_netchecks";
             this.btn_netchecks.Size = new System.Drawing.Size(26, 26);
             this.btn_netchecks.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -322,16 +326,43 @@
             this.lbl_netchecks.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_netchecks.HasBorder = false;
             this.lbl_netchecks.InteractiveText = true;
-            this.lbl_netchecks.Location = new System.Drawing.Point(12, 216);
+            this.lbl_netchecks.Location = new System.Drawing.Point(9, 249);
             this.lbl_netchecks.Name = "lbl_netchecks";
             this.lbl_netchecks.Size = new System.Drawing.Size(159, 26);
             this.lbl_netchecks.TabIndex = 110;
             this.lbl_netchecks.Text = "TOGGLE NET CHECKS:";
             this.lbl_netchecks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // btn_rdmstn
+            // 
+            this.btn_rdmstn.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_rdmstn.Location = new System.Drawing.Point(143, 62);
+            this.btn_rdmstn.Name = "btn_rdmstn";
+            this.btn_rdmstn.Size = new System.Drawing.Size(99, 28);
+            this.btn_rdmstn.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_rdmstn.SubText = "";
+            this.btn_rdmstn.TabIndex = 110;
+            this.btn_rdmstn.Text = "ADD STATION";
+            this.btn_rdmstn.UseVisualStyleBackColor = true;
+            this.btn_rdmstn.Click += new System.EventHandler(this.btn_rdmstn_Click);
+            // 
+            // lbl_rdmstn
+            // 
+            this.lbl_rdmstn.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_rdmstn.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_rdmstn.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_rdmstn.HasBorder = false;
+            this.lbl_rdmstn.InteractiveText = true;
+            this.lbl_rdmstn.Location = new System.Drawing.Point(3, 60);
+            this.lbl_rdmstn.Name = "lbl_rdmstn";
+            this.lbl_rdmstn.Size = new System.Drawing.Size(134, 26);
+            this.lbl_rdmstn.TabIndex = 112;
+            this.lbl_rdmstn.Text = "RANDOM STATION:";
+            this.lbl_rdmstn.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // DebugWindow
             // 
-            this.ClientSize = new System.Drawing.Size(481, 272);
+            this.ClientSize = new System.Drawing.Size(481, 285);
             this.Controls.Add(this.btn_netchecks);
             this.Controls.Add(this.lbl_netchecks);
             this.Controls.Add(this.insetPanel1);
@@ -372,5 +403,7 @@
         private VATSYSControls.DropDownBox dd_prov;
         private vatsys.GenericButton btn_netchecks;
         private vatsys.TextLabel lbl_netchecks;
+        private vatsys.GenericButton btn_rdmstn;
+        private vatsys.TextLabel lbl_rdmstn;
     }
 }

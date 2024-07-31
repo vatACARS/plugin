@@ -1,4 +1,6 @@
-﻿namespace vatACARS.Components
+﻿using System.Windows.Forms;
+
+namespace vatACARS.Components
 {
     partial class DispatchWindow
     {
@@ -101,6 +103,7 @@
             this.lvw_messages.View = System.Windows.Forms.View.Details;
             this.lvw_messages.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lvw_messages_DrawItem);
             this.lvw_messages.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lvw_messages_MouseUp);
+            this.lvw_messages.MouseWheel += new MouseEventHandler(this.MessageScroll_MouseWheel);
             // 
             // col_timestamp
             // 
@@ -127,6 +130,7 @@
             this.scr_messages.Value = 0;
             this.scr_messages.Scroll += new System.EventHandler(this.scr_messages_Scroll);
             this.scr_messages.Scrolling += new System.EventHandler(this.scr_messages_Scroll);
+            this.scr_messages.MouseWheel += new MouseEventHandler(this.MessageScroll_MouseWheel);
             // 
             // insetPanel1
             // 

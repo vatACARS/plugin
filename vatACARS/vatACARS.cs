@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
@@ -24,10 +25,13 @@ namespace vatACARS
     [Export(typeof(IPlugin))]
     public class vatACARS : IPlugin
     {
+        public static DebugWindow debugWindow;
         public static SetupWindow setupWindow;
+        public List<string> DebugNames = new List<string>();
         private static DispatchWindow dispatchWindow = new DispatchWindow();
         private static HandoffSelector HandoffSelector;
         private readonly Logger logger = new Logger("vatACARS");
+        private CustomToolStripMenuItem debugWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
         private CustomToolStripMenuItem setupWindowMenu;
 
@@ -195,6 +199,20 @@ namespace vatACARS
             }
         }
 
+        private static void DoShowDebugWindow()
+        {
+            if (debugWindow == null || debugWindow.IsDisposed)
+            {
+                debugWindow = new DebugWindow();
+            }
+            else if (debugWindow.Visible)
+            {
+                return;
+            }
+
+            debugWindow.Show(Form.ActiveForm);
+        }
+
         private static void DoShowDispatchWindow()
         {
             if (dispatchWindow == null || dispatchWindow.IsDisposed)
@@ -225,7 +243,7 @@ namespace vatACARS
 
             CPDLCMessage msg1 = getAllCPDLCMessages().FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
 
-            if(msg1 != null) DispatchWindow.SelectedMessage = msg1;
+            if (msg1 != null) DispatchWindow.SelectedMessage = msg1;
             else DispatchWindow.SelectedMessage = new CPDLCMessage()
             {
                 State = 0,
@@ -238,6 +256,11 @@ namespace vatACARS
             window.Show(Form.ActiveForm);
 
             e.Handled = true;
+        }
+
+        private void DebugWindowMenu_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(() => DoShowDebugWindow());
         }
 
         private void DispatchWindowMenu_Click(object sender, EventArgs e)
@@ -294,6 +317,19 @@ namespace vatACARS
                 dispatchWindowMenu.Item.Click += DispatchWindowMenu_Click;
                 MMI.AddCustomMenuItem(dispatchWindowMenu);
 
+                DebugNames.Add("Joshua H");
+                DebugNames.Add("Edward M");
+                if (!DebugNames.Contains(Network.Me.RealName))
+                {
+                    logger.Log($"{Network.Me.RealName} is not Authorized to Debug.");
+                }
+                else
+                {
+                    logger.Log($"{Network.Me.RealName} is Authorized to Debug.");
+                    debugWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Settings, new ToolStripMenuItem("ACARS DEBUG"));
+                    debugWindowMenu.Item.Click += DebugWindowMenu_Click;
+                    MMI.AddCustomMenuItem(debugWindowMenu);
+                }
                 // Update Checking
                 logger.Log("Starting version checker...");
                 VersionChecker.StartListening();
