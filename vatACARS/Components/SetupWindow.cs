@@ -22,7 +22,6 @@ namespace vatACARS
 
         public SetupWindow()
         {
-            DoShowDebugWindow();
             InitializeComponent();
             StyleComponent();
             this.Text = ($"vatACARS Setup v{AppData.CurrentVersion}");
