@@ -257,6 +257,28 @@ namespace vatACARS.Components
             tbl_connected.Controls.Add(callsignLabel);
         }
 
+        private void DispatchWindow_ResizeBegin(object sender, EventArgs e)
+        {
+            tbl_connected.SuspendLayout();
+        }
+
+        private void DispatchWindow_ResizeEnd(object sender, EventArgs e)
+        {
+            int newWidth = lvw_messages.ClientRectangle.Width;
+            int timestampWidth = 80;
+            int messageWidth = newWidth - timestampWidth;
+            col_timestamp.Width = timestampWidth;
+            col_message.Width = messageWidth;
+            lvw_messages.Invalidate();
+
+            int columnWidth = 103;
+            int columns = (int)(tbl_connected.ClientRectangle.Width / columnWidth);
+            tbl_connected.ColumnCount = columns;
+            tbl_connected.ResumeLayout();
+            tbl_connected.Invalidate();
+            UpdateMessages();
+        }
+
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             ACARSListViewItem item = (ACARSListViewItem)e.Item;
@@ -524,28 +546,6 @@ namespace vatACARS.Components
                 Invoke(new Action(() => UpdateTelexList(sender, message)));
                 return;
             }
-            UpdateMessages();
-        }
-
-        private void DispatchWindow_SizeChanged(object sender, EventArgs e)
-        {
-            int newWidth = lvw_messages.ClientRectangle.Width;
-            int timestampWidth = 80;
-            int messageWidth = newWidth - timestampWidth;
-            col_timestamp.Width = timestampWidth;
-            col_message.Width = messageWidth;
-            lvw_messages.Invalidate();
-            UpdateMessages();
-        }
-
-        private void DispatchWindow_ResizeEnd(object sender, EventArgs e)
-        {
-            int newWidth = lvw_messages.ClientRectangle.Width;
-            int timestampWidth = 80;
-            int messageWidth = newWidth - timestampWidth;
-            col_timestamp.Width = timestampWidth;
-            col_message.Width = messageWidth;
-            lvw_messages.Invalidate();
             UpdateMessages();
         }
     }
