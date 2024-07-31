@@ -22,6 +22,7 @@ namespace vatACARS
 
         public SetupWindow()
         {
+            DoShowDebugWindow();
             InitializeComponent();
             StyleComponent();
             this.Text = ($"vatACARS Setup v{AppData.CurrentVersion}");
@@ -174,6 +175,9 @@ namespace vatACARS
 
                 btn_checkStationCode_Click(null, null);
 
+                if (Properties.Settings.Default.netChecks) 
+                {
+
                 if (!Network.IsConnected)
                 {
                     lbl_statusMessage.Text = "Please connect to VATSIM first.";
@@ -184,6 +188,8 @@ namespace vatACARS
                 {
                     lbl_statusMessage.Text = "Please connect as a non-observer role.";
                     return;
+                }
+                
                 }
 
                 foreach (Control ctl in Controls)

@@ -106,5 +106,17 @@ namespace vatACARS.Properties {
                 this["sendReports"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool netChecks {
+            get {
+                return ((bool)(this["netChecks"]));
+            }
+            set {
+                this["netChecks"] = value;
+            }
+        }
     }
 }
