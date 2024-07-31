@@ -34,7 +34,6 @@ namespace vatACARS.Components
             FreeText = "";
             OnDataChanged(placeholder.ToUpper());
             tbx_freetext.Text = placeholder;
-
             if (identifier == "POSITION")
             {
                 LoadAddRoute();
@@ -42,6 +41,10 @@ namespace vatACARS.Components
             if (identifier == "LEVEL")
             {
                 LoadLevel();
+            }
+            if (identifier == "FREQUENCY")
+            {
+                LoadFreqs();
             }
             else
             {
@@ -66,13 +69,27 @@ namespace vatACARS.Components
 
         public event QuickFillChangedHandler QuickFillDataChanged;
 
+        private void QucikScroll_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                this.scr_quickfill.Value += scr_quickfill.Change;
+            }
+            else
+            {
+                if (e.Delta >= 0)
+                    return;
+                this.scr_quickfill.Value -= scr_quickfill.Change;
+            }
+        }
+
         private void AddQuickFillItem(string label)
         {
             try
             {
                 Label quickFillItemLabel = new Label();
                 quickFillItemLabel.Text = label;
-                quickFillItemLabel.Size = new Size(62, 40);
+                quickFillItemLabel.Size = new Size(83, 40);
                 quickFillItemLabel.TextAlign = ContentAlignment.MiddleCenter;
                 quickFillItemLabel.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
                 quickFillItemLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
@@ -183,6 +200,45 @@ namespace vatACARS.Components
                     }
                 }
                 UpdateScrollbar();
+            }
+        }
+
+        private void LoadFreqs()
+        {
+            List<string> freqs = new List<string>();
+
+            AddQuickFillItem("UNICOM 122.8");
+
+            foreach (VSCSFrequency vscsFrequency in (IEnumerable<VSCSFrequency>)Audio.VSCSFrequencies)
+            {
+                if (vscsFrequency.Transmit)
+                {
+                    try
+                    {
+                        freqs.Add(vscsFrequency.Name + " " + Conversions.FrequencyToString(vscsFrequency.Frequency));
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            foreach (NetworkATC networkAtc in Network.GetOnlineATCs.Where<NetworkATC>((Func<NetworkATC, bool>)(a => a.IsRealATC && a.Frequencies != null)))
+            {
+                foreach (int frequency in networkAtc.Frequencies)
+                {
+                    if (frequency != 99998)
+                    {
+                        freqs.Add(networkAtc.Callsign + " " + Conversions.FSDFrequencyToString(frequency));
+                    }
+                    else
+                        break;
+                }
+            }
+
+            foreach (string freq in freqs)
+            {
+                AddQuickFillItem(freq);
             }
         }
 
