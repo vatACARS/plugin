@@ -18,6 +18,7 @@ namespace vatACARS
         private static DebugWindow debugWindow;
 
         private static bool Hoppies = Properties.Settings.Default.enableHoppies;
+        private static bool sendReports = Properties.Settings.Default.sendReports;
 
         public SetupWindow()
         {
@@ -41,6 +42,26 @@ namespace vatACARS
                 {
                     Properties.Settings.Default.enableHoppies = false;
                     logger.Log("Hoppies OFF.");
+                }
+                Properties.Settings.Default.Save();
+            }
+        }
+
+        public static void SetReports(bool value)
+        {
+            Logger logger = new Logger("vatACARS");
+            if (sendReports != value)
+            {
+                sendReports = value;
+                if (sendReports)
+                {
+                    Properties.Settings.Default.sendReports = true;
+                    logger.Log("Reports ON.");
+                }
+                else
+                {
+                    Properties.Settings.Default.sendReports = false;
+                    logger.Log("Reports OFF.");
                 }
                 Properties.Settings.Default.Save();
             }
@@ -276,6 +297,10 @@ namespace vatACARS
 
             btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
             btn_enableHoppies.Invalidate();
+            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
+            btn_sendreports.Invalidate();
+
+            SetReports(Properties.Settings.Default.sendReports);
             SetHoppies(Properties.Settings.Default.enableHoppies);
             tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
 
@@ -329,6 +354,15 @@ namespace vatACARS
                 Properties.Settings.Default.vatACARSToken = tbx_vatACARSToken.Text;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void btn_sendreports_MouseUp(object sender, MouseEventArgs e)
+        {
+            Properties.Settings.Default.sendReports = !Properties.Settings.Default.sendReports;
+            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
+            btn_sendreports.Invalidate();
+            SetReports(Properties.Settings.Default.sendReports);
+            Properties.Settings.Default.Save();
         }
     }
 }
