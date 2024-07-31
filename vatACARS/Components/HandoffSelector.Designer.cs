@@ -40,13 +40,16 @@
             // 
             // tbl_dataAuthorities
             // 
+            this.tbl_dataAuthorities.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbl_dataAuthorities.BackColor = System.Drawing.Color.Transparent;
             this.tbl_dataAuthorities.ColumnCount = 5;
-            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 98.4F));
+            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 98.4F));
+            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 98.4F));
+            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 98.4F));
+            this.tbl_dataAuthorities.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 98.4F));
             this.tbl_dataAuthorities.Location = new System.Drawing.Point(3, 3);
             this.tbl_dataAuthorities.Name = "tbl_dataAuthorities";
             this.tbl_dataAuthorities.RowCount = 4;
@@ -59,6 +62,9 @@
             // 
             // insetPanel1
             // 
+            this.insetPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.insetPanel1.Controls.Add(this.tbl_dataAuthorities);
             this.insetPanel1.Location = new System.Drawing.Point(3, 3);
             this.insetPanel1.Name = "insetPanel1";
@@ -67,6 +73,8 @@
             // 
             // insetPanel2
             // 
+            this.insetPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.insetPanel2.Controls.Add(this.tbl_sectors);
             this.insetPanel2.Location = new System.Drawing.Point(3, 141);
             this.insetPanel2.Name = "insetPanel2";
@@ -75,27 +83,27 @@
             // 
             // tbl_sectors
             // 
-            this.tbl_sectors.AutoScroll = true;
+            this.tbl_sectors.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbl_sectors.BackColor = System.Drawing.Color.Transparent;
             this.tbl_sectors.ColumnCount = 4;
-            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 123F));
+            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 123F));
+            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 123F));
+            this.tbl_sectors.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 123F));
             this.tbl_sectors.Location = new System.Drawing.Point(3, 3);
             this.tbl_sectors.Name = "tbl_sectors";
             this.tbl_sectors.RowCount = 3;
-            this.tbl_sectors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tbl_sectors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tbl_sectors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tbl_sectors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tbl_sectors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tbl_sectors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tbl_sectors.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tbl_sectors.Size = new System.Drawing.Size(492, 93);
             this.tbl_sectors.TabIndex = 1;
             // 
             // btn_handoff
             // 
-            this.btn_handoff.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btn_handoff.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_handoff.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_handoff.Location = new System.Drawing.Point(387, 246);
             this.btn_handoff.Name = "btn_handoff";
@@ -109,6 +117,7 @@
             // 
             // btn_logoff
             // 
+            this.btn_logoff.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_logoff.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_logoff.Location = new System.Drawing.Point(12, 246);
             this.btn_logoff.Name = "btn_logoff";
@@ -127,10 +136,13 @@
             this.Controls.Add(this.btn_handoff);
             this.Controls.Add(this.insetPanel2);
             this.Controls.Add(this.insetPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(508, 308);
             this.Name = "HandoffSelector";
-            this.Resizeable = false;
+            this.Text = "Handoff";
+            this.Shown += new System.EventHandler(this.HandoffSelector_Shown);
+            this.ResizeBegin += new System.EventHandler(this.HandoffSelector_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.HandoffSelector_ResizeEnd);
             this.insetPanel1.ResumeLayout(false);
             this.insetPanel2.ResumeLayout(false);
             this.ResumeLayout(false);

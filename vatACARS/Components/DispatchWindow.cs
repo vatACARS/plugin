@@ -279,6 +279,17 @@ namespace vatACARS.Components
             UpdateMessages();
         }
 
+        private void DispatchWindow_SizeChanged(object sender, EventArgs e)
+        {
+            int newWidth = lvw_messages.ClientRectangle.Width;
+            int timestampWidth = 80;
+            int messageWidth = newWidth - timestampWidth;
+            col_timestamp.Width = timestampWidth;
+            col_message.Width = messageWidth;
+            lvw_messages.Invalidate();
+            UpdateMessages();
+        }
+
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             ACARSListViewItem item = (ACARSListViewItem)e.Item;

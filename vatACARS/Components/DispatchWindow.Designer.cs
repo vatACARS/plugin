@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
             this.insetPanel2 = new vatsys.InsetPanel();
             this.lvw_messages = new vatsys.ListViewEx();
             this.col_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -69,25 +69,25 @@
             this.col_message});
             this.lvw_messages.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lvw_messages.FullRowSelect = true;
-            listViewGroup1.Header = "";
-            listViewGroup1.Name = "downlink";
-            listViewGroup2.Header = "";
-            listViewGroup2.Name = "downlinkResponseNotRequired";
-            listViewGroup3.Header = "";
-            listViewGroup3.Name = "ADSC";
-            listViewGroup4.Header = "";
-            listViewGroup4.Name = "defer";
-            listViewGroup5.Header = "";
-            listViewGroup5.Name = "uplink";
-            listViewGroup6.Header = "";
-            listViewGroup6.Name = "finished";
+            listViewGroup7.Header = "";
+            listViewGroup7.Name = "downlink";
+            listViewGroup8.Header = "";
+            listViewGroup8.Name = "downlinkResponseNotRequired";
+            listViewGroup9.Header = "";
+            listViewGroup9.Name = "ADSC";
+            listViewGroup10.Header = "";
+            listViewGroup10.Name = "defer";
+            listViewGroup11.Header = "";
+            listViewGroup11.Name = "uplink";
+            listViewGroup12.Header = "";
+            listViewGroup12.Name = "finished";
             this.lvw_messages.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3,
-            listViewGroup4,
-            listViewGroup5,
-            listViewGroup6});
+            listViewGroup7,
+            listViewGroup8,
+            listViewGroup9,
+            listViewGroup10,
+            listViewGroup11,
+            listViewGroup12});
             this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messages.HideSelection = false;
             this.lvw_messages.Location = new System.Drawing.Point(3, 3);
@@ -209,6 +209,7 @@
             this.Text = "Dispatch Interface";
             this.ResizeBegin += new System.EventHandler(this.DispatchWindow_ResizeBegin);
             this.ResizeEnd += new System.EventHandler(this.DispatchWindow_ResizeEnd);
+            this.SizeChanged += new System.EventHandler(this.DispatchWindow_SizeChanged);
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
