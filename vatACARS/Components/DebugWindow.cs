@@ -46,10 +46,7 @@ namespace vatACARS.Components
         private static bool netchecks = Properties.Settings.Default.netChecks;
         private string callsign;
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
-        private string level = "";
         private int provider;
-        private int state;
-
         public DebugWindow()
         {
             InitializeComponent();
