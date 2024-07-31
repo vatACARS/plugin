@@ -45,6 +45,8 @@
             this.tbx_vatACARSToken = new vatsys.TextField();
             this.btn_checkStationCode = new vatsys.GenericButton();
             this.lbl_statusMessage = new vatsys.TextLabel();
+            this.btn_sendreports = new vatsys.GenericButton();
+            this.lbl_sendcrash = new vatsys.TextLabel();
             ((System.ComponentModel.ISupportInitialize)(this.sld_auralAlertVolume)).BeginInit();
             this.SuspendLayout();
             // 
@@ -52,7 +54,7 @@
             // 
             this.btn_connect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btn_connect.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_connect.Location = new System.Drawing.Point(314, 314);
+            this.btn_connect.Location = new System.Drawing.Point(314, 342);
             this.btn_connect.Name = "btn_connect";
             this.btn_connect.Size = new System.Drawing.Size(101, 28);
             this.btn_connect.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -271,17 +273,45 @@
             this.lbl_statusMessage.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lbl_statusMessage.HasBorder = false;
             this.lbl_statusMessage.InteractiveText = true;
-            this.lbl_statusMessage.Location = new System.Drawing.Point(12, 285);
+            this.lbl_statusMessage.Location = new System.Drawing.Point(12, 313);
             this.lbl_statusMessage.Name = "lbl_statusMessage";
             this.lbl_statusMessage.Size = new System.Drawing.Size(287, 57);
             this.lbl_statusMessage.TabIndex = 31;
             this.lbl_statusMessage.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
             // 
+            // btn_sendreports
+            // 
+            this.btn_sendreports.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_sendreports.Location = new System.Drawing.Point(177, 278);
+            this.btn_sendreports.Name = "btn_sendreports";
+            this.btn_sendreports.Size = new System.Drawing.Size(26, 26);
+            this.btn_sendreports.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_sendreports.SubText = "";
+            this.btn_sendreports.TabIndex = 33;
+            this.btn_sendreports.UseVisualStyleBackColor = true;
+            this.btn_sendreports.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_sendreports_MouseUp);
+            // 
+            // lbl_sendcrash
+            // 
+            this.lbl_sendcrash.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_sendcrash.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_sendcrash.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_sendcrash.HasBorder = false;
+            this.lbl_sendcrash.InteractiveText = true;
+            this.lbl_sendcrash.Location = new System.Drawing.Point(12, 278);
+            this.lbl_sendcrash.Name = "lbl_sendcrash";
+            this.lbl_sendcrash.Size = new System.Drawing.Size(159, 26);
+            this.lbl_sendcrash.TabIndex = 32;
+            this.lbl_sendcrash.Text = "SEND CRASH REPORTS";
+            this.lbl_sendcrash.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // SetupWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(427, 354);
+            this.ClientSize = new System.Drawing.Size(427, 382);
+            this.Controls.Add(this.btn_sendreports);
+            this.Controls.Add(this.lbl_sendcrash);
             this.Controls.Add(this.lbl_statusMessage);
             this.Controls.Add(this.btn_checkStationCode);
             this.Controls.Add(this.tbx_vatACARSToken);
@@ -336,5 +366,7 @@
         private vatsys.TextField tbx_vatACARSToken;
         private vatsys.GenericButton btn_checkStationCode;
         private vatsys.TextLabel lbl_statusMessage;
+        private vatsys.GenericButton btn_sendreports;
+        private vatsys.TextLabel lbl_sendcrash;
     }
 }

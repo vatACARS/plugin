@@ -190,69 +190,103 @@ namespace vatACARS.Components
             clearDataAuthorities();
             clearSectors();
 
-            foreach (StationInformation station in OnlineStations)
+            if (OnlineStations == null) //Fix crash if not connected ;P
             {
-                Label btn = new Label();
-                btn.Text = station.Station_Code;
-                btn.Tag = station;
-                btn.Size = new Size(104, 30);
-                btn.Font = MMI.eurofont_winsml;
-                btn.TextAlign = ContentAlignment.MiddleCenter;
-                btn.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
-                btn.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-                btn.Margin = new Padding(3); // A bit of spacing
-                btn.Parent = tbl_dataAuthorities;
+                ErrorHandler.GetInstance().AddError("Not Connected To VatACARS");
+            }
+            else
+            {
+                foreach (StationInformation station in OnlineStations)
+                {
+                    Label btn = new Label();
+                    btn.Text = station.Station_Code;
+                    btn.Tag = station;
+                    btn.Size = new Size(104, 30);
+                    btn.Font = MMI.eurofont_winsml;
+                    btn.TextAlign = ContentAlignment.MiddleCenter;
+                    btn.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                    btn.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                    btn.Margin = new Padding(3); // A bit of spacing
+                    btn.Parent = tbl_dataAuthorities;
 
-                btn.MouseEnter += (sender, e) => btn.BackColor = Colours.GetColour(SelectedDataAuthority == btn ? Colours.Identities.CPDLCUplink : Colours.Identities.CPDLCDownlink);
-                btn.MouseLeave += (sender, e) => btn.BackColor = Colours.GetColour(SelectedDataAuthority == btn ? Colours.Identities.CPDLCDownlink : Colours.Identities.CPDLCUplink);
+                    btn.MouseEnter += (sender, e) => btn.BackColor = Colours.GetColour(SelectedDataAuthority == btn ? Colours.Identities.CPDLCUplink : Colours.Identities.CPDLCDownlink);
+                    btn.MouseLeave += (sender, e) => btn.BackColor = Colours.GetColour(SelectedDataAuthority == btn ? Colours.Identities.CPDLCDownlink : Colours.Identities.CPDLCUplink);
 
-                btn.MouseDown += (sender, e) =>
-                    {
-                        if (e.Button == MouseButtons.Left)
+                    btn.MouseDown += (sender, e) =>
                         {
-                            if (SelectedDataAuthority == btn) return;
-                            if (SelectedDataAuthority != null) SelectedDataAuthority.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-                            SelectedDataAuthority = btn;
-                            btn.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-
-                            clearSectors();
-
-                            if (StationSectors.ContainsKey(station.Station_Code))
+                            if (e.Button == MouseButtons.Left)
                             {
-                                foreach (Sector sector in StationSectors[station.Station_Code])
+                                if (SelectedDataAuthority == btn) return;
+                                if (SelectedDataAuthority != null) SelectedDataAuthority.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                                SelectedDataAuthority = btn;
+                                btn.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
+
+                                clearSectors();
+
+                                if (StationSectors.ContainsKey(station.Station_Code))
                                 {
-                                    if (sector.Frequency == "0") continue;
-                                    Label sectorBtn = new Label();
-                                    sectorBtn.Text = $"{sector.Name} {(long.Parse(sector.Frequency) / 1000000.0).ToString("0.0##")}";
-                                    sectorBtn.Tag = sector;
-                                    sectorBtn.Size = new Size(130, 30);
-                                    sectorBtn.Font = MMI.eurofont_winsml;
-                                    sectorBtn.TextAlign = ContentAlignment.MiddleCenter;
-                                    sectorBtn.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
-                                    sectorBtn.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-                                    sectorBtn.Margin = new Padding(3); // A bit of spacing
-                                    sectorBtn.Parent = tbl_sectors;
-
-                                    sectorBtn.MouseEnter += (sender2, e2) => sectorBtn.BackColor = Colours.GetColour(SelectedSector == sectorBtn ? Colours.Identities.CPDLCUplink : Colours.Identities.CPDLCDownlink);
-                                    sectorBtn.MouseLeave += (sender2, e2) => sectorBtn.BackColor = Colours.GetColour(SelectedSector == sectorBtn ? Colours.Identities.CPDLCDownlink : Colours.Identities.CPDLCUplink);
-
-                                    sectorBtn.MouseDown += (sender2, e2) =>
+                                    foreach (Sector sector in StationSectors[station.Station_Code])
                                     {
-                                        if (e2.Button == MouseButtons.Left)
+                                        if (sector.Frequency == "0") continue;
+                                        Label sectorBtn = new Label();
+                                        sectorBtn.Text = $"{sector.Name} {(long.Parse(sector.Frequency) / 1000000.0).ToString("0.0##")}";
+                                        sectorBtn.Tag = sector;
+                                        sectorBtn.Size = new Size(130, 30);
+                                        sectorBtn.Font = MMI.eurofont_winsml;
+                                        sectorBtn.TextAlign = ContentAlignment.MiddleCenter;
+                                        sectorBtn.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                                        sectorBtn.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                                        sectorBtn.Margin = new Padding(3); // A bit of spacing
+                                        sectorBtn.Parent = tbl_sectors;
+
+                                        sectorBtn.MouseEnter += (sender2, e2) => sectorBtn.BackColor = Colours.GetColour(SelectedSector == sectorBtn ? Colours.Identities.CPDLCUplink : Colours.Identities.CPDLCDownlink);
+                                        sectorBtn.MouseLeave += (sender2, e2) => sectorBtn.BackColor = Colours.GetColour(SelectedSector == sectorBtn ? Colours.Identities.CPDLCDownlink : Colours.Identities.CPDLCUplink);
+
+                                        sectorBtn.MouseDown += (sender2, e2) =>
                                         {
-                                            if (SelectedSector == sectorBtn) return;
-                                            if (SelectedSector != null) SelectedSector.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-                                            SelectedSector = sectorBtn;
-                                            sectorBtn.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
-                                        }
-                                    };
+                                            if (e2.Button == MouseButtons.Left)
+                                            {
+                                                if (SelectedSector == sectorBtn) return;
+                                                if (SelectedSector != null) SelectedSector.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                                                SelectedSector = sectorBtn;
+                                                sectorBtn.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
+                                            }
+                                        };
+                                    }
                                 }
                             }
-                        }
-                    };
+                        };
 
-                StationSectors.Add(station.Station_Code, JsonConvert.DeserializeObject<Sector[]>(station.Sectors));
+                    StationSectors.Add(station.Station_Code, JsonConvert.DeserializeObject<Sector[]>(station.Sectors));
+                }
             }
+        }
+
+        private void HandoffSelector_ResizeBegin(object sender, EventArgs e)
+        {
+            tbl_dataAuthorities.SuspendLayout();
+            tbl_sectors.SuspendLayout();
+        }
+
+        private void HandoffSelector_ResizeEnd(object sender, EventArgs e)
+        {
+            int columnWidth = 98;
+            int columns = (int)(tbl_dataAuthorities.ClientRectangle.Width / columnWidth);
+            tbl_dataAuthorities.ColumnCount = columns;
+
+            int columnWidthSectors = 123;
+            int columnsSectors = (int)(tbl_sectors.ClientRectangle.Width / columnWidthSectors);
+            tbl_sectors.ColumnCount = columnsSectors;
+
+            tbl_dataAuthorities.ResumeLayout();
+            tbl_sectors.ResumeLayout();
+            tbl_dataAuthorities.Invalidate();
+            tbl_sectors.Invalidate();
+        }
+
+        private void HandoffSelector_Shown(object sender, EventArgs e)
+        {
+            this.Text = ($"Handoff {selectedStation.Callsign}");
         }
 
         private void StyleComponent()

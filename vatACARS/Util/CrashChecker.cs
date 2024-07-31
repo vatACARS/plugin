@@ -30,21 +30,27 @@ namespace vatACARS.Util
                             string uniqueIdentifier = $"vatACARS_plugin_{entry.TimeGenerated.Ticks.ToString().Substring(0, 11)}";
                             if (!processedEventIds.Contains(uniqueIdentifier))
                             {
-                                if (Properties.Settings.Default.vatACARSToken == null)
+                                if (Properties.Settings.Default.sendReports)
                                 {
-                                    errorHandler.AddError($"We detected a crash caused by vatACARS from your previous session. Your vatACARS token is not set so a report was not sent.");
-                                }
-                                else
-                                {
-                                    await client.PostStringTaskAsync("/reporting", new FormUrlEncodedContent(new Dictionary<string, string>
+                                    if (Properties.Settings.Default.vatACARSToken == null)
+                                    {
+                                        errorHandler.AddError($"We detected a crash caused by vatACARS from your previous session. Your vatACARS token is not set so a report was not sent.");
+                                    }
+                                    else
+                                    {
+                                        await client.PostStringTaskAsync("/reporting", new FormUrlEncodedContent(new Dictionary<string, string>
                                     {
                                         {"token", Properties.Settings.Default.vatACARSToken},
                                         {"source", "plugin"},
                                         {"data", JsonConvert.SerializeObject(new { ident = uniqueIdentifier, raw = entry.Message })}
                                     }), "https://api-dev.vatacars.com");
-                                    errorHandler.AddError($"We detected a crash caused by vatACARS from your previous session. A crash report has been generated and sent.\n\nError reference: {uniqueIdentifier}");
+                                        errorHandler.AddError($"We detected a crash caused by vatACARS from your previous session. A crash report has been generated and sent.\n\nError reference: {uniqueIdentifier}");
+                                    }
                                 }
-
+                                else
+                                {
+                                    errorHandler.AddError($"We detected a crash caused by vatACARS from your previous session. You have reports turned off so a report was not sent.");
+                                }
                                 newEventIds.Add(uniqueIdentifier);
                             }
                         }
