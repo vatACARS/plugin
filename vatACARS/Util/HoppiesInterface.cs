@@ -108,7 +108,7 @@ namespace vatACARS.Util
                     MessageId = fields[1] != "" ? int.Parse(fields[1]) : -1,
                     ReplyMessageId = fields[2] != "" ? int.Parse(fields[2]) : -1,
                     ResponseType = fields[3],
-                    Content = String.Join(", ", fields.Skip(3))
+                    Content = String.Join(", ", fields.Skip(4))
                 };
             }
             catch (FormatException ex)
