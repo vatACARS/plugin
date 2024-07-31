@@ -222,7 +222,11 @@ namespace vatACARS
                 ErrorHandler.GetInstance().AddError($"Selected aircraft has not submitted a flight plan.");
                 return;
             }
-            DispatchWindow.SelectedMessage = new CPDLCMessage()
+
+            CPDLCMessage msg1 = getAllCPDLCMessages().FirstOrDefault(message => message.State == 0 && message.Station == fdr.Callsign);
+
+            if(msg1 != null) DispatchWindow.SelectedMessage = msg1;
+            else DispatchWindow.SelectedMessage = new CPDLCMessage()
             {
                 State = 0,
                 Station = fdr.Callsign,
