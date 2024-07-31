@@ -121,6 +121,8 @@ namespace vatACARS.Components
             this.Controls.Add(this.insetPanel1);
             this.Controls.Add(this.scr_quickfill);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.HasMinimizeButton = false;
+            this.HasSendBackButton = false;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MiddleClickClose = false;
             this.Name = "QuickFillWindow";
