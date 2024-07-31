@@ -16,11 +16,13 @@ namespace vatACARS.Components
 {
     public partial class EditorWindow : BaseForm
     {
+        public IMessageData selectedMsg;
+
         private static readonly Dictionary<string, List<string>> keywordGroupMapping = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
         {
             { "14", new List<string> { "EMERG", "EMERGENCY", "MAYDAY", "PAN PAN" } } ,
-            { "1", new List<string> { "LEVEL", "ALTITUDE", "FL", "DECENT", "CLIMB", "CLIMBING", "DESCENDING", "LEAVING" } },
             { "2", new List<string> { "ROUTE", "DIRECT", "HEADING", "TRACK", "DIVERTING" } },
+            { "1", new List<string> { "LEVEL", "ALTITUDE", "FL", "DECENT", "CLIMB", "CLIMBING", "DESCENDING", "LEAVING" } },
             { "3", new List<string> { "TRANSFR", "HANDOFF", "TRANSFER" } },
             { "4", new List<string> { "CROSS", "OVERFLY", "PASS" } },
             { "5", new List<string> { "ENQ", "INQUIRE", "QUESTION", "TXT", "TEXT" } },
@@ -38,7 +40,6 @@ namespace vatACARS.Components
         private static Logger logger = new Logger("EditorWindow");
         private static ResponseItem[] response = new ResponseItem[5];
         private static int responseIndex = 0;
-        private IMessageData selectedMsg;
 
         public EditorWindow()
         {
@@ -51,10 +52,6 @@ namespace vatACARS.Components
             if (selectedMsg is TelexMessage)
             {
                 var msg = (TelexMessage)selectedMsg;
-
-                btn_suspend.Enabled = false;
-                btn_restore.Enabled = false;
-                btn_escape.Enabled = false;
 
                 this.Text = $"Replying to {msg.Station}";
                 string[] msgSplit = CutString(msg.Content);
@@ -209,13 +206,22 @@ namespace vatACARS.Components
 
         private void btn_editor_Click(object sender, EventArgs e)
         {
-            lbl_response.Text = "";
-            lbl_response.Refresh();
             pnl_categories.Visible = true;
+            lbl_response.Refresh();
+            response = new ResponseItem[5];
+            responseIndex = 0;
+            lbl_response.Text = string.Empty;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            ShowGroup("1");
+        }
+
+        private void btn_escape_Click(object sender, EventArgs e)
+        {
+            lbl_response.Refresh();
             response = new ResponseItem[5];
             responseIndex = 0;
             btn_messageScroller.Text = (responseIndex + 1).ToString();
-            ShowGroup("1");
+            lbl_response.Text = string.Empty;
         }
 
         private void btn_messageScroller_MouseDown(object sender, MouseEventArgs e)
@@ -242,6 +248,32 @@ namespace vatACARS.Components
             }
 
             lbl_response.Text = response[responseIndex].Entry.Element ?? string.Empty;
+        }
+
+        private void btn_restore_Click(object sender, EventArgs e)
+        {
+            lbl_response.Refresh();
+            response = new ResponseItem[5];
+            responseIndex = 0;
+            btn_messageScroller.Text = (responseIndex + 1).ToString();
+            lbl_response.Text = string.Empty;
+
+            var message = selectedMsg as dynamic;
+            if (message != null)
+            {
+                var responses = message.SuspendedResponses;
+                foreach (ResponseItem item in responses)
+                {
+                    btn_messageScroller.Text = (responseIndex + 1).ToString();
+                    var responsecode = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == item.Entry.Code).ToList().FirstOrDefault().Clone();
+                    HandleResponse(responsecode);
+
+                    if (responseIndex < responses.Count - 1)
+                    {
+                        responseIndex++;
+                    }
+                }
+            }
         }
 
         private void btn_send_Click(object sender, EventArgs e)
@@ -352,7 +384,18 @@ namespace vatACARS.Components
         }
 
         private void btn_suspend_Click(object sender, EventArgs e)
-        { }
+        {
+            var message = selectedMsg as dynamic;
+            if (message != null)
+            {
+                message.SuspendedResponses.Clear();
+                foreach (ResponseItem item in response.Where(obj => obj != null && obj.Entry.Element != ""))
+                {
+                    message.SuspendedResponses.Add(item);
+                }
+            }
+            Close();
+        }
 
         private void btn_tfc_Click(object sender, EventArgs e)
         {
@@ -667,13 +710,13 @@ namespace vatACARS.Components
         }
     }
 
-    internal class ResponseItem
+    public class ResponseItem
     {
         public UplinkEntry Entry;
         public ResponseItemPlaceholderData[] Placeholders;
     }
 
-    internal class ResponseItemPlaceholderData
+    public class ResponseItemPlaceholderData
     {
         public string Placeholder;
         public Size Size;

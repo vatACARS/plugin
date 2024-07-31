@@ -4,6 +4,7 @@
  */
 
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -44,18 +45,40 @@ namespace vatACARS.Util
 
         private static async void HeartbeatTimer(object sender, ElapsedEventArgs e)
         {
-            if (!Network.IsConnected || !Network.IsValidATC)
+            if (Properties.Settings.Default.netChecks)
             {
-                AudioInterface.playSound("error");
-                StopListening();
-                HoppiesInterface.StopListening();
-                Transceiver.connected = false;
-                SetupWindow setupWindow = new SetupWindow();
-                setupWindow.ShowDialog();
-                return;
+                if (!Network.IsConnected || !Network.IsValidATC || Transceiver.ClientInformation.Callsign == null || MMI.SectorsControlled.Count < 1)
+                {
+                    StopListening();
+                    HoppiesInterface.StopListening();
+                    Transceiver.connected = false;
+                    ErrorHandler.GetInstance().AddError("You have been disconnected from vatACARS.");
+                    if (vatACARS.setupWindow != null)
+                    {
+                        vatACARS.setupWindow.Close();
+                    }
+                    return;
+                }
+            }
+            else
+            {
+                if (Transceiver.ClientInformation.Callsign == null || MMI.SectorsControlled.Count < 1)
+                {
+                    StopListening();
+                    HoppiesInterface.StopListening();
+                    Transceiver.connected = false;
+                    ErrorHandler.GetInstance().AddError("You have been disconnected from vatACARS.");
+                    if (vatACARS.setupWindow != null)
+                    {
+                        vatACARS.setupWindow.Close();
+                    }
+                    return;
+                }
             }
 
-            string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
+            try
+            {
+                string LogonResponse = await client.PostStringTaskAsync("/atsu/heartbeat", new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 {"station", Transceiver.ClientInformation.Callsign},
                 {"token", Properties.Settings.Default.vatACARSToken},
@@ -63,15 +86,20 @@ namespace vatACARS.Util
                 {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition.DefaultCenter.Latitude, longitude = MMI.PrimePosition.DefaultCenter.Longitude })}
             }));
 
-            APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
-            if (!ResponseDecoded.Success) ErrorHandler.GetInstance().AddError($"Heartbeat to vatACARS failed: {ResponseDecoded.Message}");
+                APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
+                if (!ResponseDecoded.Success) ErrorHandler.GetInstance().AddError($"Heartbeat to vatACARS failed: {ResponseDecoded.Message}");
 
-            string OnlineStationsResponse = await client.GetStringTaskAsync("/atsu/online");
-            StationInformation[] StationsResponseDecoded = JsonConvert.DeserializeObject<StationInformation[]>(OnlineStationsResponse);
+                string OnlineStationsResponse = await client.GetStringTaskAsync("/atsu/online");
+                StationInformation[] StationsResponseDecoded = JsonConvert.DeserializeObject<StationInformation[]>(OnlineStationsResponse);
 
-            stationsOnline = StationsResponseDecoded;
+                stationsOnline = StationsResponseDecoded;
 
-            logger.Log("Heartbeat successful.");
+                logger.Log("Heartbeat successful.");
+            }
+            catch (Exception ex) // THIS FIXES CRASH FOR NOW (josh its to do with http client stuff)
+            {
+                logger.Log($"Crash Saved: {ex.ToString()}");
+            }
         }
     }
 }

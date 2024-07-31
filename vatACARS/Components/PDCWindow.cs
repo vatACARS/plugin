@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Windows.Forms;
 using vatACARS.Util;
 using vatsys;
@@ -15,9 +16,9 @@ namespace vatACARS.Components
     {
         private static Logger logger = new Logger("PDCWindow");
         private ErrorHandler errorHandler = ErrorHandler.GetInstance();
+        private FDR networkPilotFDR;
         private Dictionary<string, string> PDCElements = new Dictionary<string, string>();
         private IMessageData selectedMsg;
-        private FDR networkPilotFDR;
 
         public PDCWindow()
         {
@@ -31,7 +32,11 @@ namespace vatACARS.Components
 
         private void btn_send_Click(object sender, EventArgs e)
         {
-            string encodedMessage = $"{string.Join("\n", PDCElements.Values)}";
+            List<string> values = PDCElements.Values.ToList();
+            values[6] = $"DEP FREQ: {dd_freq.Text}";
+            values[8] = $"ONLY READBACK SID, SQUAWK CODE, AND BAY NO. ON: {dd_freq2.Text}";
+
+            string encodedMessage = $"{string.Join("\n", values)}";
             FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "CPDLC", $"/data2/{SentMessages}//WU/{encodedMessage}");
             _ = HoppiesInterface.SendMessage(req);
 

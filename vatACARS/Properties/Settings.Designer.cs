@@ -94,5 +94,29 @@ namespace vatACARS.Properties {
                 this["stationCode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool sendReports {
+            get {
+                return ((bool)(this["sendReports"]));
+            }
+            set {
+                this["sendReports"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool netChecks {
+            get {
+                return ((bool)(this["netChecks"]));
+            }
+            set {
+                this["netChecks"] = value;
+            }
+        }
     }
 }

@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewGroup listViewGroup1 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup2 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup3 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup4 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup5 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
-            System.Windows.Forms.ListViewGroup listViewGroup6 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup7 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup8 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup9 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup10 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup11 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
+            System.Windows.Forms.ListViewGroup listViewGroup12 = new System.Windows.Forms.ListViewGroup("", System.Windows.Forms.HorizontalAlignment.Left);
             this.insetPanel2 = new vatsys.InsetPanel();
             this.lvw_messages = new vatsys.ListViewEx();
             this.col_timestamp = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -49,39 +49,45 @@
             // 
             // insetPanel2
             // 
+            this.insetPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.insetPanel2.Controls.Add(this.lvw_messages);
             this.insetPanel2.Location = new System.Drawing.Point(3, 24);
             this.insetPanel2.Name = "insetPanel2";
-            this.insetPanel2.Size = new System.Drawing.Size(507, 138);
+            this.insetPanel2.Size = new System.Drawing.Size(502, 138);
             this.insetPanel2.TabIndex = 3;
             // 
             // lvw_messages
             // 
+            this.lvw_messages.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lvw_messages.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lvw_messages.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.col_timestamp,
             this.col_message});
             this.lvw_messages.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lvw_messages.FullRowSelect = true;
-            listViewGroup1.Header = "";
-            listViewGroup1.Name = "downlink";
-            listViewGroup2.Header = "";
-            listViewGroup2.Name = "downlinkResponseNotRequired";
-            listViewGroup3.Header = "";
-            listViewGroup3.Name = "ADSC";
-            listViewGroup4.Header = "";
-            listViewGroup4.Name = "defer";
-            listViewGroup5.Header = "";
-            listViewGroup5.Name = "uplink";
-            listViewGroup6.Header = "";
-            listViewGroup6.Name = "finished";
+            listViewGroup7.Header = "";
+            listViewGroup7.Name = "downlink";
+            listViewGroup8.Header = "";
+            listViewGroup8.Name = "downlinkResponseNotRequired";
+            listViewGroup9.Header = "";
+            listViewGroup9.Name = "ADSC";
+            listViewGroup10.Header = "";
+            listViewGroup10.Name = "defer";
+            listViewGroup11.Header = "";
+            listViewGroup11.Name = "uplink";
+            listViewGroup12.Header = "";
+            listViewGroup12.Name = "finished";
             this.lvw_messages.Groups.AddRange(new System.Windows.Forms.ListViewGroup[] {
-            listViewGroup1,
-            listViewGroup2,
-            listViewGroup3,
-            listViewGroup4,
-            listViewGroup5,
-            listViewGroup6});
+            listViewGroup7,
+            listViewGroup8,
+            listViewGroup9,
+            listViewGroup10,
+            listViewGroup11,
+            listViewGroup12});
             this.lvw_messages.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.lvw_messages.HideSelection = false;
             this.lvw_messages.Location = new System.Drawing.Point(3, 3);
@@ -89,7 +95,7 @@
             this.lvw_messages.Name = "lvw_messages";
             this.lvw_messages.OwnerDraw = true;
             this.lvw_messages.ShowGroups = false;
-            this.lvw_messages.Size = new System.Drawing.Size(501, 132);
+            this.lvw_messages.Size = new System.Drawing.Size(496, 132);
             this.lvw_messages.TabIndex = 2;
             this.lvw_messages.UseCompatibleStateImageBehavior = false;
             this.lvw_messages.View = System.Windows.Forms.View.Details;
@@ -104,7 +110,7 @@
             // col_message
             // 
             this.col_message.Text = "";
-            this.col_message.Width = 441;
+            this.col_message.Width = 421;
             // 
             // scr_messages
             // 
@@ -112,7 +118,7 @@
             this.scr_messages.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scr_messages.Change = 1;
-            this.scr_messages.Location = new System.Drawing.Point(511, 24);
+            this.scr_messages.Location = new System.Drawing.Point(508, 24);
             this.scr_messages.Name = "scr_messages";
             this.scr_messages.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
             this.scr_messages.PreferredHeight = 10;
@@ -124,21 +130,25 @@
             // 
             // insetPanel1
             // 
+            this.insetPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.insetPanel1.Controls.Add(this.tbl_connected);
             this.insetPanel1.Location = new System.Drawing.Point(3, 193);
             this.insetPanel1.Name = "insetPanel1";
-            this.insetPanel1.Size = new System.Drawing.Size(528, 130);
+            this.insetPanel1.Size = new System.Drawing.Size(525, 121);
             this.insetPanel1.TabIndex = 4;
             // 
             // tbl_connected
             // 
+            this.tbl_connected.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbl_connected.BackColor = System.Drawing.Color.Transparent;
             this.tbl_connected.ColumnCount = 5;
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            this.tbl_connected.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
             this.tbl_connected.Location = new System.Drawing.Point(3, 3);
             this.tbl_connected.Name = "tbl_connected";
             this.tbl_connected.RowCount = 4;
@@ -146,7 +156,7 @@
             this.tbl_connected.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tbl_connected.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tbl_connected.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tbl_connected.Size = new System.Drawing.Size(522, 124);
+            this.tbl_connected.Size = new System.Drawing.Size(519, 115);
             this.tbl_connected.TabIndex = 1;
             this.tbl_connected.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tbl_connected_MouseDown);
             // 
@@ -166,6 +176,8 @@
             // 
             // lbl_connections
             // 
+            this.lbl_connections.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.lbl_connections.AutoSize = true;
             this.lbl_connections.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.lbl_connections.ForeColor = System.Drawing.SystemColors.ControlDark;
@@ -183,23 +195,21 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(533, 326);
-            this.ControlBox = false;
             this.Controls.Add(this.lbl_connections);
             this.Controls.Add(this.lbl_messages);
             this.Controls.Add(this.insetPanel1);
             this.Controls.Add(this.scr_messages);
             this.Controls.Add(this.insetPanel2);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HasSendBackButton = false;
             this.HideOnClose = true;
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(950, 400);
             this.MiddleClickClose = false;
-            this.MinimumSize = new System.Drawing.Size(537, 263);
+            this.MinimumSize = new System.Drawing.Size(537, 354);
             this.Name = "DispatchWindow";
-            this.Resizeable = false;
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Dispatch Interface";
+            this.ResizeBegin += new System.EventHandler(this.DispatchWindow_ResizeBegin);
+            this.ResizeEnd += new System.EventHandler(this.DispatchWindow_ResizeEnd);
+            this.SizeChanged += new System.EventHandler(this.DispatchWindow_SizeChanged);
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel1.ResumeLayout(false);
             this.ResumeLayout(false);

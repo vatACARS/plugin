@@ -130,7 +130,14 @@ namespace vatACARS.Components
                     if (segment.Type == FDP2.FDR.ExtractedRoute.Segment.SegmentTypes.WAYPOINT)
                         if (segment.Intersection.Name.Length > 5)
                         {
-                            AddQuickFillItem(segment.Intersection.FullName);
+                            if (segment.Intersection.FullName != "")
+                            {
+                                AddQuickFillItem(segment.Intersection.FullName);
+                            }
+                            else
+                            {
+                                AddQuickFillItem(segment.Intersection.Name);
+                            }
                         }
                         else
                         {

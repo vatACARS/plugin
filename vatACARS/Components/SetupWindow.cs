@@ -18,11 +18,14 @@ namespace vatACARS
         private static DebugWindow debugWindow;
 
         private static bool Hoppies = Properties.Settings.Default.enableHoppies;
+        private static bool sendReports = Properties.Settings.Default.sendReports;
 
         public SetupWindow()
         {
+            DoShowDebugWindow();
             InitializeComponent();
             StyleComponent();
+            this.Text = ($"vatACARS Setup v{AppData.CurrentVersion}");
         }
 
         public static void SetHoppies(bool value)
@@ -45,6 +48,26 @@ namespace vatACARS
             }
         }
 
+        public static void SetReports(bool value)
+        {
+            Logger logger = new Logger("vatACARS");
+            if (sendReports != value)
+            {
+                sendReports = value;
+                if (sendReports)
+                {
+                    Properties.Settings.Default.sendReports = true;
+                    logger.Log("Reports ON.");
+                }
+                else
+                {
+                    Properties.Settings.Default.sendReports = false;
+                    logger.Log("Reports OFF.");
+                }
+                Properties.Settings.Default.Save();
+            }
+        }
+
         public void tbx_messageTimeout_TextChanged(object sender, EventArgs e)
         {
             string newText = new string(tbx_messageTimeout.Text.Where(char.IsDigit).ToArray());
@@ -60,6 +83,20 @@ namespace vatACARS
                 Properties.Settings.Default.finishedMessageTimeout = timeout;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private static void DoShowDebugWindow()
+        {
+            if (debugWindow == null || debugWindow.IsDisposed)
+            {
+                debugWindow = new DebugWindow();
+            }
+            else if (debugWindow.Visible)
+            {
+                return;
+            }
+
+            debugWindow.Show(Form.ActiveForm);
         }
 
         private void btn_auralAlertVolumeTest_MouseUp(object sender, MouseEventArgs e)
@@ -138,6 +175,9 @@ namespace vatACARS
 
                 btn_checkStationCode_Click(null, null);
 
+                if (Properties.Settings.Default.netChecks) 
+                {
+
                 if (!Network.IsConnected)
                 {
                     lbl_statusMessage.Text = "Please connect to VATSIM first.";
@@ -148,6 +188,8 @@ namespace vatACARS
                 {
                     lbl_statusMessage.Text = "Please connect as a non-observer role.";
                     return;
+                }
+                
                 }
 
                 foreach (Control ctl in Controls)
@@ -261,6 +303,10 @@ namespace vatACARS
 
             btn_enableHoppies.Text = Properties.Settings.Default.enableHoppies ? "\u2713" : "";
             btn_enableHoppies.Invalidate();
+            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
+            btn_sendreports.Invalidate();
+
+            SetReports(Properties.Settings.Default.sendReports);
             SetHoppies(Properties.Settings.Default.enableHoppies);
             tbx_hoppiesLogonCode.Enabled = Properties.Settings.Default.enableHoppies;
 
@@ -301,20 +347,6 @@ namespace vatACARS
             sld_auralAlertVolume.Font = MMI.eurofont_winsml;
         }
 
-        private static void DoShowDebugWindow()
-        {
-            if (debugWindow == null || debugWindow.IsDisposed)
-            {
-                debugWindow = new DebugWindow();
-            }
-            else if (debugWindow.Visible)
-            {
-                return;
-            }
-
-            debugWindow.Show(Form.ActiveForm);
-        }
-
         private void tbx_hoppiesLogonCode_TextChanged(object sender, EventArgs e)
         {
             Properties.Settings.Default.hoppiesLogonCode = tbx_hoppiesLogonCode.Text;
@@ -328,6 +360,15 @@ namespace vatACARS
                 Properties.Settings.Default.vatACARSToken = tbx_vatACARSToken.Text;
                 Properties.Settings.Default.Save();
             }
+        }
+
+        private void btn_sendreports_MouseUp(object sender, MouseEventArgs e)
+        {
+            Properties.Settings.Default.sendReports = !Properties.Settings.Default.sendReports;
+            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
+            btn_sendreports.Invalidate();
+            SetReports(Properties.Settings.Default.sendReports);
+            Properties.Settings.Default.Save();
         }
     }
 }

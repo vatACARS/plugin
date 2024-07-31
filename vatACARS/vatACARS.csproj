@@ -215,7 +215,7 @@
     <None Include="Resources\RXIcon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\adsc.ico" />
+    <Content Include="Resources\ADSCIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

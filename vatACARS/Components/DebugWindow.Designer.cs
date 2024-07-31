@@ -31,6 +31,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DebugWindow));
             this.tbx_content = new vatsys.TextField();
             this.insetPanel2 = new vatsys.InsetPanel();
+            this.dd_type = new VATSYSControls.DropDownBox();
+            this.lbl_type = new vatsys.TextLabel();
             this.btn_add = new vatsys.GenericButton();
             this.dd_state = new VATSYSControls.DropDownBox();
             this.lbl_state = new vatsys.TextLabel();
@@ -38,15 +40,15 @@
             this.tbx_station = new vatsys.TextField();
             this.lbl_callsign = new vatsys.TextLabel();
             this.lbl_messagecreate = new vatsys.TextLabel();
-            this.dd_type = new VATSYSControls.DropDownBox();
-            this.lbl_type = new vatsys.TextLabel();
             this.insetPanel1 = new vatsys.InsetPanel();
+            this.lbl_prov = new vatsys.TextLabel();
+            this.dd_prov = new VATSYSControls.DropDownBox();
             this.btn_screate = new vatsys.GenericButton();
             this.tbx_stationc = new vatsys.TextField();
             this.lbl_stationc = new vatsys.TextLabel();
             this.lbl_stationcreate = new vatsys.TextLabel();
-            this.dd_prov = new VATSYSControls.DropDownBox();
-            this.lbl_prov = new vatsys.TextLabel();
+            this.btn_netchecks = new vatsys.GenericButton();
+            this.lbl_netchecks = new vatsys.TextLabel();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -82,6 +84,32 @@
             this.insetPanel2.Name = "insetPanel2";
             this.insetPanel2.Size = new System.Drawing.Size(457, 128);
             this.insetPanel2.TabIndex = 17;
+            // 
+            // dd_type
+            // 
+            this.dd_type.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_type.FocusColor = System.Drawing.Color.Cyan;
+            this.dd_type.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_type.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_type.Items")));
+            this.dd_type.Location = new System.Drawing.Point(205, 94);
+            this.dd_type.Name = "dd_type";
+            this.dd_type.SelectedIndex = -1;
+            this.dd_type.Size = new System.Drawing.Size(131, 25);
+            this.dd_type.TabIndex = 108;
+            // 
+            // lbl_type
+            // 
+            this.lbl_type.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_type.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_type.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_type.HasBorder = false;
+            this.lbl_type.InteractiveText = true;
+            this.lbl_type.Location = new System.Drawing.Point(127, 92);
+            this.lbl_type.Name = "lbl_type";
+            this.lbl_type.Size = new System.Drawing.Size(72, 26);
+            this.lbl_type.TabIndex = 107;
+            this.lbl_type.Text = "TYPE:";
+            this.lbl_type.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btn_add
             // 
@@ -180,32 +208,6 @@
             this.lbl_messagecreate.Text = "MESSAGE CREATOR";
             this.lbl_messagecreate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // dd_type
-            // 
-            this.dd_type.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_type.FocusColor = System.Drawing.Color.Cyan;
-            this.dd_type.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_type.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_type.Items")));
-            this.dd_type.Location = new System.Drawing.Point(205, 94);
-            this.dd_type.Name = "dd_type";
-            this.dd_type.SelectedIndex = -1;
-            this.dd_type.Size = new System.Drawing.Size(131, 25);
-            this.dd_type.TabIndex = 108;
-            // 
-            // lbl_type
-            // 
-            this.lbl_type.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lbl_type.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.lbl_type.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_type.HasBorder = false;
-            this.lbl_type.InteractiveText = true;
-            this.lbl_type.Location = new System.Drawing.Point(127, 92);
-            this.lbl_type.Name = "lbl_type";
-            this.lbl_type.Size = new System.Drawing.Size(72, 26);
-            this.lbl_type.TabIndex = 107;
-            this.lbl_type.Text = "TYPE:";
-            this.lbl_type.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // insetPanel1
             // 
             this.insetPanel1.Controls.Add(this.lbl_prov);
@@ -218,6 +220,32 @@
             this.insetPanel1.Name = "insetPanel1";
             this.insetPanel1.Size = new System.Drawing.Size(457, 67);
             this.insetPanel1.TabIndex = 109;
+            // 
+            // lbl_prov
+            // 
+            this.lbl_prov.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_prov.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_prov.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_prov.HasBorder = false;
+            this.lbl_prov.InteractiveText = true;
+            this.lbl_prov.Location = new System.Drawing.Point(194, 29);
+            this.lbl_prov.Name = "lbl_prov";
+            this.lbl_prov.Size = new System.Drawing.Size(83, 26);
+            this.lbl_prov.TabIndex = 109;
+            this.lbl_prov.Text = "PROVIDER:";
+            this.lbl_prov.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // dd_prov
+            // 
+            this.dd_prov.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_prov.FocusColor = System.Drawing.Color.Cyan;
+            this.dd_prov.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.dd_prov.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_prov.Items")));
+            this.dd_prov.Location = new System.Drawing.Point(283, 32);
+            this.dd_prov.Name = "dd_prov";
+            this.dd_prov.SelectedIndex = -1;
+            this.dd_prov.Size = new System.Drawing.Size(40, 25);
+            this.dd_prov.TabIndex = 109;
             // 
             // btn_screate
             // 
@@ -275,35 +303,37 @@
             this.lbl_stationcreate.Text = "STATION CREATOR";
             this.lbl_stationcreate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // dd_prov
+            // btn_netchecks
             // 
-            this.dd_prov.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_prov.FocusColor = System.Drawing.Color.Cyan;
-            this.dd_prov.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.dd_prov.Items = ((System.Collections.ObjectModel.ObservableCollection<string>)(resources.GetObject("dd_prov.Items")));
-            this.dd_prov.Location = new System.Drawing.Point(283, 32);
-            this.dd_prov.Name = "dd_prov";
-            this.dd_prov.SelectedIndex = -1;
-            this.dd_prov.Size = new System.Drawing.Size(40, 25);
-            this.dd_prov.TabIndex = 109;
+            this.btn_netchecks.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_netchecks.Location = new System.Drawing.Point(177, 216);
+            this.btn_netchecks.Name = "btn_netchecks";
+            this.btn_netchecks.Size = new System.Drawing.Size(26, 26);
+            this.btn_netchecks.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_netchecks.SubText = "";
+            this.btn_netchecks.TabIndex = 111;
+            this.btn_netchecks.UseVisualStyleBackColor = true;
+            this.btn_netchecks.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btn_netchecks_MouseUp);
             // 
-            // lbl_prov
+            // lbl_netchecks
             // 
-            this.lbl_prov.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.lbl_prov.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.lbl_prov.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_prov.HasBorder = false;
-            this.lbl_prov.InteractiveText = true;
-            this.lbl_prov.Location = new System.Drawing.Point(194, 29);
-            this.lbl_prov.Name = "lbl_prov";
-            this.lbl_prov.Size = new System.Drawing.Size(83, 26);
-            this.lbl_prov.TabIndex = 109;
-            this.lbl_prov.Text = "PROVIDER:";
-            this.lbl_prov.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lbl_netchecks.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.lbl_netchecks.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_netchecks.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_netchecks.HasBorder = false;
+            this.lbl_netchecks.InteractiveText = true;
+            this.lbl_netchecks.Location = new System.Drawing.Point(12, 216);
+            this.lbl_netchecks.Name = "lbl_netchecks";
+            this.lbl_netchecks.Size = new System.Drawing.Size(159, 26);
+            this.lbl_netchecks.TabIndex = 110;
+            this.lbl_netchecks.Text = "TOGGLE NET CHECKS:";
+            this.lbl_netchecks.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DebugWindow
             // 
-            this.ClientSize = new System.Drawing.Size(481, 224);
+            this.ClientSize = new System.Drawing.Size(481, 272);
+            this.Controls.Add(this.btn_netchecks);
+            this.Controls.Add(this.lbl_netchecks);
             this.Controls.Add(this.insetPanel1);
             this.Controls.Add(this.insetPanel2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -311,6 +341,7 @@
             this.Name = "DebugWindow";
             this.Resizeable = false;
             this.Text = "vatACARS DEBUG";
+            this.Shown += new System.EventHandler(this.DebugWindow_Shown);
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel2.PerformLayout();
             this.insetPanel1.ResumeLayout(false);
@@ -339,5 +370,7 @@
         private vatsys.TextLabel lbl_stationcreate;
         private vatsys.TextLabel lbl_prov;
         private VATSYSControls.DropDownBox dd_prov;
+        private vatsys.GenericButton btn_netchecks;
+        private vatsys.TextLabel lbl_netchecks;
     }
 }

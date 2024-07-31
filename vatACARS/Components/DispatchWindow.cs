@@ -50,7 +50,6 @@ namespace vatACARS.Components
                 }
             };
 
-
             UpdateMessages();
         }
 
@@ -59,7 +58,7 @@ namespace vatACARS.Components
             try
             {
                 ACARSListViewItem item = new ACARSListViewItem(message.TimeReceived.ToString("HH:mm"), message.State == MessageState.Finished ? -1 : (int)message.State, lvw_messages);
-                item.SubItems.Add($"{message.Station}: {message.Content}");
+                item.SubItems.Add($"{message.Station.PadRight(7)}: {message.Content}");
                 item.Font = MMI.eurofont_winsml;
                 item.Tag = message;
                 item.Group = lvw_messages.Groups[(int)message.State];
@@ -258,6 +257,39 @@ namespace vatACARS.Components
             tbl_connected.Controls.Add(callsignLabel);
         }
 
+        private void DispatchWindow_ResizeBegin(object sender, EventArgs e)
+        {
+            tbl_connected.SuspendLayout();
+        }
+
+        private void DispatchWindow_ResizeEnd(object sender, EventArgs e)
+        {
+            int newWidth = lvw_messages.ClientRectangle.Width;
+            int timestampWidth = 80;
+            int messageWidth = newWidth - timestampWidth;
+            col_timestamp.Width = timestampWidth;
+            col_message.Width = messageWidth;
+            lvw_messages.Invalidate();
+
+            int columnWidth = 103;
+            int columns = (int)(tbl_connected.ClientRectangle.Width / columnWidth);
+            tbl_connected.ColumnCount = columns;
+            tbl_connected.ResumeLayout();
+            tbl_connected.Invalidate();
+            UpdateMessages();
+        }
+
+        private void DispatchWindow_SizeChanged(object sender, EventArgs e)
+        {
+            int newWidth = lvw_messages.ClientRectangle.Width;
+            int timestampWidth = 80;
+            int messageWidth = newWidth - timestampWidth;
+            col_timestamp.Width = timestampWidth;
+            col_message.Width = messageWidth;
+            lvw_messages.Invalidate();
+            UpdateMessages();
+        }
+
         private void lvw_messages_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             ACARSListViewItem item = (ACARSListViewItem)e.Item;
@@ -345,14 +377,12 @@ namespace vatACARS.Components
                                     }
                                     else
                                     {
-                                        EditorWindow window2 = new EditorWindow();
-                                        window2.Show(ActiveForm);
+                                        ShowEditorWindow(msg);
                                     }
                                     return;
                                 }
                             }
-                            EditorWindow window = new EditorWindow();
-                            window.Show(ActiveForm);
+                            ShowEditorWindow(msg);
                         }
                         lvw_messages.Invalidate();
                     }
@@ -380,6 +410,28 @@ namespace vatACARS.Components
             lvw_messages.SetScrollPosVert(scr_messages.PercentageValue);
         }
 
+        private void ShowEditorWindow(IMessageData msg)
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is EditorWindow && ((EditorWindow)form).selectedMsg == msg)
+                {
+                    if (form.Visible)
+                    {
+                        form.BringToFront();
+                        return;
+                    }
+                    else
+                    {
+                        form.Close();
+                    }
+                }
+            }
+            EditorWindow window = new EditorWindow();
+            window.selectedMsg = msg;
+            window.Show(ActiveForm);
+        }
+
         private void StyleComponent()
         {
             lbl_messages.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
@@ -391,9 +443,10 @@ namespace vatACARS.Components
 
             il = new ImageList();
             il.Images.Add(Properties.Resources.RXIcon);
+            il.Images.Add(Properties.Resources.RXIcon);
+            il.Images.Add(Properties.Resources.ADSCIcon);
             il.Images.Add(Properties.Resources.DeferIcon);
             il.Images.Add(Properties.Resources.TXIcon);
-            il.Images.Add(Properties.Resources.ADSCIcon);
 
             lvw_messages.SmallImageList = il;
         }

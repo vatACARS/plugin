@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using vatACARS.Components;
 using vatACARS.Util;
 
 namespace vatACARS.Helpers
@@ -23,9 +24,13 @@ namespace vatACARS.Helpers
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
 
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
+
         public static event EventHandler<IMessageData> MessageUpdated;
+
         public static event EventHandler<Station> StationAdded;
+
         public static event EventHandler<Station> StationRemoved;
+
         public static event EventHandler<TelexMessage> TelexMessageReceived;
 
         public interface IMessageData
@@ -79,8 +84,15 @@ namespace vatACARS.Helpers
 
         public static void addStation(Station station)
         {
-            Stations.Add(station);
-            StationAdded?.Invoke(null, station);
+            if (!Stations.Any(s => s.Callsign == station.Callsign))
+            {
+                Stations.Add(station);
+                StationAdded?.Invoke(null, station);
+            }
+            else
+            {
+                ErrorHandler.GetInstance().AddError($"Station Already Exists: {station.Callsign}");
+            }
         }
 
         public static void addTelexMessage(TelexMessage message)
@@ -153,6 +165,7 @@ namespace vatACARS.Helpers
             public string Response { get; set; } = "";
             public MessageState State { get; set; }
             public string Station { get; set; }
+            public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
             public DateTime TimeReceived { get; set; }
         }
 
@@ -186,6 +199,7 @@ namespace vatACARS.Helpers
             public string Content { get; set; }
             public MessageState State { get; set; }
             public string Station { get; set; }
+            public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
             public DateTime TimeReceived { get; set; }
         }
     }
