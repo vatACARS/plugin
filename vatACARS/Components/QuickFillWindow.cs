@@ -16,11 +16,11 @@ namespace vatACARS.Components
         private static ErrorHandler errorHandler = ErrorHandler.GetInstance();
         private static string FreeText;
         private static Logger logger = new Logger("QuickFillWindow");
-        private static Label SelectedLabel;
+        private static ListViewItem selectedItem;
         private string identifier;
         private FDR networkPilotFDR;
 
-        private List<Label> quickFillItems = new List<Label>();
+        private List<ListViewItem> quickFillItems = new List<ListViewItem>();
 
         private IMessageData selectedMsg;
 
@@ -30,7 +30,7 @@ namespace vatACARS.Components
             StyleComponent();
             this.selectedMsg = selectedMsg;
             this.identifier = identifier;
-            SelectedLabel = new Label();
+            selectedItem = new ListViewItem(placeholder);
             FreeText = "";
             OnDataChanged(placeholder.ToUpper());
             tbx_freetext.Text = placeholder;
@@ -43,6 +43,10 @@ namespace vatACARS.Components
                 LoadLevel();
             }
             if (identifier == "FREQUENCY")
+            {
+                LoadFreqs();
+            }
+            if (identifier == "UNIT NAME")
             {
                 LoadFreqs();
             }
@@ -62,6 +66,7 @@ namespace vatACARS.Components
                 }
             }
 
+            FindItem();
             logger.Log("Opened & populated.");
         }
 
@@ -69,55 +74,19 @@ namespace vatACARS.Components
 
         public event QuickFillChangedHandler QuickFillDataChanged;
 
-        private void QucikScroll_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (e.Delta > 0)
-            {
-                this.scr_quickfill.Value += scr_quickfill.Change;
-            }
-            else
-            {
-                if (e.Delta >= 0)
-                    return;
-                this.scr_quickfill.Value -= scr_quickfill.Change;
-            }
-        }
-
         private void AddQuickFillItem(string label)
         {
             try
             {
-                Label quickFillItemLabel = new Label();
-                quickFillItemLabel.Text = label;
-                quickFillItemLabel.Size = new Size(83, 40);
-                quickFillItemLabel.TextAlign = ContentAlignment.MiddleCenter;
-                quickFillItemLabel.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
-                quickFillItemLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-                quickFillItemLabel.Margin = new Padding(3); // A bit of spacing
-
-                quickFillItemLabel.MouseEnter += (sender, e) => quickFillItemLabel.BackColor = Colours.GetColour(SelectedLabel == quickFillItemLabel ? Colours.Identities.CPDLCMessageBackground : Colours.Identities.CPDLCDownlink);
-                quickFillItemLabel.MouseLeave += (sender, e) => quickFillItemLabel.BackColor = Colours.GetColour(SelectedLabel == quickFillItemLabel ? Colours.Identities.CPDLCDownlink : Colours.Identities.CPDLCUplink);
-
-                quickFillItemLabel.MouseDown += (sender, e) =>
+                if (!lvw_quickfillselector.Items.Cast<ListViewItem>().Any(item => item.Text == label))
                 {
-                    if (e.Button == MouseButtons.Left)
-                    {
-                        if (SelectedLabel == quickFillItemLabel)
-                        {
-                            OnDataChanged(SelectedLabel.Text);
-                            this.Close();
-                            return;
-                        }
-                        if (SelectedLabel != null) SelectedLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-                        tbx_freetext.Clear();
-                        tbx_freetext.Text = quickFillItemLabel.Text;
-                        SelectedLabel = quickFillItemLabel;
-                    }
-                };
-
-                tbl_quickFillSelector.Controls.Add(quickFillItemLabel);
-
-                quickFillItems.Add(quickFillItemLabel);
+                    ListViewItem item = new ListViewItem(label);
+                    item.Font = MMI.eurofont_winsml;
+                    item.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                    lvw_quickfillselector.Items.Add(item);
+                    quickFillItems.Add(item);
+                }
             }
             catch (Exception ex)
             {
@@ -129,8 +98,26 @@ namespace vatACARS.Components
         private void btn_confirm_Click(object sender, EventArgs e)
         {
             if (FreeText != "") OnDataChanged(FreeText.ToUpper());
-            if (SelectedLabel.Text != "") OnDataChanged(SelectedLabel.Text.ToUpper());
+            if (selectedItem.Text != "") OnDataChanged(selectedItem.Text.ToUpper());
             this.Close();
+        }
+
+        private void FindItem()
+        {
+            foreach (ListViewItem item in lvw_quickfillselector.Items)
+            {
+                if (item.Text == tbx_freetext.Text)
+                {
+                    selectedItem = item;
+                    selectedItem.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                    selectedItem.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                }
+                else
+                {
+                    item.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                }
+            }
         }
 
         private void LoadAddRoute()
@@ -160,44 +147,6 @@ namespace vatACARS.Components
                         {
                             AddQuickFillItem(segment.Intersection.Name);
                         }
-                }
-                UpdateScrollbar();
-            }
-        }
-
-        private void LoadLevel()
-        {
-            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
-            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
-            {
-                try
-                {
-                    foreach (string item in JSONReader.quickFillItems.data[identifier])
-                    {
-                        AddQuickFillItem(item);
-                    }
-                    UpdateScrollbar();
-                }
-                catch (Exception ex)
-                {
-                    logger.Log(ex.ToString());
-                }
-            }
-            else if(networkPilotFDR.CFLString.Trim() != "")
-            { 
-                string levelPrefix = (networkPilotFDR.CFLString.Trim() != "" && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL");
-                int levelValue = int.Parse(networkPilotFDR.CFLString);
-
-                foreach (string item in JSONReader.quickFillItems.data[identifier])
-                {
-                    if (item.StartsWith(levelPrefix))
-                    {
-                        int itemValue = int.Parse(item.Substring(levelPrefix.Length));
-                        if (Math.Abs(levelValue - itemValue) <= 100)
-                        {
-                            AddQuickFillItem(item);
-                        }
-                    }
                 }
                 UpdateScrollbar();
             }
@@ -242,39 +191,107 @@ namespace vatACARS.Components
             }
         }
 
+        private void LoadLevel()
+        {
+            var networkPilotFDR = GetFDRs.FirstOrDefault((FDR f) => f.Callsign == selectedMsg.Station);
+            if (networkPilotFDR == null || !GetFDRs.Contains(networkPilotFDR))
+            {
+                try
+                {
+                    foreach (string item in JSONReader.quickFillItems.data[identifier])
+                    {
+                        AddQuickFillItem(item);
+                    }
+                    UpdateScrollbar();
+                }
+                catch (Exception ex)
+                {
+                    logger.Log(ex.ToString());
+                }
+            }
+            else if (networkPilotFDR.CFLString.Trim() != "")
+            {
+                string levelPrefix = (networkPilotFDR.CFLString.Trim() != "" && int.Parse(networkPilotFDR.CFLString) < 110 ? "A" : "FL");
+                int levelValue = int.Parse(networkPilotFDR.CFLString);
+
+                foreach (string item in JSONReader.quickFillItems.data[identifier])
+                {
+                    if (item.StartsWith(levelPrefix))
+                    {
+                        int itemValue = int.Parse(item.Substring(levelPrefix.Length));
+                        if (Math.Abs(levelValue - itemValue) <= 100)
+                        {
+                            AddQuickFillItem(item);
+                        }
+                    }
+                }
+                UpdateScrollbar();
+            }
+        }
+
+        private void lvw_quickfillselector_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            Font font = MMI.eurofont_winsml;
+            SolidBrush bg = new SolidBrush(e.Item.BackColor);
+            SolidBrush fg = new SolidBrush(e.Item.ForeColor);
+            e.Graphics.FillRectangle(bg, e.Bounds);
+            StringFormat format = new StringFormat();
+            format.LineAlignment = StringAlignment.Center;
+            format.Alignment = StringAlignment.Near;
+            Rectangle bounds = e.Bounds;
+            bounds.Inflate(-2, -2);
+            e.Graphics.DrawString(e.Item.Text, font, fg, bounds, format);
+        }
+
+        private void lvw_quickfillselector_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvw_quickfillselector.SelectedItems.Count > 0)
+            {
+                tbx_freetext.Text = lvw_quickfillselector.SelectedItems[0].Text;
+                foreach (ListViewItem item in lvw_quickfillselector.Items)
+                {
+                    item.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+                    item.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                }
+                ListViewItem selectedItem = lvw_quickfillselector.SelectedItems[0];
+                if (selectedItem != null)
+                {
+                    selectedItem.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+                    selectedItem.ForeColor = Colours.GetColour(Colours.Identities.CPDLCMessageBackground);
+                }
+            }
+        }
+
         private void OnDataChanged(string newData)
         {
             QuickFillDataChanged?.Invoke(this, new QuickFillData { Setting = newData });
         }
 
+        private void QuickScroll_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                this.scr_quickfill.Value -= scr_quickfill.Change;
+            }
+            else
+            {
+                if (e.Delta >= 0)
+                    return;
+                this.scr_quickfill.Value += scr_quickfill.Change;
+            }
+        }
+
         private void scr_quickfill_Scroll(object sender, EventArgs e)
         {
-            float percentageValue = scr_quickfill.PercentageValue;
-            int totalItems = quickFillItems.Count;
-            int itemsPerColumn = 4;
-            int totalColumns = (int)Math.Ceiling((double)totalItems / itemsPerColumn);
-            tbl_quickFillSelector.SuspendLayout();
-            int startColumnIndex = (int)Math.Round(percentageValue * (totalColumns - 1));
-            tbl_quickFillSelector.Controls.Clear();
-            for (int columnIndex = startColumnIndex; columnIndex < totalColumns; columnIndex++)
-            {
-                for (int itemIndex = 0; itemIndex < itemsPerColumn; itemIndex++)
-                {
-                    int index = columnIndex * itemsPerColumn + itemIndex;
-                    if (index < totalItems)
-                    {
-                        Label itemLabel = quickFillItems[index];
-                        tbl_quickFillSelector.Controls.Add(itemLabel);
-                    }
-                }
-            }
-            tbl_quickFillSelector.ResumeLayout();
+            lvw_quickfillselector.SetScrollPosVert(scr_quickfill.PercentageValue);
         }
 
         private void StyleComponent()
         {
             tbx_freetext.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
             tbx_freetext.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
+            lvw_quickfillselector.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+            lvw_quickfillselector.BackColor = Colours.GetColour(Colours.Identities.WindowBackground);
 
             scr_quickfill.ForeColor = Colours.GetColour(Colours.Identities.WindowBackground);
             scr_quickfill.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
@@ -285,7 +302,7 @@ namespace vatACARS.Components
 
         private void tbx_freetext_KeyUp(object sender, KeyEventArgs e)
         {
-            if (SelectedLabel.Text != "") SelectedLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+            if (selectedItem.Text != "") selectedItem.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
             FreeText = tbx_freetext.Text;
             if (((char)e.KeyCode) == (char)Keys.Enter) btn_confirm_Click(sender, null);
         }
@@ -294,19 +311,27 @@ namespace vatACARS.Components
         {
             string placeholder = "";
             FreeText = tbx_freetext.Text;
-            if (SelectedLabel.Text != "") SelectedLabel.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
-            SelectedLabel = new Label();
-            OnDataChanged(placeholder.ToUpper());
+            if (selectedItem.Text != "") selectedItem.BackColor = Colours.GetColour(Colours.Identities.CPDLCUplink);
+            selectedItem = new ListViewItem(placeholder);
+            FindItem();
+            OnDataChanged(FreeText.ToUpper());
         }
 
         private void UpdateScrollbar()
         {
-            if (quickFillItems.Count > 32)
+            int tileHeight = quickFillItems[0].Bounds.Height;
+            if (quickFillItems.Count > 0)
             {
-                scr_quickfill.PreferredHeight = quickFillItems.Count * 63;
-                scr_quickfill.ActualHeight = (quickFillItems.Count * 63) / 10;
+                scr_quickfill.PreferredHeight = quickFillItems.Count * tileHeight;
+                scr_quickfill.ActualHeight = lvw_quickfillselector.Height;
                 scr_quickfill.Enabled = true;
-                scr_quickfill.Change = (quickFillItems.Count * 63) / 10;
+                scr_quickfill.Change = tileHeight;
+            }
+            else
+            {
+                scr_quickfill.PreferredHeight = 1;
+                scr_quickfill.ActualHeight = 1;
+                scr_quickfill.Enabled = false;
             }
             scr_quickfill.Value = 0;
         }
@@ -314,6 +339,16 @@ namespace vatACARS.Components
         public class QuickFillData : EventArgs
         {
             public string Setting { get; set; }
+        }
+
+        private void QuickFillWindow_Shown(object sender, EventArgs e)
+        {
+
+        }
+
+        private void QuickFillWindow_SizeChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }
