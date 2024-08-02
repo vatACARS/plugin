@@ -41,15 +41,6 @@ namespace vatACARS.Components
             StationAdded += UpdateStationsList;
             StationRemoved += UpdateStationsList;
 
-            lvw_messages.MouseWheel += (sender, e) =>
-            {
-                if (scr_messages.Enabled)
-                {
-                    if (e.Delta > 0) scr_messages.Value -= scr_messages.Change;
-                    else scr_messages.Value += scr_messages.Change;
-                }
-            };
-
             UpdateMessages();
         }
 
