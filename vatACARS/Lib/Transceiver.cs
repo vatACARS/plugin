@@ -66,6 +66,8 @@ namespace vatACARS.Helpers
                 else
                 {
                     CPDLCMessages.Add(message);
+                    Station station = Stations.FirstOrDefault(s => s.Callsign == message.Station);
+                    station.History.Add(message);
                     if (message.ResponseType == "N") message.setMessageState(MessageState.DownlinkResponseNotRequired);
                 }
             }
@@ -99,6 +101,8 @@ namespace vatACARS.Helpers
         {
             AudioInterface.playSound("incomingMessage");
             TelexMessages.Add(message);
+            Station station = Stations.FirstOrDefault(s => s.Callsign == message.Station);
+            station.History.Add(message);
             TelexMessageReceived?.Invoke(null, message);
         }
 
@@ -166,6 +170,7 @@ namespace vatACARS.Helpers
             public MessageState State { get; set; }
             public string Station { get; set; }
             public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
+            public List<CPDLCMessage> History { get; set; } = new List<CPDLCMessage>();
             public DateTime TimeReceived { get; set; }
         }
 
@@ -184,6 +189,7 @@ namespace vatACARS.Helpers
              */
             public string Callsign;
             public int Provider;
+            public List<IMessageData> History { get; set; } = new List<IMessageData>();
         }
 
         public class TelexMessage : IMessageData

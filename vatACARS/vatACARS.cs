@@ -27,6 +27,7 @@ namespace vatACARS
     {
         public static DebugWindow debugWindow;
         public static SetupWindow setupWindow;
+        public static HistoryWindow historyWindow;
         public List<string> DebugNames = new List<string>();
         private static DispatchWindow dispatchWindow = new DispatchWindow();
         private static HandoffSelector HandoffSelector;
@@ -34,6 +35,7 @@ namespace vatACARS
         private CustomToolStripMenuItem debugWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
         private CustomToolStripMenuItem setupWindowMenu;
+        private CustomToolStripMenuItem historyWindowMenu;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
@@ -227,6 +229,20 @@ namespace vatACARS
             dispatchWindow.Show(Form.ActiveForm);
         }
 
+        private static void DoShowHistoryWindow()
+        {
+            if (historyWindow == null || historyWindow.IsDisposed)
+            {
+                historyWindow = new HistoryWindow();
+            }
+            else if (historyWindow.Visible)
+            {
+                return;
+            }
+
+            historyWindow.Show(Form.ActiveForm);
+        }
+
         private void ActiveForm_KeyUp(object sender, KeyEventArgs e)
         {
             throw new NotImplementedException();
@@ -266,6 +282,11 @@ namespace vatACARS
         private void DispatchWindowMenu_Click(object sender, EventArgs e)
         {
             MMI.InvokeOnGUI(() => DoShowDispatchWindow());
+        }
+
+        private void HistoryWindowMenu_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(() => DoShowHistoryWindow());
         }
 
         private void HandoffLabelClick(CustomLabelItemMouseClickEventArgs e)
@@ -317,8 +338,14 @@ namespace vatACARS
                 dispatchWindowMenu.Item.Click += DispatchWindowMenu_Click;
                 MMI.AddCustomMenuItem(dispatchWindowMenu);
 
+                historyWindowMenu = new CustomToolStripMenuItem(CustomToolStripMenuItemWindowType.Main, CustomToolStripMenuItemCategory.Custom, new ToolStripMenuItem("History"));
+                historyWindowMenu.CustomCategoryName = "ACARS";
+                historyWindowMenu.Item.Click += HistoryWindowMenu_Click;
+                MMI.AddCustomMenuItem(historyWindowMenu);
+
                 DebugNames.Add("Joshua H");
                 DebugNames.Add("Edward M");
+                DebugNames.Add("Jamie K");
                 if (!DebugNames.Contains(Network.Me.RealName))
                 {
                     logger.Log($"{Network.Me.RealName} is not Authorized to Debug.");

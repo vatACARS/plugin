@@ -507,7 +507,20 @@ namespace vatACARS.Components
                         QuickFillWindow fillWindow = new QuickFillWindow(item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper(), selectedMsg, item.UserValue);
                         fillWindow.QuickFillDataChanged += (object s, QuickFillData data) =>
                         {
-                            item.UserValue = data.Setting;
+                            var placesub = (item.Placeholder.Substring(1, item.Placeholder.Length - 2).ToUpper());
+                            string setting = Regex.Replace(data.Setting, @"\s", string.Empty);
+                            if (placesub == "UNIT NAME")
+                            {
+                                item.UserValue = Regex.Replace(setting, @"[\d\.]", string.Empty);
+                            }
+                            else if (placesub == "FREQUENCY")
+                            {
+                                item.UserValue = Regex.Replace(setting, @"[^\d\.]", string.Empty);
+                            }
+                            else
+                            {
+                                item.UserValue = setting;
+                            }
                             lbl_response.Refresh();
                         };
 
