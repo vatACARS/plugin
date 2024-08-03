@@ -72,7 +72,7 @@ namespace vatACARS.Components
         private void HistoryWindow_ResizeEnd(object sender, EventArgs e)
         {
             int newWidth = lvw_messages.ClientRectangle.Width;
-            int timestampWidth = 80;
+            int timestampWidth = 55;
             int messageWidth = newWidth - timestampWidth;
             col_timestamp.Width = timestampWidth;
             col_message.Width = messageWidth;
@@ -83,7 +83,7 @@ namespace vatACARS.Components
         private void HistoryWindow_SizeChanged(object sender, EventArgs e)
         {
             int newWidth = lvw_messages.ClientRectangle.Width;
-            int timestampWidth = 80;
+            int timestampWidth = 55;
             int messageWidth = newWidth - timestampWidth;
             col_timestamp.Width = timestampWidth;
             col_message.Width = messageWidth;
