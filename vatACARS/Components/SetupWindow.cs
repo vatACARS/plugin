@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -152,6 +153,7 @@ namespace vatACARS
 
                     foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
                     btn_connect.Text = "Connect";
+                    tbx_stationCode.Enabled = false;
                     lbl_statusMessage.Text = "Disconnected from vatACARS.";
                     connected = false;
                     return;
@@ -159,21 +161,19 @@ namespace vatACARS
 
                 btn_checkStationCode_Click(null, null);
 
-                if (Properties.Settings.Default.netChecks) 
+                if (Properties.Settings.Default.netChecks)
                 {
+                    if (Network.IsConnected == false)
+                    {
+                        lbl_statusMessage.Text = "Please connect to VATSIM first.";
+                        return;
+                    }
 
-                if (!Network.IsConnected)
-                {
-                    lbl_statusMessage.Text = "Please connect to VATSIM first.";
-                    return;
-                }
-
-                if (!Network.IsValidATC)
-                {
-                    lbl_statusMessage.Text = "Please connect as a non-observer role.";
-                    return;
-                }
-                
+                    if (Network.IsValidATC == false)
+                    {
+                        lbl_statusMessage.Text = "Please connect as a non-observer role.";
+                        return;
+                    }
                 }
 
                 foreach (Control ctl in Controls)
@@ -197,7 +197,10 @@ namespace vatACARS
 
                 // Check if any information is missing
                 bool checksFailed = false;
-                if (!Network.Me.ATIS.Any((string atisLine) => new Regex(@"PDC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 || new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
+                if (Network.Me.ATIS == null || !Network.Me.ATIS.Any((string atisLine) =>
+                    new Regex(@"PDC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 ||
+                    new Regex(@"CPDLC [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0 ||
+                    new Regex(@"CPDLC LOG[IO]N [A-Z]{4}").Matches(atisLine.ToUpperInvariant()).Count > 0))
                 {
                     lbl_stationCodePrompt.ForeColor = Colours.GetColour(Colours.Identities.Warning);
                     lbl_stationCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
@@ -205,14 +208,15 @@ namespace vatACARS
                     checksFailed = true;
                 }
 
-                if (tbx_vatACARSToken.Text.Length != 0 && (!tbx_vatACARSToken.Text.StartsWith("vAcV1-") && tbx_vatACARSToken.Text.Length != 32))
+                if (!string.IsNullOrEmpty(tbx_vatACARSToken.Text) &&
+                    (!tbx_vatACARSToken.Text.StartsWith("vAcV1-") && tbx_vatACARSToken.Text.Length != 32))
                 {
                     lbl_vatACARSToken.ForeColor = Colours.GetColour(Colours.Identities.Warning);
                     lbl_statusMessage.Text = "Your vatACARS token appears invalid.";
                     checksFailed = true;
                 }
 
-                if (Properties.Settings.Default.enableHoppies && tbx_hoppiesLogonCode.Text.Length < 10)
+                if (Properties.Settings.Default.enableHoppies && (tbx_hoppiesLogonCode.Text?.Length ?? 0) < 10)
                 {
                     lbl_hoppiesLogonCode.ForeColor = Colours.GetColour(Colours.Identities.Warning);
                     lbl_statusMessage.Text = "Your hoppies code appears invalid.";
@@ -225,28 +229,41 @@ namespace vatACARS
                     checksFailed = true;
                 }
 
+                // Check if controlling at least one sector
+                if (MMI.SectorsControlled == null || !MMI.SectorsControlled.Any())
+                {
+                    lbl_statusMessage.Text = "You must be controlling at least one sector or position.";
+                    checksFailed = true;
+                }
+
                 if (checksFailed)
                 {
                     foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
+                    btn_connect.Text = "Connect";
+                    tbx_stationCode.Enabled = false;
                     return;
                 }
 
-                string LogonResponse = await client.PostStringTaskAsync("/atsu/logon", new FormUrlEncodedContent(new Dictionary<string, string>
+                string LogonResponse = await client?.PostStringTaskAsync("/atsu/logon", new FormUrlEncodedContent(new Dictionary<string, string>
                 {
                     {"station", tbx_stationCode.Text},
                     {"token", tbx_vatACARSToken.Text},
-                    {"sectors", JsonConvert.SerializeObject(MMI.SectorsControlled.Where(sector => !MMI.SectorsControlled.SelectMany(s => s.SubSectors).Contains(sector)).ToList().Select(sector => new { name = sector.Name, callsign = sector.Callsign, frequency = sector.Frequency }).ToArray()) },
-                    {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition.DefaultCenter.Latitude, longitude = MMI.PrimePosition.DefaultCenter.Longitude })}
+                    {"sectors", JsonConvert.SerializeObject(MMI.SectorsControlled
+                        ?.Where(sector => MMI.SectorsControlled?.SelectMany(s => s.SubSectors)?.Contains(sector) == false)
+                        .ToList().Select(sector => new { name = sector.Name, callsign = sector.Callsign, frequency = sector.Frequency }).ToArray()) },
+                    {"approxLoc", JsonConvert.SerializeObject(new { latitude = MMI.PrimePosition?.DefaultCenter?.Latitude ?? 0, longitude = MMI.PrimePosition?.DefaultCenter?.Longitude ?? 0 })}
                 }));
 
                 APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
 
-                if (ResponseDecoded.Success == false) checksFailed = true;
-                lbl_statusMessage.Text = ResponseDecoded.Message;
+                if (ResponseDecoded?.Success == false) checksFailed = true;
+                lbl_statusMessage.Text = ResponseDecoded?.Message;
 
                 if (checksFailed)
                 {
                     foreach (Control ctl in Controls) if (ctl is GenericButton || ctl is TextField) ctl.Enabled = true;
+                    btn_connect.Text = "Connect";
+                    tbx_stationCode.Enabled = false;
                     return;
                 }
 
@@ -280,6 +297,7 @@ namespace vatACARS
         private void SetupWindow_Shown(object sender, EventArgs e)
         {
             tbx_stationCode.Text = Properties.Settings.Default.stationCode;
+            tbx_stationCode.Enabled = false;
             tbx_vatACARSToken.Text = Properties.Settings.Default.vatACARSToken;
             tbx_hoppiesLogonCode.Text = Properties.Settings.Default.hoppiesLogonCode;
             tbx_messageTimeout.Text = Properties.Settings.Default.finishedMessageTimeout.ToString();
