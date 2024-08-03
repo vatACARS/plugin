@@ -251,22 +251,31 @@ namespace vatACARS.Components
             lbl_response.Refresh();
             response = new ResponseItem[5];
             responseIndex = 0;
-            btn_messageScroller.Text = (responseIndex + 1).ToString();
             lbl_response.Text = string.Empty;
 
-            var message = selectedMsg as dynamic;
-            if (message != null)
+            if (btn_messageScroller != null)
             {
-                var responses = message.SuspendedResponses;
-                foreach (ResponseItem item in responses)
-                {
-                    btn_messageScroller.Text = (responseIndex + 1).ToString();
-                    var responsecode = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == item.Entry.Code).ToList().FirstOrDefault().Clone();
-                    HandleResponse(responsecode);
+                btn_messageScroller.Text = (responseIndex + 1).ToString();
+            }
 
-                    if (responseIndex < responses.Count - 1)
+            if (selectedMsg != null)
+            {
+                var message = selectedMsg as dynamic;
+                if (message != null && message.SuspendedResponses != null)
+                {
+                    foreach (ResponseItem item in message.SuspendedResponses)
                     {
-                        responseIndex++;
+                        if (btn_messageScroller != null)
+                        {
+                            btn_messageScroller.Text = (responseIndex + 1).ToString();
+                        }
+                        var responsecode = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == item.Entry.Code).ToList().FirstOrDefault().Clone();
+                        HandleResponse(responsecode);
+
+                        if (responseIndex < message.SuspendedResponses.Count - 1)
+                        {
+                            responseIndex++;
+                        }
                     }
                 }
             }
