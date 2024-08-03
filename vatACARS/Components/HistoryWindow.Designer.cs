@@ -80,7 +80,7 @@ namespace vatACARS.Components
             // col_timestamp
             // 
             this.col_timestamp.Text = "";
-            this.col_timestamp.Width = 80;
+            this.col_timestamp.Width = 55;
             // 
             // col_message
             // 
