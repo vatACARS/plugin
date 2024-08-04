@@ -67,7 +67,14 @@ namespace vatACARS.Helpers
                 {
                     CPDLCMessages.Add(message);
                     Station station = Stations.FirstOrDefault(s => s.Callsign == message.Station);
-                    station.History.Add(message);
+                    if (station != null) // cpdlc may not have come from connected station (PDC's)
+                    {
+                        station.History.Add(message);
+                    }
+                    else
+                    {
+                        logger.Log($"Station {message.Station} is not connected.");
+                    }
                     if (message.ResponseType == "N") message.setMessageState(MessageState.DownlinkResponseNotRequired);
                 }
             }
