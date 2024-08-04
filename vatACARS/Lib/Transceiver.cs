@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using vatACARS.Components;
 using vatACARS.Util;
+using static vatsys.FDP2;
 
 namespace vatACARS.Helpers
 {
@@ -58,6 +59,8 @@ namespace vatACARS.Helpers
                     if (originalMessage == null) CPDLCMessages.Add(message);
                     else
                     {
+                        FDR fdr = GetFDRs.FirstOrDefault(f => f.Callsign == message.Station);
+                        if (fdr != null && originalMessage.Content.Contains("PDC")) fdr.PDCAcknowledged = true;
                         SentCPDLCMessages.Remove(sentCPDLCMessage);
                         originalMessage.Response = message.Content;
                         if (message.Content != "STANDBY") originalMessage.setMessageState(MessageState.Finished);
@@ -180,11 +183,11 @@ namespace vatACARS.Helpers
             public int ReplyMessageId;
             public string ResponseType;
             public string Content { get; set; }
+            public List<CPDLCMessage> History { get; set; } = new List<CPDLCMessage>();
             public string Response { get; set; } = "";
             public MessageState State { get; set; }
             public string Station { get; set; }
             public List<ResponseItem> SuspendedResponses { get; set; } = new List<ResponseItem>();
-            public List<CPDLCMessage> History { get; set; } = new List<CPDLCMessage>();
             public DateTime TimeReceived { get; set; }
         }
 
