@@ -83,6 +83,11 @@ namespace vatACARS.Components
                     {
                         if (ctl is Button) ctl.Enabled = false;
                     }
+                    btn_air.Enabled = false;
+                    btn_tfc.Enabled = false;
+                    btn_standby.Enabled = false;
+                    btn_editor.Enabled = false;
+                    btn_defer.Enabled = false;
                     return;
                 }
 
@@ -106,6 +111,11 @@ namespace vatACARS.Components
                     {
                         if (ctl is Button) ctl.Enabled = false;
                     }
+                    btn_air.Enabled = false;
+                    btn_tfc.Enabled = false;
+                    btn_standby.Enabled = false;
+                    btn_editor.Enabled = false;
+                    btn_defer.Enabled = false;
                     return;
                 }
 
