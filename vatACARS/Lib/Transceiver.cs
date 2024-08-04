@@ -102,7 +102,14 @@ namespace vatACARS.Helpers
             AudioInterface.playSound("incomingMessage");
             TelexMessages.Add(message);
             Station station = Stations.FirstOrDefault(s => s.Callsign == message.Station);
-            station.History.Add(message);
+            if (station != null) // telex may not have come from connected station.
+            {
+                station.History.Add(message);
+            }
+            else
+            {
+                logger.Log($"Station {message.Station} is not connected.");
+            }
             TelexMessageReceived?.Invoke(null, message);
         }
 
