@@ -63,9 +63,13 @@ namespace vatACARS.Components
                 {
                     State = MessageState.Finished,
                     Station = ((StationInformation)SelectedDataAuthority.Tag).Station_Code,
-                    Content = $"HANDED {selectedStation.Callsign} TO YOU\nTHIS IS AN AUTO MSG, REPLY NOT REQD.",
+                    Content = $"HANDED {selectedStation.Callsign} TO YOU THIS IS AN AUTO MSG, REPLY NOT REQD.",
+                    TimeReceived = DateTime.UtcNow
                 });
 
+                FormUrlEncodedContent hand = HoppiesInterface.ConstructMessage(((StationInformation)SelectedDataAuthority.Tag).Station_Code, "CPDLC", $"/data2/{SentMessages}//N/HANDED {selectedStation.Callsign} TO YOU THIS IS AN AUTO MSG, REPLY NOT REQD.");
+                _ = HoppiesInterface.SendMessage(hand);
+                btn_logoff_Click(sender, e);
                 Close();
             }
             catch (Exception ex)
@@ -74,7 +78,7 @@ namespace vatACARS.Components
             }
         }
 
-        private void btn_logoff_Click(object sender, System.EventArgs e)
+        private void btn_logoff_Click(object sender, EventArgs e)
         {
             FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedStation.Callsign, "CPDLC", $"/data2/{SentMessages}//N/LOGOFF");
             _ = HoppiesInterface.SendMessage(req);

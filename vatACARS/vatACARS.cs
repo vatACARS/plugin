@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using vatACARS.Components;
 using vatACARS.Helpers;
@@ -26,21 +27,26 @@ namespace vatACARS
     public class vatACARS : IPlugin
     {
         public static DebugWindow debugWindow;
-        public static SetupWindow setupWindow;
         public static HistoryWindow historyWindow;
+        public static SetupWindow setupWindow;
         public List<string> DebugNames = new List<string>();
         private static DispatchWindow dispatchWindow = new DispatchWindow();
         private static HandoffSelector HandoffSelector;
         private readonly Logger logger = new Logger("vatACARS");
         private CustomToolStripMenuItem debugWindowMenu;
         private CustomToolStripMenuItem dispatchWindowMenu;
-        private CustomToolStripMenuItem setupWindowMenu;
         private CustomToolStripMenuItem historyWindowMenu;
+        private Dictionary<FDR, string> lastCFLStrings = new Dictionary<FDR, string>();
+        private CustomToolStripMenuItem setupWindowMenu;
+        private System.Timers.Timer UpdateTimer;
 
         // The following function runs on vatSys startup. Init code should be contained here.
         public vatACARS()
         {
             string dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "vatACARS");
+            UpdateTimer = new System.Timers.Timer(10000.0);
+            UpdateTimer.Elapsed += new ElapsedEventHandler(UpdateTimer_Elapsed);
+            UpdateTimer.Start();
 
             // Create directories only if they don't exist
             Directory.CreateDirectory(dataPath);
@@ -112,9 +118,8 @@ namespace vatACARS
                             OnMouseClick = HandoffLabelClick
                         };
 
-                        /*if (radarTrack == null) return null;
-                        int level = radarTrack == null ? flightDataRecord.PRL / 100 : radarTrack.CorrectedAltitude / 100;
-                        if (level < 245)
+                        int level = flightDataRecord.CoupledTrack.ActualAircraft.TrueAltitude;
+                        if (level < 24500)
                         {
                             return new CustomLabelItem()
                             {
@@ -122,7 +127,7 @@ namespace vatACARS
                                 ForeColourIdentity = Colours.Identities.Warning,
                                 OnMouseClick = HandoffLabelClick
                             };
-                        }*/
+                        }
 
                         if (combinedDownlink != null) return new CustomLabelItem()
                         {
@@ -284,11 +289,6 @@ namespace vatACARS
             MMI.InvokeOnGUI(() => DoShowDispatchWindow());
         }
 
-        private void HistoryWindowMenu_Click(object sender, EventArgs e)
-        {
-            MMI.InvokeOnGUI(() => DoShowHistoryWindow());
-        }
-
         private void HandoffLabelClick(CustomLabelItemMouseClickEventArgs e)
         {
             DispatchWindow.SelectedStation = getAllStations().FirstOrDefault(station => station.Callsign == e.Track.GetFDR().Callsign);
@@ -296,6 +296,11 @@ namespace vatACARS
             HandoffSelector.Show(Form.ActiveForm);
 
             e.Handled = true;
+        }
+
+        private void HistoryWindowMenu_Click(object sender, EventArgs e)
+        {
+            MMI.InvokeOnGUI(() => DoShowHistoryWindow());
         }
 
         private void PDCLabelClick(CustomLabelItemMouseClickEventArgs e)
@@ -374,6 +379,24 @@ namespace vatACARS
             catch (Exception e)
             {
                 logger.Log($"Error in Start: {e.Message}");
+            }
+        }
+        private void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            List<FDR> fdrs = GetFDRs.ToList();
+            foreach (FDR fdr in fdrs)
+            {
+                if (!lastCFLStrings.TryGetValue(fdr, out string lastCFLString))
+                {
+                    lastCFLString = string.Empty;
+                }
+
+                if (fdr.CFLString != lastCFLString)
+                {
+                    lastCFLStrings[fdr] = fdr.CFLString;
+                    // can use this to detect changes in the CFL string.
+                    // will make a use later.
+                }
             }
         }
     }
