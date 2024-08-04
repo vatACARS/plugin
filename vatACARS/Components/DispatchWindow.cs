@@ -114,8 +114,7 @@ namespace vatACARS.Components
                     {
                         item.ContextMenu.Show(false);
                         SelectedMessage = message;
-                        EditorWindow window = new EditorWindow();
-                        window.Show(ActiveForm);
+                        ShowEditorWindow(SelectedMessage);
                     };
                 }
             }
@@ -208,8 +207,7 @@ namespace vatACARS.Components
                     {
                         item.ContextMenu.Show(false);
                         SelectedMessage = message;
-                        EditorWindow window = new EditorWindow();
-                        window.Show(ActiveForm);
+                        ShowEditorWindow(SelectedMessage);
                     };
                 }
             }

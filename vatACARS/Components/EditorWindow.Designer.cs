@@ -154,7 +154,7 @@ namespace vatACARS.Components
             this.scr_messageSelector.Value = 0;
             this.scr_messageSelector.Scroll += new System.EventHandler(this.scr_messageSelector_Scroll);
             this.scr_messageSelector.Scrolling += new System.EventHandler(this.scr_messageSelector_Scroll);
-            this.scr_messageSelector.MouseWheel += new MouseEventHandler(this.MessageScroll_MouseWheel);
+            this.scr_messageSelector.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.MessageScroll_MouseWheel);
             // 
             // lvw_messageSelector
             // 
@@ -177,7 +177,7 @@ namespace vatACARS.Components
             this.lvw_messageSelector.View = System.Windows.Forms.View.Details;
             this.lvw_messageSelector.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.lvw_messageSelector_DrawItem);
             this.lvw_messageSelector.SelectedIndexChanged += new System.EventHandler(this.lvw_messageSelector_SelectedIndexChanged);
-            this.lvw_messageSelector.MouseWheel += new MouseEventHandler(this.MessageScroll_MouseWheel);
+            this.lvw_messageSelector.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.MessageScroll_MouseWheel);
             // 
             // columnHeader1
             // 
