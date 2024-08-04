@@ -96,6 +96,16 @@ namespace vatACARS.Components
                 return;
             }
 
+            if (networkPilotFDR.PDCCapable == false)
+            {
+                errorHandler.AddError($"PDC for '{selectedMsg.Station}' failed to initialise. The pilot is not PDC capable.");
+                FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(selectedMsg.Station, "telex", $"UNABLE");
+                _ = HoppiesInterface.SendMessage(req);
+                selectedMsg.setMessageState(MessageState.Finished);
+                Close();
+                return;
+            }
+
             var requiredProperties = new Dictionary<string, Func<object, bool>>
             {
                 { "Callsign", value => !string.IsNullOrEmpty(value.ToString()) },

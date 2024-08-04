@@ -148,13 +148,13 @@ namespace vatACARS.Helpers
         {
             message.State = state;
 
+            MessageUpdated.Invoke(null, message);
+
             if (state == MessageState.Finished)
             {
                 await Task.Delay(TimeSpan.FromSeconds(Properties.Settings.Default.finishedMessageTimeout));
                 message.removeMessage();
             }
-
-            MessageUpdated.Invoke(null, message);
         }
 
         private static void removeMessage(this IMessageData message)
