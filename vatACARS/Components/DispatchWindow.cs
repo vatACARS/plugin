@@ -382,7 +382,7 @@ namespace vatACARS.Components
                                     }
                                     else
                                     {
-                                        ShowEditorWindow(msg);
+                                        logger.Log("error showing PDC window.");
                                     }
                                     return;
                                 }
