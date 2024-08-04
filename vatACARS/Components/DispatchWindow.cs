@@ -194,7 +194,6 @@ namespace vatACARS.Components
                         item.ContextMenu.Show(false);
                         FormUrlEncodedContent req = HoppiesInterface.ConstructMessage(message.Station, "CPDLC", $"/data2/{SentMessages}/{message.MessageId}/N/STANDBY");
                         _ = HoppiesInterface.SendMessage(req);
-                        message.Content = "STANDBY";
                         message.setMessageState(MessageState.StbyDefer);
                         UpdateMessages();
                     };
