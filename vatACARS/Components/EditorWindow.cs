@@ -99,14 +99,21 @@ namespace vatACARS.Components
 
                 lvw_messages.Items.Add(lvMsg);
 
+                if (msg.State == MessageState.Uplink || msg.State == MessageState.Finished || msg.State == MessageState.ADSC)
+                {
+                    Text = $"Viewing Message from {msg.Station}";
+                    foreach (Control ctl in Controls)
+                    {
+                        if (ctl is Button) ctl.Enabled = false;
+                    }
+                    return;
+                }
+
                 ShowGroupBasedOnMessageContent(msg.Content);
             }
 
             response = new ResponseItem[5];
             responseIndex = 0;
-
-
-
             lbl_response.Invalidate();
         }
 

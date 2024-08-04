@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
-using System.Net.NetworkInformation;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using vatACARS.Util;
 using vatsys;
@@ -43,8 +42,8 @@ namespace vatACARS.Components
 
             addSentCPDLCMessage(new SentCPDLCMessage()
             {
-                Station = selectedMsg.Station,
-                MessageId = SentMessages,
+                Station = selectedMsg.Station,                
+                MessageId = (SentMessages -1), 
                 ReplyMessageId = SentMessages
             });
 
@@ -57,7 +56,7 @@ namespace vatACARS.Components
                 MessageId = SentMessages,
                 ReplyMessageId = -1
             });
-
+            networkPilotFDR.PDCSent = true;
             selectedMsg.setMessageState(MessageState.Finished);
             Close();
         }
@@ -77,11 +76,14 @@ namespace vatACARS.Components
             result = result.Trim();
             if (result.Length <= maxLength) result += " T";
 
+            result = result.Replace("\\", " ");
+
             return result;
         }
 
         private void dd_freq_SelectedIndexChanged(object sender, EventArgs e)
         {
+            dd_freq.Text = Regex.Replace(dd_freq.Text, @"[^\d\.]", string.Empty);
         }
 
         private void InitPlaceholders()
@@ -233,6 +235,11 @@ namespace vatACARS.Components
             {
                 errorHandler.AddError(ex.ToString());
             }
+        }
+
+        private void dd_freq2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dd_freq2.Text = Regex.Replace(dd_freq2.Text, @"[^\d\.]", string.Empty);
         }
     }
 }

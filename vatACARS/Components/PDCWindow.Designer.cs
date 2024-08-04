@@ -229,6 +229,7 @@
             this.dd_freq2.SelectedIndex = -1;
             this.dd_freq2.Size = new System.Drawing.Size(162, 25);
             this.dd_freq2.TabIndex = 104;
+            this.dd_freq2.SelectedIndexChanged += new System.EventHandler(this.dd_freq2_SelectedIndexChanged);
             // 
             // PDCWindow
             // 
