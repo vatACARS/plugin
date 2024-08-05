@@ -381,6 +381,7 @@ namespace vatACARS
                 logger.Log($"Error in Start: {e.Message}");
             }
         }
+
         private void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             List<FDR> fdrs = GetFDRs.ToList();

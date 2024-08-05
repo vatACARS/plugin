@@ -42,8 +42,8 @@ namespace vatACARS.Components
 
             addSentCPDLCMessage(new SentCPDLCMessage()
             {
-                Station = selectedMsg.Station,                
-                MessageId = (SentMessages -1), 
+                Station = selectedMsg.Station,
+                MessageId = (SentMessages - 1),
                 ReplyMessageId = SentMessages
             });
 
@@ -84,6 +84,11 @@ namespace vatACARS.Components
         private void dd_freq_SelectedIndexChanged(object sender, EventArgs e)
         {
             dd_freq.Text = Regex.Replace(dd_freq.Text, @"[^\d\.]", string.Empty);
+        }
+
+        private void dd_freq2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dd_freq2.Text = Regex.Replace(dd_freq2.Text, @"[^\d\.]", string.Empty);
         }
 
         private void InitPlaceholders()
@@ -245,11 +250,6 @@ namespace vatACARS.Components
             {
                 errorHandler.AddError(ex.ToString());
             }
-        }
-
-        private void dd_freq2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            dd_freq2.Text = Regex.Replace(dd_freq2.Text, @"[^\d\.]", string.Empty);
         }
     }
 }

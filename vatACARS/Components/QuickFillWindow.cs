@@ -267,6 +267,14 @@ namespace vatACARS.Components
             QuickFillDataChanged?.Invoke(this, new QuickFillData { Setting = newData });
         }
 
+        private void QuickFillWindow_Shown(object sender, EventArgs e)
+        {
+        }
+
+        private void QuickFillWindow_SizeChanged(object sender, EventArgs e)
+        {
+        }
+
         private void QuickScroll_MouseWheel(object sender, MouseEventArgs e)
         {
             if (e.Delta > 0)
@@ -339,16 +347,6 @@ namespace vatACARS.Components
         public class QuickFillData : EventArgs
         {
             public string Setting { get; set; }
-        }
-
-        private void QuickFillWindow_Shown(object sender, EventArgs e)
-        {
-
-        }
-
-        private void QuickFillWindow_SizeChanged(object sender, EventArgs e)
-        {
-            
         }
     }
 }
