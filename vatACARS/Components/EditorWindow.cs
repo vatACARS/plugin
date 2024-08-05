@@ -134,7 +134,6 @@ namespace vatACARS.Components
             }
 
             response = new ResponseItem[5];
-            responseIndex = 0;
             currentresponselabel.Invalidate();
         }
 
@@ -276,6 +275,7 @@ namespace vatACARS.Components
 
         private void btn_messageScrollerSecondary_MouseDown(object sender, MouseEventArgs e)
         {
+            UpdateResponseText();
             Button button = (Button)sender;
             int index = int.Parse(button.Name.Substring(button.Name.Length - 1));
             if (e.Button == MouseButtons.Left)
