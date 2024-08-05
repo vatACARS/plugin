@@ -39,12 +39,12 @@ namespace vatACARS.Components
         private static readonly Regex placeholderParse = new Regex(@"\((.*?)\)");
         private static Logger logger = new Logger("EditorWindow");
         private static ResponseItem[] response = new ResponseItem[5];
-        private int responseIndex = 0;
-        private List<GenericButton> scrollerButtons = new List<GenericButton>();
-        private List<TextLabel> responselabels = new List<TextLabel>();
-        private GenericButton currentScrollerButton;
-        private TextLabel currentresponselabel;
         private int currentresponseindex;
+        private TextLabel currentresponselabel;
+        private GenericButton currentScrollerButton;
+        private int responseIndex = 0;
+        private List<TextLabel> responselabels = new List<TextLabel>();
+        private List<GenericButton> scrollerButtons = new List<GenericButton>();
 
         public EditorWindow()
         {
@@ -99,6 +99,7 @@ namespace vatACARS.Components
                     btn_standby.Enabled = false;
                     btn_editor.Enabled = false;
                     btn_defer.Enabled = false;
+                    ClearResponses();
                     return;
                 }
 
@@ -125,6 +126,7 @@ namespace vatACARS.Components
                     btn_standby.Enabled = false;
                     btn_editor.Enabled = false;
                     btn_defer.Enabled = false;
+                    ClearResponses();
                     return;
                 }
 
@@ -238,103 +240,6 @@ namespace vatACARS.Components
             ClearResponses();
         }
 
-        private void ClearResponses()
-        {
-            response = new ResponseItem[5];
-            responseIndex = 0;
-            UpdateScrollerButton();
-            UpdateScroll();
-            response[responseIndex] = null;
-            currentresponselabel.Text = "";
-            currentresponselabel.Refresh();
-        }
-
-        private void InitializeScrollerButtons()
-        {
-            for (int i = 0; i <= 4; i++)
-            {
-                GenericButton button = (GenericButton)this.Controls.Find("btn_messageScroller_" + i, true).FirstOrDefault();
-                if (button != null)
-                {
-                    scrollerButtons.Add(button);
-                    if (i == 0)
-                    {
-                        currentScrollerButton = button;
-                        currentScrollerButton.MouseDown += btn_messageScroller_MouseDown;
-                    }
-                }
-            }
-        }
-
-        private void InitializeResponselabels()
-        {
-            for (int i = 0; i <= 4; i++)
-            {
-                TextLabel label = (TextLabel)this.Controls.Find("lbl_response_" + i, true).FirstOrDefault();
-                if (label != null)
-                {
-                    responselabels.Add(label);
-                    if (i == 0)
-                    {
-                        currentresponselabel = label;
-                        currentresponselabel.MouseDown += lbl_response_MouseDown;
-                        currentresponselabel.MouseUp += lbl_response_MouseUp;
-                        currentresponselabel.Paint += lbl_response_Paint;
-                        currentresponselabel.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
-                    }
-                }
-            }
-        }
-
-        private void UpdateResponselabels()
-        {
-            if (currentresponselabel != null)
-            {
-                currentresponselabel.MouseDown -= lbl_response_MouseDown;
-                currentresponselabel.MouseUp -= lbl_response_MouseUp;
-                currentresponselabel.Paint -= lbl_response_Paint;
-                currentresponselabel.Name = "lbl_response_" + responselabels.IndexOf(currentresponselabel);
-            }
-
-            if (responseIndex >= 0 && responseIndex < responselabels.Count)
-            {
-                currentresponselabel = responselabels[responseIndex];
-                currentresponselabel.Name = "lbl_response";
-                currentresponselabel.MouseDown += lbl_response_MouseDown;
-                currentresponselabel.MouseUp += lbl_response_MouseUp;
-                currentresponselabel.Paint += lbl_response_Paint;
-            }
-        }
-
-        private void UpdateScroll()
-        {
-                int visibleIndex = 0;
-                for (int i = 0; i < response.Length; i++)
-                {
-                    if (response[i] != null)
-                    {
-                        visibleIndex = i;
-                    }
-                }
-
-                insetPanel_1.Visible = visibleIndex >= 1;
-                insetPanel_2.Visible = visibleIndex >= 2;
-                insetPanel_3.Visible = visibleIndex >= 3;
-                insetPanel_4.Visible = visibleIndex >= 4;
-
-                scrollerButtons[1].Visible = visibleIndex >= 1;
-                scrollerButtons[2].Visible = visibleIndex >= 2;
-                scrollerButtons[3].Visible = visibleIndex >= 3;
-                scrollerButtons[4].Visible = visibleIndex >= 4;
-
-                this.Size = new Size(590, 497 + visibleIndex * 38);
-
-                foreach (TextLabel label in responselabels)
-                {
-                    label.Invalidate();
-                }
-        }
-
         private void btn_messageScroller_MouseDown(object sender, MouseEventArgs e)
         {
             UpdateResponseText();
@@ -375,28 +280,13 @@ namespace vatACARS.Components
             int index = int.Parse(button.Name.Substring(button.Name.Length - 1));
             if (e.Button == MouseButtons.Left)
             {
-               responseIndex = index;
-               UpdateScrollerButton();
+                responseIndex = index;
+                UpdateScrollerButton();
                 foreach (TextLabel label in responselabels)
                 {
                     label.Invalidate();
                 }
             }
-        }
-
-        private void UpdateScrollerButton()
-        {
-            currentScrollerButton.MouseDown -= btn_messageScroller_MouseDown;
-            currentScrollerButton.MouseDown += btn_messageScrollerSecondary_MouseDown;
-            currentScrollerButton.Name = "btn_messageScroller_" + scrollerButtons.IndexOf(currentScrollerButton);
-
-            currentScrollerButton = scrollerButtons[responseIndex];
-            currentScrollerButton.Name = "btn_messageScroller";
-            currentScrollerButton.MouseDown += btn_messageScroller_MouseDown;
-            currentScrollerButton.MouseDown -= btn_messageScrollerSecondary_MouseDown;
-            currentScrollerButton.Text = (responseIndex + 1).ToString();
-
-            UpdateResponselabels();
         }
 
         private void btn_restore_Click(object sender, EventArgs e)
@@ -415,7 +305,6 @@ namespace vatACARS.Components
                     {
                         var responsecode = (UplinkEntry)XMLReader.uplinks.Entries.Where(entry => entry.Code == item.Entry.Code).ToList().FirstOrDefault().Clone();
                         HandleResponse(responsecode);
-
 
                         if (responseIndex < message.SuspendedResponses.Count - 1)
                         {
@@ -558,6 +447,17 @@ namespace vatACARS.Components
             HandleResponse(tfc);
         }
 
+        private void ClearResponses()
+        {
+            response = new ResponseItem[5];
+            responseIndex = 0;
+            UpdateScrollerButton();
+            UpdateScroll();
+            response[responseIndex] = null;
+            currentresponselabel.Text = "";
+            currentresponselabel.Refresh();
+        }
+
         private string[] CutString(string input, int maxLength = 58)
         {
             if (input.Length <= maxLength) return new string[] { input };
@@ -635,6 +535,43 @@ namespace vatACARS.Components
             currentresponselabel.Refresh();
         }
 
+        private void InitializeResponselabels()
+        {
+            for (int i = 0; i <= 4; i++)
+            {
+                TextLabel label = (TextLabel)this.Controls.Find("lbl_response_" + i, true).FirstOrDefault();
+                if (label != null)
+                {
+                    responselabels.Add(label);
+                    if (i == 0)
+                    {
+                        currentresponselabel = label;
+                        currentresponselabel.MouseDown += lbl_response_MouseDown;
+                        currentresponselabel.MouseUp += lbl_response_MouseUp;
+                        currentresponselabel.Paint += lbl_response_Paint;
+                        currentresponselabel.ForeColor = Colours.GetColour(Colours.Identities.InteractiveText);
+                    }
+                }
+            }
+        }
+
+        private void InitializeScrollerButtons()
+        {
+            for (int i = 0; i <= 4; i++)
+            {
+                GenericButton button = (GenericButton)this.Controls.Find("btn_messageScroller_" + i, true).FirstOrDefault();
+                if (button != null)
+                {
+                    scrollerButtons.Add(button);
+                    if (i == 0)
+                    {
+                        currentScrollerButton = button;
+                        currentScrollerButton.MouseDown += btn_messageScroller_MouseDown;
+                    }
+                }
+            }
+        }
+
         private void lbl_response_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Middle)
@@ -644,30 +581,6 @@ namespace vatACARS.Components
                 currentresponselabel.Text = "";
                 currentresponselabel.Refresh();
             }
-        }
-        private void UpdateResponseText()
-        {
-            if (response == null || responseIndex < 0 || responseIndex >= response.Length)
-            {
-                return; 
-            }
-
-            ResponseItem currentItem = response[responseIndex];
-            if (currentItem == null || currentItem.Placeholders == null)
-            {
-                return; 
-            }
-
-            string responseText = currentresponselabel.Text ?? currentresponselabel.Text;
-            foreach (ResponseItemPlaceholderData item in currentItem.Placeholders)
-            {
-                if (item != null && !string.IsNullOrEmpty(item.Placeholder) && !string.IsNullOrEmpty(item.UserValue))
-                {
-                    responseText = responseText.Replace(item.Placeholder, item.UserValue);
-                }
-            }
-            currentresponselabel.Text = responseText;
-            currentresponselabel.Refresh();
         }
 
         private void lbl_response_MouseUp(object sender, MouseEventArgs e)
@@ -912,6 +825,95 @@ namespace vatACARS.Components
             scr_messageSelector.BackColor = Colours.GetColour(Colours.Identities.WindowButtonSelected);
 
             this.Size = new Size(590, 497);
+        }
+
+        private void UpdateResponselabels()
+        {
+            if (currentresponselabel != null)
+            {
+                currentresponselabel.MouseDown -= lbl_response_MouseDown;
+                currentresponselabel.MouseUp -= lbl_response_MouseUp;
+                currentresponselabel.Paint -= lbl_response_Paint;
+                currentresponselabel.Name = "lbl_response_" + responselabels.IndexOf(currentresponselabel);
+            }
+
+            if (responseIndex >= 0 && responseIndex < responselabels.Count)
+            {
+                currentresponselabel = responselabels[responseIndex];
+                currentresponselabel.Name = "lbl_response";
+                currentresponselabel.MouseDown += lbl_response_MouseDown;
+                currentresponselabel.MouseUp += lbl_response_MouseUp;
+                currentresponselabel.Paint += lbl_response_Paint;
+            }
+        }
+
+        private void UpdateResponseText()
+        {
+            if (response == null || responseIndex < 0 || responseIndex >= response.Length)
+            {
+                return;
+            }
+
+            ResponseItem currentItem = response[responseIndex];
+            if (currentItem == null || currentItem.Placeholders == null)
+            {
+                return;
+            }
+
+            string responseText = currentresponselabel.Text ?? currentresponselabel.Text;
+            foreach (ResponseItemPlaceholderData item in currentItem.Placeholders)
+            {
+                if (item != null && !string.IsNullOrEmpty(item.Placeholder) && !string.IsNullOrEmpty(item.UserValue))
+                {
+                    responseText = responseText.Replace(item.Placeholder, item.UserValue);
+                }
+            }
+            currentresponselabel.Text = responseText;
+            currentresponselabel.Refresh();
+        }
+
+        private void UpdateScroll()
+        {
+            int visibleIndex = 0;
+            for (int i = 0; i < response.Length; i++)
+            {
+                if (response[i] != null)
+                {
+                    visibleIndex = i;
+                }
+            }
+
+            insetPanel_1.Visible = visibleIndex >= 1;
+            insetPanel_2.Visible = visibleIndex >= 2;
+            insetPanel_3.Visible = visibleIndex >= 3;
+            insetPanel_4.Visible = visibleIndex >= 4;
+
+            scrollerButtons[1].Visible = visibleIndex >= 1;
+            scrollerButtons[2].Visible = visibleIndex >= 2;
+            scrollerButtons[3].Visible = visibleIndex >= 3;
+            scrollerButtons[4].Visible = visibleIndex >= 4;
+
+            this.Size = new Size(590, 497 + visibleIndex * 38);
+
+            foreach (TextLabel label in responselabels)
+            {
+                label.Invalidate();
+            }
+        }
+
+        private void UpdateScrollerButton()
+        {
+            currentScrollerButton.MouseDown -= btn_messageScroller_MouseDown;
+            currentScrollerButton.MouseDown += btn_messageScrollerSecondary_MouseDown;
+            currentScrollerButton.Name = "btn_messageScroller_" + scrollerButtons.IndexOf(currentScrollerButton);
+
+            currentScrollerButton = scrollerButtons[responseIndex];
+            currentScrollerButton.Name = "btn_messageScroller";
+            currentScrollerButton.MouseDown += btn_messageScroller_MouseDown;
+            currentScrollerButton.MouseDown -= btn_messageScrollerSecondary_MouseDown;
+            currentScrollerButton.Text = (responseIndex + 1).ToString();
+
+            UpdateResponselabels();
         }
     }
 

@@ -1,12 +1,10 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using vatACARS.Components;
 using vatACARS.Util;
 using vatsys;
 using static vatACARS.Helpers.Transceiver;
@@ -294,6 +292,15 @@ namespace vatACARS
             Properties.Settings.Default.Save();
         }
 
+        private void btn_sendreports_MouseUp(object sender, MouseEventArgs e)
+        {
+            Properties.Settings.Default.sendReports = !Properties.Settings.Default.sendReports;
+            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
+            btn_sendreports.Invalidate();
+            SetReports(Properties.Settings.Default.sendReports);
+            Properties.Settings.Default.Save();
+        }
+
         private void SetupWindow_Shown(object sender, EventArgs e)
         {
             tbx_stationCode.Text = Properties.Settings.Default.stationCode;
@@ -362,15 +369,6 @@ namespace vatACARS
                 Properties.Settings.Default.vatACARSToken = tbx_vatACARSToken.Text;
                 Properties.Settings.Default.Save();
             }
-        }
-
-        private void btn_sendreports_MouseUp(object sender, MouseEventArgs e)
-        {
-            Properties.Settings.Default.sendReports = !Properties.Settings.Default.sendReports;
-            btn_sendreports.Text = Properties.Settings.Default.sendReports ? "\u2713" : "";
-            btn_sendreports.Invalidate();
-            SetReports(Properties.Settings.Default.sendReports);
-            Properties.Settings.Default.Save();
         }
     }
 }

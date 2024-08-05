@@ -124,20 +124,6 @@ namespace vatACARS.Components
             }
         }
 
-        private void MessageScroll_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (e.Delta > 0)
-            {
-                this.scr_messages.Value -= scr_messages.Change;
-            }
-            else
-            {
-                if (e.Delta >= 0)
-                    return;
-                this.scr_messages.Value += scr_messages.Change;
-            }
-        }
-
         public void AddMessage(CPDLCMessage message)
         {
             try
@@ -399,6 +385,20 @@ namespace vatACARS.Components
             catch (Exception ex)
             {
                 logger.Log($"Something went wrong:\n{ex.ToString()}");
+            }
+        }
+
+        private void MessageScroll_MouseWheel(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                this.scr_messages.Value -= scr_messages.Change;
+            }
+            else
+            {
+                if (e.Delta >= 0)
+                    return;
+                this.scr_messages.Value += scr_messages.Change;
             }
         }
 
