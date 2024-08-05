@@ -58,9 +58,9 @@ namespace vatACARS.Components
             this.btn_suspend = new vatsys.GenericButton();
             this.btn_restore = new vatsys.GenericButton();
             this.btn_send = new vatsys.GenericButton();
-            this.insetPanel3 = new vatsys.InsetPanel();
-            this.lbl_response = new vatsys.TextLabel();
-            this.btn_messageScroller = new vatsys.GenericButton();
+            this.insetPanel_0 = new vatsys.InsetPanel();
+            this.lbl_response_0 = new vatsys.TextLabel();
+            this.btn_messageScroller_0 = new vatsys.GenericButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.UnableLabel = new vatsys.TextLabel();
             this.ToEditLabel = new vatsys.TextLabel();
@@ -70,11 +70,27 @@ namespace vatACARS.Components
             this.btn_defer = new vatsys.GenericButton();
             this.btn_standby = new vatsys.GenericButton();
             this.btn_editor = new vatsys.GenericButton();
+            this.btn_messageScroller_1 = new vatsys.GenericButton();
+            this.insetPanel_1 = new vatsys.InsetPanel();
+            this.lbl_response_1 = new vatsys.TextLabel();
+            this.btn_messageScroller_2 = new vatsys.GenericButton();
+            this.insetPanel_2 = new vatsys.InsetPanel();
+            this.lbl_response_2 = new vatsys.TextLabel();
+            this.btn_messageScroller_3 = new vatsys.GenericButton();
+            this.insetPanel_3 = new vatsys.InsetPanel();
+            this.lbl_response_3 = new vatsys.TextLabel();
+            this.btn_messageScroller_4 = new vatsys.GenericButton();
+            this.insetPanel_4 = new vatsys.InsetPanel();
+            this.lbl_response_4 = new vatsys.TextLabel();
             this.insetPanel2.SuspendLayout();
             this.insetPanel1.SuspendLayout();
             this.pnl_categories.SuspendLayout();
-            this.insetPanel3.SuspendLayout();
+            this.insetPanel_0.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.insetPanel_1.SuspendLayout();
+            this.insetPanel_2.SuspendLayout();
+            this.insetPanel_3.SuspendLayout();
+            this.insetPanel_4.SuspendLayout();
             this.SuspendLayout();
             // 
             // lbl_receivedMsgs
@@ -93,9 +109,9 @@ namespace vatACARS.Components
             // 
             // btn_escape
             // 
-            this.btn_escape.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_escape.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_escape.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_escape.Location = new System.Drawing.Point(10, 428);
+            this.btn_escape.Location = new System.Drawing.Point(10, 580);
             this.btn_escape.Name = "btn_escape";
             this.btn_escape.Size = new System.Drawing.Size(90, 28);
             this.btn_escape.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -143,7 +159,6 @@ namespace vatACARS.Components
             // scr_messageSelector
             // 
             this.scr_messageSelector.ActualHeight = 8;
-            this.scr_messageSelector.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.scr_messageSelector.Change = 1;
             this.scr_messageSelector.Location = new System.Drawing.Point(559, 205);
             this.scr_messageSelector.Name = "scr_messageSelector";
@@ -185,7 +200,6 @@ namespace vatACARS.Components
             // 
             // insetPanel1
             // 
-            this.insetPanel1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.insetPanel1.Controls.Add(this.lvw_messageSelector);
             this.insetPanel1.Location = new System.Drawing.Point(11, 206);
             this.insetPanel1.Name = "insetPanel1";
@@ -194,7 +208,6 @@ namespace vatACARS.Components
             // 
             // pnl_categories
             // 
-            this.pnl_categories.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.pnl_categories.Controls.Add(this.btn_level);
             this.pnl_categories.Controls.Add(this.btn_expect);
             this.pnl_categories.Controls.Add(this.btn_surv);
@@ -399,9 +412,9 @@ namespace vatACARS.Components
             // 
             // btn_suspend
             // 
-            this.btn_suspend.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_suspend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_suspend.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_suspend.Location = new System.Drawing.Point(202, 428);
+            this.btn_suspend.Location = new System.Drawing.Point(202, 580);
             this.btn_suspend.Name = "btn_suspend";
             this.btn_suspend.Size = new System.Drawing.Size(90, 28);
             this.btn_suspend.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -413,9 +426,9 @@ namespace vatACARS.Components
             // 
             // btn_restore
             // 
-            this.btn_restore.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_restore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_restore.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_restore.Location = new System.Drawing.Point(106, 428);
+            this.btn_restore.Location = new System.Drawing.Point(106, 580);
             this.btn_restore.Name = "btn_restore";
             this.btn_restore.Size = new System.Drawing.Size(90, 28);
             this.btn_restore.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -427,9 +440,9 @@ namespace vatACARS.Components
             // 
             // btn_send
             // 
-            this.btn_send.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.btn_send.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btn_send.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_send.Location = new System.Drawing.Point(466, 428);
+            this.btn_send.Location = new System.Drawing.Point(466, 580);
             this.btn_send.Name = "btn_send";
             this.btn_send.Size = new System.Drawing.Size(111, 28);
             this.btn_send.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -439,44 +452,38 @@ namespace vatACARS.Components
             this.btn_send.UseVisualStyleBackColor = true;
             this.btn_send.Click += new System.EventHandler(this.btn_send_Click);
             // 
-            // insetPanel3
+            // insetPanel_0
             // 
-            this.insetPanel3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.insetPanel3.Controls.Add(this.lbl_response);
-            this.insetPanel3.Location = new System.Drawing.Point(47, 392);
-            this.insetPanel3.Name = "insetPanel3";
-            this.insetPanel3.Size = new System.Drawing.Size(529, 31);
-            this.insetPanel3.TabIndex = 7;
+            this.insetPanel_0.Controls.Add(this.lbl_response_0);
+            this.insetPanel_0.Location = new System.Drawing.Point(47, 392);
+            this.insetPanel_0.Name = "insetPanel_0";
+            this.insetPanel_0.Size = new System.Drawing.Size(529, 31);
+            this.insetPanel_0.TabIndex = 7;
             // 
-            // lbl_response
+            // lbl_response_0
             // 
-            this.lbl_response.BackColor = System.Drawing.Color.Transparent;
-            this.lbl_response.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.lbl_response.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lbl_response.HasBorder = false;
-            this.lbl_response.InteractiveText = false;
-            this.lbl_response.Location = new System.Drawing.Point(2, 2);
-            this.lbl_response.Name = "lbl_response";
-            this.lbl_response.Size = new System.Drawing.Size(525, 27);
-            this.lbl_response.TabIndex = 0;
-            this.lbl_response.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.lbl_response.Paint += new System.Windows.Forms.PaintEventHandler(this.lbl_response_Paint);
-            this.lbl_response.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lbl_response_MouseDown);
-            this.lbl_response.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lbl_response_MouseUp);
+            this.lbl_response_0.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_response_0.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_response_0.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_response_0.HasBorder = false;
+            this.lbl_response_0.InteractiveText = false;
+            this.lbl_response_0.Location = new System.Drawing.Point(2, 2);
+            this.lbl_response_0.Name = "lbl_response_0";
+            this.lbl_response_0.Size = new System.Drawing.Size(525, 27);
+            this.lbl_response_0.TabIndex = 0;
+            this.lbl_response_0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btn_messageScroller
+            // btn_messageScroller_0
             // 
-            this.btn_messageScroller.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_messageScroller.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.btn_messageScroller.Location = new System.Drawing.Point(10, 391);
-            this.btn_messageScroller.Name = "btn_messageScroller";
-            this.btn_messageScroller.Size = new System.Drawing.Size(31, 31);
-            this.btn_messageScroller.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_messageScroller.SubText = "";
-            this.btn_messageScroller.TabIndex = 24;
-            this.btn_messageScroller.Text = "1";
-            this.btn_messageScroller.UseVisualStyleBackColor = true;
-            this.btn_messageScroller.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btn_messageScroller_MouseDown);
+            this.btn_messageScroller_0.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_messageScroller_0.Location = new System.Drawing.Point(10, 391);
+            this.btn_messageScroller_0.Name = "btn_messageScroller_0";
+            this.btn_messageScroller_0.Size = new System.Drawing.Size(31, 31);
+            this.btn_messageScroller_0.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_messageScroller_0.SubText = "";
+            this.btn_messageScroller_0.TabIndex = 24;
+            this.btn_messageScroller_0.Text = "1";
+            this.btn_messageScroller_0.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -602,16 +609,164 @@ namespace vatACARS.Components
             this.btn_editor.UseVisualStyleBackColor = true;
             this.btn_editor.Click += new System.EventHandler(this.btn_editor_Click);
             // 
+            // btn_messageScroller_1
+            // 
+            this.btn_messageScroller_1.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_messageScroller_1.Location = new System.Drawing.Point(10, 428);
+            this.btn_messageScroller_1.Name = "btn_messageScroller_1";
+            this.btn_messageScroller_1.Size = new System.Drawing.Size(31, 31);
+            this.btn_messageScroller_1.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_messageScroller_1.SubText = "";
+            this.btn_messageScroller_1.TabIndex = 26;
+            this.btn_messageScroller_1.Text = "1";
+            this.btn_messageScroller_1.UseVisualStyleBackColor = true;
+            this.btn_messageScroller_1.Visible = false;
+            // 
+            // insetPanel_1
+            // 
+            this.insetPanel_1.Controls.Add(this.lbl_response_1);
+            this.insetPanel_1.Location = new System.Drawing.Point(47, 429);
+            this.insetPanel_1.Name = "insetPanel_1";
+            this.insetPanel_1.Size = new System.Drawing.Size(529, 31);
+            this.insetPanel_1.TabIndex = 25;
+            this.insetPanel_1.Visible = false;
+            // 
+            // lbl_response_1
+            // 
+            this.lbl_response_1.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_response_1.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_response_1.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_response_1.HasBorder = false;
+            this.lbl_response_1.InteractiveText = false;
+            this.lbl_response_1.Location = new System.Drawing.Point(2, 2);
+            this.lbl_response_1.Name = "lbl_response_1";
+            this.lbl_response_1.Size = new System.Drawing.Size(525, 27);
+            this.lbl_response_1.TabIndex = 0;
+            this.lbl_response_1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btn_messageScroller_2
+            // 
+            this.btn_messageScroller_2.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_messageScroller_2.Location = new System.Drawing.Point(10, 465);
+            this.btn_messageScroller_2.Name = "btn_messageScroller_2";
+            this.btn_messageScroller_2.Size = new System.Drawing.Size(31, 31);
+            this.btn_messageScroller_2.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_messageScroller_2.SubText = "";
+            this.btn_messageScroller_2.TabIndex = 28;
+            this.btn_messageScroller_2.Text = "1";
+            this.btn_messageScroller_2.UseVisualStyleBackColor = true;
+            this.btn_messageScroller_2.Visible = false;
+            // 
+            // insetPanel_2
+            // 
+            this.insetPanel_2.Controls.Add(this.lbl_response_2);
+            this.insetPanel_2.Location = new System.Drawing.Point(47, 466);
+            this.insetPanel_2.Name = "insetPanel_2";
+            this.insetPanel_2.Size = new System.Drawing.Size(529, 31);
+            this.insetPanel_2.TabIndex = 27;
+            this.insetPanel_2.Visible = false;
+            // 
+            // lbl_response_2
+            // 
+            this.lbl_response_2.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_response_2.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_response_2.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_response_2.HasBorder = false;
+            this.lbl_response_2.InteractiveText = false;
+            this.lbl_response_2.Location = new System.Drawing.Point(2, 2);
+            this.lbl_response_2.Name = "lbl_response_2";
+            this.lbl_response_2.Size = new System.Drawing.Size(525, 27);
+            this.lbl_response_2.TabIndex = 0;
+            this.lbl_response_2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btn_messageScroller_3
+            // 
+            this.btn_messageScroller_3.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_messageScroller_3.Location = new System.Drawing.Point(10, 502);
+            this.btn_messageScroller_3.Name = "btn_messageScroller_3";
+            this.btn_messageScroller_3.Size = new System.Drawing.Size(31, 31);
+            this.btn_messageScroller_3.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_messageScroller_3.SubText = "";
+            this.btn_messageScroller_3.TabIndex = 30;
+            this.btn_messageScroller_3.Text = "1";
+            this.btn_messageScroller_3.UseVisualStyleBackColor = true;
+            this.btn_messageScroller_3.Visible = false;
+            // 
+            // insetPanel_3
+            // 
+            this.insetPanel_3.Controls.Add(this.lbl_response_3);
+            this.insetPanel_3.Location = new System.Drawing.Point(47, 503);
+            this.insetPanel_3.Name = "insetPanel_3";
+            this.insetPanel_3.Size = new System.Drawing.Size(529, 31);
+            this.insetPanel_3.TabIndex = 29;
+            this.insetPanel_3.Visible = false;
+            // 
+            // lbl_response_3
+            // 
+            this.lbl_response_3.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_response_3.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_response_3.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_response_3.HasBorder = false;
+            this.lbl_response_3.InteractiveText = false;
+            this.lbl_response_3.Location = new System.Drawing.Point(2, 2);
+            this.lbl_response_3.Name = "lbl_response_3";
+            this.lbl_response_3.Size = new System.Drawing.Size(525, 27);
+            this.lbl_response_3.TabIndex = 0;
+            this.lbl_response_3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btn_messageScroller_4
+            // 
+            this.btn_messageScroller_4.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.btn_messageScroller_4.Location = new System.Drawing.Point(10, 539);
+            this.btn_messageScroller_4.Name = "btn_messageScroller_4";
+            this.btn_messageScroller_4.Size = new System.Drawing.Size(31, 31);
+            this.btn_messageScroller_4.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_messageScroller_4.SubText = "";
+            this.btn_messageScroller_4.TabIndex = 32;
+            this.btn_messageScroller_4.Text = "1";
+            this.btn_messageScroller_4.UseVisualStyleBackColor = true;
+            this.btn_messageScroller_4.Visible = false;
+            // 
+            // insetPanel_4
+            // 
+            this.insetPanel_4.Controls.Add(this.lbl_response_4);
+            this.insetPanel_4.Location = new System.Drawing.Point(47, 540);
+            this.insetPanel_4.Name = "insetPanel_4";
+            this.insetPanel_4.Size = new System.Drawing.Size(529, 31);
+            this.insetPanel_4.TabIndex = 31;
+            this.insetPanel_4.Visible = false;
+            // 
+            // lbl_response_4
+            // 
+            this.lbl_response_4.BackColor = System.Drawing.Color.Transparent;
+            this.lbl_response_4.Font = new System.Drawing.Font("Terminus (TTF)", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            this.lbl_response_4.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lbl_response_4.HasBorder = false;
+            this.lbl_response_4.InteractiveText = false;
+            this.lbl_response_4.Location = new System.Drawing.Point(2, 2);
+            this.lbl_response_4.Name = "lbl_response_4";
+            this.lbl_response_4.Size = new System.Drawing.Size(525, 27);
+            this.lbl_response_4.TabIndex = 0;
+            this.lbl_response_4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // EditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 469);
+            this.ClientSize = new System.Drawing.Size(586, 621);
             this.ControlBox = false;
+            this.Controls.Add(this.btn_messageScroller_4);
+            this.Controls.Add(this.btn_messageScroller_3);
+            this.Controls.Add(this.insetPanel_4);
+            this.Controls.Add(this.btn_messageScroller_2);
+            this.Controls.Add(this.insetPanel_3);
+            this.Controls.Add(this.btn_messageScroller_1);
+            this.Controls.Add(this.insetPanel_2);
             this.Controls.Add(this.pnl_categories);
+            this.Controls.Add(this.insetPanel_1);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.btn_messageScroller);
-            this.Controls.Add(this.insetPanel3);
+            this.Controls.Add(this.btn_messageScroller_0);
+            this.Controls.Add(this.insetPanel_0);
             this.Controls.Add(this.btn_send);
             this.Controls.Add(this.btn_restore);
             this.Controls.Add(this.btn_suspend);
@@ -625,6 +780,7 @@ namespace vatACARS.Components
             this.HideOnClose = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MiddleClickClose = false;
+            this.MinimumSize = new System.Drawing.Size(590, 497);
             this.Name = "EditorWindow";
             this.Resizeable = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
@@ -632,8 +788,12 @@ namespace vatACARS.Components
             this.insetPanel2.ResumeLayout(false);
             this.insetPanel1.ResumeLayout(false);
             this.pnl_categories.ResumeLayout(false);
-            this.insetPanel3.ResumeLayout(false);
+            this.insetPanel_0.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.insetPanel_1.ResumeLayout(false);
+            this.insetPanel_2.ResumeLayout(false);
+            this.insetPanel_3.ResumeLayout(false);
+            this.insetPanel_4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -651,8 +811,8 @@ namespace vatACARS.Components
         private vatsys.GenericButton btn_suspend;
         private vatsys.GenericButton btn_restore;
         private vatsys.GenericButton btn_send;
-        private vatsys.InsetPanel insetPanel3;
-        private vatsys.GenericButton btn_messageScroller;
+        private vatsys.InsetPanel insetPanel_0;
+        private vatsys.GenericButton btn_messageScroller_0;
         private System.Windows.Forms.Panel pnl_categories;
         private vatsys.GenericButton btn_level;
         private vatsys.GenericButton btn_expect;
@@ -680,6 +840,18 @@ namespace vatACARS.Components
         private System.Windows.Forms.ColumnHeader col_timestamp;
         private System.Windows.Forms.ColumnHeader col_message;
         private System.Windows.Forms.ColumnHeader columnHeader1;
-        private vatsys.TextLabel lbl_response;
+        private vatsys.TextLabel lbl_response_0;
+        private vatsys.GenericButton btn_messageScroller_1;
+        private vatsys.InsetPanel insetPanel_1;
+        private vatsys.TextLabel lbl_response_1;
+        private vatsys.GenericButton btn_messageScroller_2;
+        private vatsys.InsetPanel insetPanel_2;
+        private vatsys.TextLabel lbl_response_2;
+        private vatsys.GenericButton btn_messageScroller_3;
+        private vatsys.InsetPanel insetPanel_3;
+        private vatsys.TextLabel lbl_response_3;
+        private vatsys.GenericButton btn_messageScroller_4;
+        private vatsys.InsetPanel insetPanel_4;
+        private vatsys.TextLabel lbl_response_4;
     }
 }

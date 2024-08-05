@@ -48,7 +48,7 @@ namespace vatACARS.Components
             this.insetPanel1.Controls.Add(this.lvw_quickfillselector);
             this.insetPanel1.Location = new System.Drawing.Point(12, 2);
             this.insetPanel1.Name = "insetPanel1";
-            this.insetPanel1.Size = new System.Drawing.Size(77, 211);
+            this.insetPanel1.Size = new System.Drawing.Size(195, 211);
             this.insetPanel1.TabIndex = 8;
             // 
             // lvw_quickfillselector
@@ -68,7 +68,7 @@ namespace vatACARS.Components
             this.lvw_quickfillselector.Name = "lvw_quickfillselector";
             this.lvw_quickfillselector.OwnerDraw = true;
             this.lvw_quickfillselector.ShowGroups = false;
-            this.lvw_quickfillselector.Size = new System.Drawing.Size(71, 205);
+            this.lvw_quickfillselector.Size = new System.Drawing.Size(189, 205);
             this.lvw_quickfillselector.TabIndex = 3;
             this.lvw_quickfillselector.TileSize = new System.Drawing.Size(440, 20);
             this.lvw_quickfillselector.UseCompatibleStateImageBehavior = false;
@@ -87,7 +87,7 @@ namespace vatACARS.Components
             this.scr_quickfill.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scr_quickfill.Change = 1;
-            this.scr_quickfill.Location = new System.Drawing.Point(95, 2);
+            this.scr_quickfill.Location = new System.Drawing.Point(213, 2);
             this.scr_quickfill.Name = "scr_quickfill";
             this.scr_quickfill.Orientation = System.Windows.Forms.ScrollOrientation.VerticalScroll;
             this.scr_quickfill.PreferredHeight = 10;
@@ -105,7 +105,7 @@ namespace vatACARS.Components
             this.btn_confirm.Font = new System.Drawing.Font("Terminus (TTF)", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
             this.btn_confirm.Location = new System.Drawing.Point(12, 250);
             this.btn_confirm.Name = "btn_confirm";
-            this.btn_confirm.Size = new System.Drawing.Size(103, 25);
+            this.btn_confirm.Size = new System.Drawing.Size(221, 25);
             this.btn_confirm.SubFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_confirm.SubText = "";
             this.btn_confirm.TabIndex = 11;
@@ -123,7 +123,7 @@ namespace vatACARS.Components
             this.tbx_freetext.Name = "tbx_freetext";
             this.tbx_freetext.NumericCharOnly = false;
             this.tbx_freetext.OctalOnly = false;
-            this.tbx_freetext.Size = new System.Drawing.Size(103, 25);
+            this.tbx_freetext.Size = new System.Drawing.Size(221, 25);
             this.tbx_freetext.TabIndex = 10;
             this.tbx_freetext.WordWrap = false;
             this.tbx_freetext.TextChanged += new System.EventHandler(this.tbx_freetext_TextChanged);
@@ -133,7 +133,7 @@ namespace vatACARS.Components
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(127, 287);
+            this.ClientSize = new System.Drawing.Size(250, 287);
             this.Controls.Add(this.scr_quickfill);
             this.Controls.Add(this.tbx_freetext);
             this.Controls.Add(this.btn_confirm);
