@@ -27,42 +27,16 @@ namespace vatACARS
 
         public static void SetHoppies(bool value)
         {
-            Logger logger = new Logger("vatACARS");
-            if (Hoppies != value)
-            {
-                Hoppies = value;
-                if (Hoppies)
-                {
-                    Properties.Settings.Default.enableHoppies = true;
-                    logger.Log("Hoppies ON.");
-                }
-                else
-                {
-                    Properties.Settings.Default.enableHoppies = false;
-                    logger.Log("Hoppies OFF.");
-                }
-                Properties.Settings.Default.Save();
-            }
+            Hoppies = value;
+            Properties.Settings.Default.enableHoppies = value;
+            Properties.Settings.Default.Save();
         }
 
         public static void SetReports(bool value)
         {
-            Logger logger = new Logger("vatACARS");
-            if (sendReports != value)
-            {
-                sendReports = value;
-                if (sendReports)
-                {
-                    Properties.Settings.Default.sendReports = true;
-                    logger.Log("Reports ON.");
-                }
-                else
-                {
-                    Properties.Settings.Default.sendReports = false;
-                    logger.Log("Reports OFF.");
-                }
-                Properties.Settings.Default.Save();
-            }
+            sendReports = value;
+            Properties.Settings.Default.sendReports = value;
+            Properties.Settings.Default.Save();
         }
 
         public void tbx_messageTimeout_TextChanged(object sender, EventArgs e)
@@ -228,7 +202,7 @@ namespace vatACARS
                 }
 
                 // Check if controlling at least one sector
-                if (MMI.SectorsControlled == null || !MMI.SectorsControlled.Any())
+                if (MMI.SectorsControlled == null || !MMI.SectorsControlled.Any() || MMI.PrimePosition == null)
                 {
                     lbl_statusMessage.Text = "You must be controlling at least one sector or position.";
                     checksFailed = true;
@@ -254,7 +228,7 @@ namespace vatACARS
 
                 APIResponse ResponseDecoded = JsonConvert.DeserializeObject<APIResponse>(LogonResponse);
 
-                if (ResponseDecoded?.Success == false) checksFailed = true;
+                if (ResponseDecoded is LoginResponse) checksFailed = true;
                 lbl_statusMessage.Text = ResponseDecoded?.Message;
 
                 if (checksFailed)
