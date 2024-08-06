@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using vatACARS.Components;
 using vatACARS.Util;
+using vatsys;
 using static vatsys.FDP2;
 
 namespace vatACARS.Helpers
@@ -17,6 +18,7 @@ namespace vatACARS.Helpers
     {
         public static bool connected = false;
         public static int SentMessages = 1;
+        private static List<string> AgreeMessages = new List<string>() { "WILCO", "ROGER", "AFFIRM" };
         private static List<string> ClosingMessages = new List<string>() { "WILCO", "UNABLE", "ROGER", "STANDBY", "AFFIRM", "NEGATIVE" };
         private static List<CPDLCMessage> CPDLCMessages = new List<CPDLCMessage>();
         private static Logger logger = new Logger("Transceiver");
@@ -61,6 +63,7 @@ namespace vatACARS.Helpers
                     {
                         FDR fdr = GetFDRs.FirstOrDefault(f => f.Callsign == message.Station);
                         if (fdr != null && originalMessage.Content.Contains("PDC")) fdr.PDCAcknowledged = true;
+                        if (AgreeMessages.Contains(message.Content)) useMessageIntent(sentCPDLCMessage);
                         SentCPDLCMessages.Remove(sentCPDLCMessage);
                         originalMessage.Response = message.Content;
                         if (message.Content != "STANDBY") originalMessage.setMessageState(MessageState.Finished);
@@ -157,6 +160,107 @@ namespace vatACARS.Helpers
             }
         }
 
+        public static void useMessageIntent(SentCPDLCMessage message)
+        {
+            FDR fdr = GetFDRs.FirstOrDefault(f => f.Callsign == message.Station);
+            if (fdr == null) return;
+            Intent intent = message.Intent;
+            if (intent.Type == "SPEED")
+            {
+                if (intent.Value == "CLRSPD") FDP2.SetLabelData(fdr, string.Empty);
+                if (intent.Value == "PRSSPD")
+                {
+                    string s = "S" + fdr.TAS.ToString();
+                    FDP2.SetLabelData(fdr, s);
+                }
+                if (intent.Value == "CSR") FDP2.SetLabelData(fdr, "CSR");
+                FDP2.SetLabelData(fdr, intent.Value);
+            }
+            if (intent.Type == "LEVEL" || intent.Type == "BLOCK")
+            {
+                var values = intent.Type == "LEVEL" ? new[] { intent.Value } : intent.Value.Split(',');
+                if (intent.Type == "LEVEL")
+                {
+                    string part = values[0].Trim();
+                    int levelValue;
+                    if (part.StartsWith("FL"))
+                    {
+                        part = part.Replace("FL", "");
+                        if (int.TryParse(part, out levelValue))
+                        {
+                            FDP2.SetCFL(fdr, levelValue.ToString());
+                        }
+                    }
+                    else if (part.StartsWith("A"))
+                    {
+                        part = part.Replace("A", "");
+                        if (int.TryParse(part, out levelValue))
+                        {
+                            FDP2.SetCFL(fdr, levelValue.ToString());
+                        }
+                    }
+                }
+                else
+                {
+                    int firstValue = 0;
+                    int secondValue = 0;
+                    bool firstValueSet = false;
+                    bool secondValueSet = false;
+                    foreach (var value in values)
+                    {
+                        string part = value.Trim();
+                        int blockValue;
+                        if (part.StartsWith("FL"))
+                        {
+                            part = part.Replace("FL", "");
+                            if (int.TryParse(part, out blockValue))
+                            {
+                                blockValue *= 100; // cus vatsys is silly
+                                if (!firstValueSet)
+                                {
+                                    firstValue = blockValue;
+                                    firstValueSet = true;
+                                }
+                                else
+                                {
+                                    secondValue = blockValue;
+                                    secondValueSet = true;
+                                }
+                            }
+                        }
+                        else if (part.StartsWith("A"))
+                        {
+                            part = part.Replace("A", "");
+                            if (int.TryParse(part, out blockValue))
+                            {
+                                if (!firstValueSet)
+                                {
+                                    firstValue = blockValue;
+                                    firstValueSet = true;
+                                }
+                                else
+                                {
+                                    secondValue = blockValue;
+                                    secondValueSet = true;
+                                }
+                            }
+                        }
+                        if (firstValueSet && secondValueSet)
+                        {
+                            int lowerValue = Math.Min(firstValue, secondValue);
+                            int upperValue = Math.Max(firstValue, secondValue);
+                            FDP2.SetCFL(fdr, lowerValue, upperValue, false);
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                logger.Log("Invalid Intent Type");
+            }
+        }
+
         private static void removeMessage(this IMessageData message)
         {
             if (message is CPDLCMessage) CPDLCMessages.Remove((CPDLCMessage)message);
@@ -191,11 +295,18 @@ namespace vatACARS.Helpers
             public DateTime TimeReceived { get; set; }
         }
 
+        public class Intent
+        {
+            public string Type;
+            public string Value;
+        }
+
         public class SentCPDLCMessage
         {
             public int MessageId;
             public int ReplyMessageId;
             public string Station;
+            public Intent Intent { get; set; }
         }
 
         public class Station

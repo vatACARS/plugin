@@ -137,6 +137,22 @@ namespace vatACARS.Components
             currentresponselabel.Invalidate();
         }
 
+        public static string FormatSpeed(string s)
+        {
+            if (s.EndsWith("KT", StringComparison.OrdinalIgnoreCase))
+            {
+                s = s.Substring(0, s.Length - 2);
+                return s;
+            }
+            else if (s.EndsWith("M", StringComparison.OrdinalIgnoreCase))
+            {
+                s = s.Substring(0, s.Length - 1);
+                s = s.Replace(".", string.Empty);
+                return "M" + s;
+            }
+            return s;
+        }
+
         public void lbl_response_Paint(object sender, PaintEventArgs e)
         {
             if (response[responseIndex] == null || response[responseIndex].Placeholders == null) return;
@@ -176,6 +192,124 @@ namespace vatACARS.Components
                     e.Graphics.DrawString(item.Placeholder, currentresponselabel.Font, highlightText, new PointF(item.TopLeftLoc.X + (item.Size.Width / 2), item.TopLeftLoc.Y + (item.Size.Height / 2)), format);
                 }
             }
+        }
+
+        private static Intent DetectIntent(string message)
+        {
+            Intent intent = new Intent();
+
+            var detectionStrings = new Dictionary<string, string>
+            {
+                { "CLIMB TO AND MAINTAIN BLOCK", "BLOCK" },
+                { "DESCEND TO AND MAINTAIN BLOCK", "BLOCK" },
+                { "CRUISE CLIMB TO", "LEVEL" },
+                { "REACH", "LEVEL" },
+                { "CRUISE CLIMB ABOVE", "LEVEL" },
+                { "STOP CLIMB AT", "LEVEL" },
+                { "STOP DESCENT AT", "LEVEL" },
+                { "IMMEDIATELY CLIMB TO", "LEVEL" },
+                { "IMMEDIATELY DESCEND TO", "LEVEL" },
+                { "EXPEDITE CLIMB TO", "LEVEL" },
+                { "EXPEDITE DESCENT TO", "LEVEL" },
+                { "MAINTAIN BLOCK", "BLOCK" },
+                { "CLIMB TO", "LEVEL" },
+                { "DESCEND TO", "LEVEL" },
+                { "MAINTAIN", "LEVEL" },
+                { "PROCEED DIRECT TO", "DIRECT" },
+                { "WHEN ABLE PROCEED DIRECT TO", "DIRECT" },
+                { "INCREASE SPEED TO", "LEVEL" }, // dont wanna duplicate working code so set to LEVEL
+                { "REDUCE SPEED TO", "LEVEL" }, // same story
+                { "DO NOT EXCEED", "LEVEL" }, // same again
+                { "ADJUST SPEED TO", "LEVEL" }, // same :)
+                { "RESUME NORMAL SPEED", "SPEED" }, // finally
+                { "NO SPEED RESTRICTION", "SPEED" },
+                { "MAINTAIN PRESENT SPEED", "SPEED" }
+            };
+
+            foreach (var detectionString in detectionStrings)
+            {
+                if (message.StartsWith(detectionString.Key, StringComparison.OrdinalIgnoreCase))
+                {
+                    intent.Type = detectionString.Value;
+                    var startIndex = detectionString.Key.Length;
+                    var value = message.Substring(startIndex).TrimStart().Split(' ')[0];
+                    value = value.Replace(",", string.Empty);
+                    if (intent.Type == "BLOCK")
+                    {
+                        var valueParts = message.Substring(startIndex).TrimStart().Split(new[] { '(', ')', 'T', 'O' }, StringSplitOptions.RemoveEmptyEntries);
+                        intent.Value = string.Join(",", valueParts);
+                    }
+                    else if (intent.Type == "LEVEL")
+                    {
+                        if (value.StartsWith("A", StringComparison.OrdinalIgnoreCase) || value.StartsWith("FL", StringComparison.OrdinalIgnoreCase))
+                        {
+                            intent.Value = value;
+                        }
+                        else if (message.EndsWith("OR GREATER", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (value.EndsWith("KT", StringComparison.OrdinalIgnoreCase) || value.EndsWith("M", StringComparison.OrdinalIgnoreCase))
+                            {
+                                intent.Type = "SPEED";
+                                intent.Value = FormatSpeed(value) + "G";
+                            }
+                        }
+                        else if (message.EndsWith("OR LESS", StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (value.EndsWith("KT", StringComparison.OrdinalIgnoreCase) || value.EndsWith("M", StringComparison.OrdinalIgnoreCase))
+                            {
+                                intent.Type = "SPEED";
+                                intent.Value = FormatSpeed(value) + "L";
+                            }
+                        }
+                        else if (message.StartsWith("DO NOT EXCEED"))
+                        {
+                            if (value.EndsWith("KT", StringComparison.OrdinalIgnoreCase) || value.EndsWith("M", StringComparison.OrdinalIgnoreCase))
+                            {
+                                intent.Type = "SPEED";
+                                intent.Value = FormatSpeed(value) + "L";
+                            }
+                        }
+                        else if (value.EndsWith("KT", StringComparison.OrdinalIgnoreCase) || value.EndsWith("M", StringComparison.OrdinalIgnoreCase))
+                        {
+                            intent.Type = "SPEED";
+                            intent.Value = "S" + FormatSpeed(value);
+                        }
+                        else
+                        {
+                            intent.Type = "UNKNOWN";
+                            intent.Value = "Unknown";
+                        }
+                    }
+                    else if (intent.Type == "SPEED")
+                    {
+                        if (message.StartsWith("NO SPEED RESTRICTION"))
+                        {
+                            intent.Value = "CSR";
+                        }
+                        else if (message.StartsWith("RESUME NORMAL SPEED"))
+                        {
+                            intent.Value = "CLRSPD";
+                        }
+                        else if (message.StartsWith("MAINTAIN PRESENT SPEED"))
+                        {
+                            intent.Value = "PRSSPD";
+                        }
+                        else
+                        {
+                            intent.Value = value;
+                        }
+                    }
+                    else
+                    {
+                        intent.Value = value;
+                    }
+                    return intent;
+                }
+            }
+
+            intent.Type = "UNKNOWN";
+            intent.Value = "Unknown";
+            return intent;
         }
 
         private void btn_air_Click(object sender, EventArgs e)
@@ -376,7 +510,8 @@ namespace vatACARS.Components
                         {
                             Station = selectedMsg.Station,
                             MessageId = SentMessages,
-                            ReplyMessageId = SentMessages
+                            ReplyMessageId = SentMessages,
+                            Intent = DetectIntent(encodedMessage.Replace("@", ""))
                         });
 
                         addCPDLCMessage(new CPDLCMessage()
@@ -395,7 +530,8 @@ namespace vatACARS.Components
                         {
                             Station = selectedMsg.Station,
                             MessageId = SentMessages,
-                            ReplyMessageId = message.MessageId
+                            ReplyMessageId = message.MessageId,
+                            Intent = DetectIntent(encodedMessage.Replace("@", ""))
                         });
 
                         selectedMsg.Content = encodedMessage.Replace("@", "");
