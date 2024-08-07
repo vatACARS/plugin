@@ -214,6 +214,7 @@ namespace vatACARS.Components
                 { "MAINTAIN BLOCK", "BLOCK" },
                 { "CLIMB TO", "LEVEL" },
                 { "DESCEND TO", "LEVEL" },
+                { "MAINTAIN PRESENT SPEED", "SPEED" },
                 { "MAINTAIN", "LEVEL" },
                 { "PROCEED DIRECT TO", "DIRECT" },
                 { "WHEN ABLE PROCEED DIRECT TO", "DIRECT" },
@@ -223,7 +224,6 @@ namespace vatACARS.Components
                 { "ADJUST SPEED TO", "LEVEL" }, // same :)
                 { "RESUME NORMAL SPEED", "SPEED" }, // finally
                 { "NO SPEED RESTRICTION", "SPEED" },
-                { "MAINTAIN PRESENT SPEED", "SPEED" }
             };
 
             foreach (var detectionString in detectionStrings)
@@ -298,6 +298,10 @@ namespace vatACARS.Components
                         {
                             intent.Value = value;
                         }
+                    }
+                    else if (intent.Type == "DIRECT")
+                    {
+                        intent.Value = value;
                     }
                     else
                     {

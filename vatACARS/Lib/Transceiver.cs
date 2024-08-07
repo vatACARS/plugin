@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using vatACARS.Components;
 using vatACARS.Util;
 using vatsys;
@@ -25,6 +26,7 @@ namespace vatACARS.Helpers
         private static List<SentCPDLCMessage> SentCPDLCMessages = new List<SentCPDLCMessage>();
         private static List<Station> Stations = new List<Station>();
         private static List<TelexMessage> TelexMessages = new List<TelexMessage>();
+        private static PopupWindow PopupWindow;
 
         public static event EventHandler<CPDLCMessage> CPDLCMessageReceived;
 
@@ -168,15 +170,18 @@ namespace vatACARS.Helpers
             if (intent.Type == "SPEED")
             {
                 if (intent.Value == "CLRSPD") FDP2.SetLabelData(fdr, string.Empty);
-                if (intent.Value == "PRSSPD")
+                else if (intent.Value == "PRSSPD")
                 {
                     string s = "S" + fdr.TAS.ToString();
                     FDP2.SetLabelData(fdr, s);
                 }
-                if (intent.Value == "CSR") FDP2.SetLabelData(fdr, "CSR");
-                FDP2.SetLabelData(fdr, intent.Value);
+                else if (intent.Value == "CSR") FDP2.SetLabelData(fdr, "CSR");
+                else
+                {
+                    ErrorHandler.GetInstance().AddError("Invalid Speed Intent");
+                }
             }
-            if (intent.Type == "LEVEL" || intent.Type == "BLOCK")
+            else if (intent.Type == "LEVEL" || intent.Type == "BLOCK")
             {
                 var values = intent.Type == "LEVEL" ? new[] { intent.Value } : intent.Value.Split(',');
                 if (intent.Type == "LEVEL")
@@ -255,12 +260,50 @@ namespace vatACARS.Helpers
                     }
                 }
             }
+            else if (intent.Type == "DIRECT")
+            {
+                DoShowPopupWindow(intent.Value, fdr, intent);
+            }
             else
             {
                 logger.Log("Invalid Intent Type");
             }
         }
 
+        private static void DoShowPopupWindow(string c, FDR fdr, Intent i)
+        {
+            if (i.Type != "DIRECT")
+            {
+                return;
+            }
+            if (PopupWindow == null || PopupWindow.IsDisposed)
+            {
+                c = "UPDATE " + fdr.Callsign + " DIRECT TO: " + c + "?";
+                PopupWindow = new PopupWindow(c, true, fdr);
+            }
+            else if (PopupWindow.Visible)
+            {
+                return;
+            }
+
+            Form form = Form.ActiveForm;
+            if (form != null)
+            {
+                if (form.InvokeRequired)
+                {
+                    form.Invoke((Action)(() => PopupWindow.Show(form)));
+                }
+                else
+                {
+                    PopupWindow.Show(form);
+                }
+            }
+            else
+            {
+
+                logger.Log("Form.ActiveForm is null");
+            }
+        }
         private static void removeMessage(this IMessageData message)
         {
             if (message is CPDLCMessage) CPDLCMessages.Remove((CPDLCMessage)message);
